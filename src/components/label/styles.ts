@@ -93,7 +93,7 @@ export const StyledLabel: any = styled(Box, {
     padding: theme.spacing(0, 0.75),
     fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
-    borderRadius: 0,
+    borderRadius: "12px",
     transition: theme.transitions.create("all", {
       duration: theme.transitions.duration.shorter,
     }),

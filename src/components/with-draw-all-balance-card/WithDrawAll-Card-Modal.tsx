@@ -1,7 +1,7 @@
 import type { FC } from "react";
-import type { IEmployee } from "@/types/employee"
-import type { CurrencyDetails } from "@/types/cash"
-import type { RootState } from "@/store"
+import type { IEmployee } from "@/types/employee";
+import type { CurrencyDetails } from "@/types/cash";
+import type { RootState } from "@/store";
 
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -20,12 +20,11 @@ import {
   CardContent,
 } from "@mui/material";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
-
-import { formatNumber } from "@/utils/format-number"
-
-import { enqueueSnackbar } from "@/store/slices/snackbar"
-import { withdrawFromBalance } from "@/store/actions/employeeActions"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { formatNumber } from "@/utils/format-number";
+import { enqueueSnackbar } from "@/store/slices/snackbar";
+import { withdrawFromBalance } from "@/store/actions/employeeActions";
+import { varAlpha } from "@/theme/styles";
 
 type CurrencyKey = "sum" | "dollar";
 
@@ -47,95 +46,86 @@ const WithdrawAllBalanceCard: FC<Props> = ({ employee }) => {
   const { currency: exchangeRate } = useSelector(
     (state: RootState) => state.dashboard
   );
-  const [amounts, setAmounts] = useState<Partial<Record<CurrencyKey, number>>>(
-    {}
-  );
+
+  // We allow string or number to make the TextField behavior smooth
+  const [amounts, setAmounts] = useState<Record<CurrencyKey, string | number>>({
+    dollar: "",
+    sum: "",
+  });
   const [showControls, setShowControls] = useState(false);
   const [notes, setNotes] = useState("");
 
   const calculateTotalInDollars = () => {
-    const dollarAmount = amounts.dollar ?? 0;
-    const sumAmount = amounts.sum ?? 0;
+    const dollarAmount = Number(amounts.dollar) || 0;
+    const sumAmount = Number(amounts.sum) || 0;
     const sumInDollars = exchangeRate > 0 ? sumAmount / exchangeRate : 0;
     return dollarAmount + sumInDollars;
   };
 
+  const handleChange = (key: CurrencyKey, value: string) => {
+    // 1. Allow clearing the input
+    if (value === "") {
+      setAmounts((prev) => ({ ...prev, [key]: "" }));
+      return;
+    }
 
-  const handleChange = (key: CurrencyKey, value: number) => {
-    if (value < 0) return;
+    const numValue = Number(value);
     const max = employee.balance[key] ?? 0;
-    if (value > max) {
+
+    // 2. Prevent negative numbers
+    if (numValue < 0) return;
+
+    // 3. Validation for max balance
+    if (numValue > max) {
       dispatch(
         enqueueSnackbar({
           message: `${balanceFields.find((f) => f.key === key)?.label} uchun ${formatNumber(max)} dan oshirib bo'lmaydi`,
           options: { variant: "warning" },
         })
       );
-      value = max;
+      setAmounts((prev) => ({ ...prev, [key]: max }));
+    } else {
+      setAmounts((prev) => ({ ...prev, [key]: value }));
     }
-    setAmounts((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleFullWithdraw = (key: CurrencyKey) => {
-    handleChange(key, employee.balance[key] || 0);
+    setAmounts((prev) => ({ 
+        ...prev, 
+        [key]: employee.balance[key] || 0,
+        // Clear the other field to respect the mutual exclusivity
+        [key === "dollar" ? "sum" : "dollar"]: ""
+    }));
   };
 
   const handleSubmit = () => {
     const normalizedAmounts: CurrencyDetails = {
-      sum: amounts.sum ?? 0,
-      dollar: amounts.dollar ?? 0,
+      sum: Number(amounts.sum) || 0,
+      dollar: Number(amounts.dollar) || 0,
     };
 
-    const total = Object.values(normalizedAmounts).reduce(
-      (acc, val) => Number(acc || 0) + Number(val || 0),
-      0 as number
-    ) as number;
+    const total = normalizedAmounts.sum + normalizedAmounts.dollar;
 
     if (total <= 0) {
-      dispatch(
-        enqueueSnackbar({
-          message: "Yechilayotgan summa 0 bo'lishi mumkin emas",
-          options: { variant: "error" },
-        })
-      );
-      return;
-    }
-
-    if (normalizedAmounts.dollar > (employee.balance.dollar ?? 0)) {
-      dispatch(
-        enqueueSnackbar({
-          message: `Balansda yetarli dollar yo'q. Mavjud: ${formatNumber(employee.balance.dollar ?? 0)} $`,
-          options: { variant: "error" },
-        })
-      );
-      return;
-    }
-
-    if (normalizedAmounts.sum > (employee.balance.sum ?? 0)) {
-      dispatch(
-        enqueueSnackbar({
-          message: `Balansda yetarli so'm yo'q. Mavjud: ${formatNumber(employee.balance.sum ?? 0)} so'm`,
-          options: { variant: "error" },
-        })
-      );
+      dispatch(enqueueSnackbar({ message: "Summa 0 bo'lishi mumkin emas", options: { variant: "error" } }));
       return;
     }
 
     dispatch(withdrawFromBalance(employee._id, normalizedAmounts, notes));
-    setAmounts({});
+    setAmounts({ dollar: "", sum: "" });
     setNotes("");
-    setShowControls(false); // Yechish rejimini o'chirish
+    setShowControls(false); 
   };
 
   return (
-    <>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Typography variant="h6">Umumiy yechib olish</Typography>
+    <Box sx={{ 
+      p: 3, 
+      borderRadius: "18px", 
+      bgcolor: 'background.neutral',
+      border: (theme) => `1px solid ${theme.palette.divider}` 
+    }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6" sx={{ fontWeight: 700 }}>Umumiy yechib olish</Typography>
         <FormControlLabel
           control={
             <Checkbox
@@ -143,7 +133,7 @@ const WithdrawAllBalanceCard: FC<Props> = ({ employee }) => {
               onChange={(e) => {
                 setShowControls(e.target.checked);
                 if (!e.target.checked) {
-                  setAmounts({});
+                  setAmounts({ dollar: "", sum: "" });
                   setNotes("");
                 }
               }}
@@ -154,91 +144,85 @@ const WithdrawAllBalanceCard: FC<Props> = ({ employee }) => {
       </Stack>
 
       <Stack spacing={2}>
-        {balanceFields.map(({ key, label }) => (
-          <Grid container spacing={1} key={key} alignItems="center">
-            <Grid item xs={4}>
-              <Typography variant="body2">
-                {label}: {formatNumber(employee.balance[key] ?? 0)}
-              </Typography>
-            </Grid>
-            <Grid item xs={5}>
-              <TextField
-                size="small"
-                type="number"
-                value={amounts[key] ?? ""}
-                onChange={(e) => handleChange(key, Number(e.target.value))}
-                fullWidth
-                placeholder="Miqdor"
-                disabled={
-                  !showControls ||
-                  (key === "dollar"
-                    ? (amounts.sum ?? 0) > 0
-                    : (amounts.dollar ?? 0) > 0)
-                }
-              />
-            </Grid>
-            <Grid item xs={3}>
-              {showControls && (
-                <Button
-                  variant="outlined"
-                  fullWidth
+        {balanceFields.map(({ key, label }) => {
+          const otherKey = key === "dollar" ? "sum" : "dollar";
+          // Disable if the OTHER field has any value > 0
+          const isOtherFieldActive = Number(amounts[otherKey]) > 0;
+
+          return (
+            <Grid container spacing={2} key={key} alignItems="center">
+              <Grid item xs={4}>
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                  {label}: <Typography component="span" variant="body2" sx={{ color: 'text.primary', fontWeight: 700 }}>
+                    {formatNumber(employee.balance[key] ?? 0)}
+                  </Typography>
+                </Typography>
+              </Grid>
+              <Grid item xs={5}>
+                <TextField
                   size="small"
-                  onClick={() => handleFullWithdraw(key)}
-                  disabled={
-                    key === "dollar"
-                      ? (amounts.sum ?? 0) > 0
-                      : (amounts.dollar ?? 0) > 0
-                  }
-                >
-                  To'liq
-                </Button>
-              )}
+                  type="number"
+                  value={amounts[key]}
+                  onChange={(e) => handleChange(key, e.target.value)}
+                  fullWidth
+                  placeholder="0.00"
+                  disabled={!showControls || isOtherFieldActive}
+                  // Prevents mouse wheel from changing values accidentally
+                  onWheel={(e) => (e.target as HTMLElement).blur()}
+                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                {showControls && (
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    onClick={() => handleFullWithdraw(key)}
+                    disabled={isOtherFieldActive}
+                    sx={{ borderRadius: '12px', height: '40px' }}
+                  >
+                    To'liq
+                  </Button>
+                )}
+              </Grid>
             </Grid>
-          </Grid>
-        ))}
+          );
+        })}
       </Stack>
 
       {showControls && (
         <>
-          <Divider sx={{ my: 2 }} />
+          <Divider sx={{ my: 3, borderStyle: 'dashed' }} />
 
-          {/* Umumiy dollarda ko'rsatish */}
           <Card
             sx={{
-              mb: 2,
-              bgcolor: "primary.50",
-              border: 1,
-              borderColor: "primary.200",
+              mb: 3,
+              borderRadius: '16px',
+              bgcolor: (theme) => varAlpha(theme.palette.primary.mainChannel, 0.08),
+              border: (theme) => `1px solid ${varAlpha(theme.palette.primary.mainChannel, 0.2)}`,
+              boxShadow: 'none'
             }}
           >
-            <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
-              <Typography variant="h6" color="primary.main" gutterBottom>
+            <CardContent sx={{ p: 2.5, "&:last-child": { pb: 2.5 } }}>
+              <Typography variant="subtitle1" color="primary.main" sx={{ fontWeight: 800, mb: 1 }}>
                 Umumiy yechilayotgan summa
               </Typography>
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Typography variant="body2" color="text.secondary">
-                  Dollar: {formatNumber(amounts.dollar ?? 0)} $
+              
+              <Box display="flex" justifyContent="space-between" mb={2}>
+                <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
+                  Dollar: {formatNumber(Number(amounts.dollar) || 0)} $
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  So'm: {formatNumber(amounts.sum ?? 0)} so'm
+                <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
+                  So'm: {formatNumber(Number(amounts.sum) || 0)} so'm
                 </Typography>
               </Box>
-              <Box
-                sx={{ mt: 1, p: 1, bgcolor: "primary.100", borderRadius: 0 }}
-              >
-                <Typography
-                  variant="h6"
-                  color="primary.dark"
-                  textAlign="center"
-                >
+
+              <Box sx={{ p: 1.5, bgcolor: (theme) => varAlpha(theme.palette.primary.mainChannel, 0.12), borderRadius: '12px', textAlign: 'center' }}>
+                <Typography variant="h5" color="primary.dark" sx={{ fontWeight: 900 }}>
                   Jami: {formatNumber(calculateTotalInDollars())} $
-                  <Typography component="span" variant="caption" sx={{ ml: 1 }}>
-                    (kurs: 1$ = {formatNumber(exchangeRate)} so'm)
-                  </Typography>
+                </Typography>
+                <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 600 }}>
+                  Kurs: 1$ = {formatNumber(exchangeRate)} so'm
                 </Typography>
               </Box>
             </CardContent>
@@ -251,15 +235,21 @@ const WithdrawAllBalanceCard: FC<Props> = ({ employee }) => {
             label="Izoh (ixtiyoriy)"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="Nima uchun pul yechib olinmoqda?"
-            sx={{ mb: 2 }}
+            sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
           />
-          <Button variant="contained" fullWidth onClick={handleSubmit}>
-            Yechib olish ({formatNumber(calculateTotalInDollars())} $ jami)
+          
+          <Button 
+            variant="contained" 
+            fullWidth 
+            size="large"
+            onClick={handleSubmit}
+            sx={{ borderRadius: "12px", py: 1.5, fontWeight: 800 }}
+          >
+            Tasdiqlash ({formatNumber(calculateTotalInDollars())} $ jami)
           </Button>
         </>
       )}
-    </>
+    </Box>
   );
 };
 

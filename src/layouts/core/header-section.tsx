@@ -25,7 +25,7 @@ import { navData } from "@/layouts/config-nav-dashboard";
 // ----------------------------------------------------------------------
 
 export type HeaderSectionProps = AppBarProps & {
-  layoutQuery: Breakpoint;
+  layoutQuery?: Breakpoint;
   slots?: {
     leftArea?: React.ReactNode;
     rightArea?: React.ReactNode;
@@ -56,8 +56,10 @@ export function HeaderSection({
   ...other
 }: HeaderSectionProps) {
   const theme = useTheme();
+  const pathname = usePathname();
   const { profile } = useTypedSelector((state) => state.auth);
   const roleNavItems = profile?.role ? navData[profile?.role] : [];
+  
   const toolbarStyles = {
     default: {
       ...bgBlur({
@@ -69,36 +71,27 @@ export function HeaderSection({
         easing: theme.transitions.easing.easeInOut,
         duration: theme.transitions.duration.shorter,
       }),
-      [theme.breakpoints.up("sm")]: {
-        minHeight: "auto",
-      },
       [theme.breakpoints.up(layoutQuery)]: {
         height: "var(--layout-header-desktop-height)",
       },
     },
   };
 
-  const pathname = usePathname();
   return (
     <AppBar
       position="sticky"
       color="transparent"
       className={layoutClasses.header}
-      sx={{
-        boxShadow: "none",
-        zIndex: "var(--layout-header-zIndex)",
-        ...(sx ?? {}),
-      }}
-      {...other}>
+      sx={{ boxShadow: "none", zIndex: "var(--layout-header-zIndex)", ...sx }}
+      {...other}
+    >
       {slots?.topArea}
 
       <Toolbar
         disableGutters
         {...slotProps?.toolbar}
-        sx={{
-          ...toolbarStyles?.default,
-          ...(slotProps?.toolbar?.sx ?? {}),
-        }}>
+        sx={{ ...toolbarStyles.default, ...slotProps?.toolbar?.sx }}
+      >
         <Container
           {...slotProps?.container}
           sx={{
@@ -106,99 +99,80 @@ export function HeaderSection({
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            ...(slotProps?.container?.sx ?? {}),
-            // Colleague's UI: blur glass effect — hardcoded rgba(255,255,255,0.75) replaced with CSS var
             background: `rgba(var(--palette-background-defaultChannel) / 0.75)`,
             backdropFilter: "saturate(200%) blur(30px)",
-            borderBottom: "0.5px solid rgba(0, 0, 0, 0.08)",
-          }}>
+            borderBottom: "0.5px solid rgba(255, 255, 255, 0.08)",
+            ...slotProps?.container?.sx,
+          }}
+        >
           {slots?.leftArea}
 
+          {/* NAV PILL CONTAINER (TRACK) */}
           <Box
             sx={{
               display: "flex",
-              flex: "1 1 auto",
-              justifyContent: "center",
-              // Colleague's UI: pill-shaped nav container
-              gap: "0.5rem",
+              alignItems: "center",
+              gap: "4px",
               p: "4px",
-              maxWidth: "1000px",
-              borderRadius: "10px",
-              bgcolor: "var(--layout-nav-item-hover-bg)",
-            }}>
-            <Box
-              sx={{
-                display: { xs: "none", md: "flex" },
-                flex: "1 auto",
-                bgcolor: "var(--layout-nav-item-hover-bg)",
-                borderRadius: "10px",
-              }}>
-              {roleNavItems.map((item: DataType) => {
-                const isActived = item.path === pathname;
+              borderRadius: "12px",
+              bgcolor: "var(--layout-nav-item-hover-bg)", // Container background
+            }}
+          >
+            {roleNavItems.map((item: DataType) => {
+              const isActived = item.path === pathname;
 
-                return (
-                  <ListItem disableGutters disablePadding key={item.title}>
-                    <ListItemButton
-                      disableGutters
-                      component={RouterLink}
-                      href={item.path}
-                      sx={{
-                        px: 2,
-                        py: "6px",
-                        gap: "0.5rem",
-                        borderRadius: "10px",
-                        // typography: "body2",
-                        fontWeight: "700",
-                        fontSize: "12px",
-                        color: "var(--layout-nav-item-color)",
-                        minHeight: "var(--layout-nav-item-height)",
-                        bgcolor: "var(--layout-nav-item-hover-bg)",
+              return (
+                <ListItem disableGutters disablePadding key={item.title} sx={{ width: 'auto' }}>
+                  <ListItemButton
+                    component={RouterLink}
+                    href={item.path}
+                    sx={{
+                      px: 2,
+                      py: "6px",
+                      gap: "8px",
+                      borderRadius: "10px",
+                      fontWeight: "700",
+                      fontSize: "12px",
+                      whiteSpace: 'nowrap',
+                      color: "var(--layout-nav-item-color)",
+                      bgcolor: "transparent", // Set to transparent so it matches the track
+                      transition: (theme) => theme.transitions.create(['all'], { duration: '0.2s' }),
+                      
+                      "&:hover": {
+                        color: "var(--layout-nav-item-hover-color)",
+                        bgcolor: "rgba(255, 255, 255, 0.04)",
+                      },
+
+                      ...(isActived && {
+                        bgcolor: "var(--layout-nav-item-active-bg)",
+                        color: "var(--layout-nav-item-active-color)",
+                        boxShadow: (theme) => theme.palette.mode === 'dark' 
+                            ? "0 4px 12px rgba(0,0,0,0.4)" 
+                            : "0 3px 8px rgba(0, 0, 0, 0.1)",
                         "&:hover": {
-                          color: "var(--layout-nav-item-hover-color)",
-                          bgcolor: "var(--layout-nav-item-hover-bg)",
-                          transition: "all 0.2s ease",
-                        },
-                        ...(isActived && {
-                          borderRadius: "10px",
-                          fontWeight: "fontWeightSemiBold",
                           bgcolor: "var(--layout-nav-item-active-bg)",
-                          color: "var(--layout-nav-item-active-color)",
+                        },
+                      }),
+                    }}
+                  >
+                    <Box component="span" sx={{ width: 20, height: 20, display: 'flex', alignItems: 'center' }}>
+                      {item.icon}
+                    </Box>
 
-                          boxShadow:
-                            "0 3px 8px rgba(0, 0, 0, 0.1), 0 3px 1px rgba(0, 0, 0, 0.04)",
+                    <Box component="span">{item.title}</Box>
 
-                          border: "0.5px solid rgba(0, 0, 0, 0.04)",
-                          transition: "all 0.2s ease",
-
-                          "&:hover": {
-                            color: "var(--layout-nav-item-active-color)",
-                            bgcolor: "var(--layout-nav-item-active-bg)",
-                          },
-                        }),
-                      }}>
-                      {/* Colleague's UI: icon size 20×20 */}
-                      <Box component="span" sx={{ width: 20, height: 20 }}>
-                        {item.icon}
-                      </Box>
-
-                      <Box component="span" flexGrow={1}>
-                        {item.title}
-                      </Box>
-
-                      {item.info && item.info}
-                    </ListItemButton>
-                  </ListItem>
-                );
-              })}
-            </Box>
-            {slots?.centerArea}
+                    {item.info && (
+                        <Box component="span" sx={{ ml: 0.5 }}>{item.info}</Box>
+                    )}
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
           </Box>
 
           {slots?.rightArea}
         </Container>
       </Toolbar>
-
-      {slots?.bottomArea}
     </AppBar>
   );
 }

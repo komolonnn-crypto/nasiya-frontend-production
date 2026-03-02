@@ -14,7 +14,7 @@ const Calculate = ({
 }) => (
   <Paper
     elevation={3}
-    sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}
+    sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 ,borderRadius: "18px"}}
   >
     <Grid container spacing={1}>
       <RenderContractFields 

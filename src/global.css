@@ -159,3 +159,91 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
+
+
+
+
+/** **************************************
+* Global Date Picker Fix (Universal Color)
+*************************************** */
+
+input::-webkit-calendar-picker-indicator {
+  /* This filter turns the default black icon into a professional MUI-style blue (#1976d2) */
+  /* This color is visible on both white and dark grey backgrounds */
+  filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(181deg) brightness(92%) contrast(100%);
+  
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 2px;
+  transition: background-color 0.2s;
+}
+
+input::-webkit-calendar-picker-indicator:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark input::-webkit-calendar-picker-indicator:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* This ensures the calendar popup itself matches the system/browser theme */
+input {
+  color-scheme: light dark;
+}
+
+
+
+
+/* global.css */
+
+/* 1. Global Button Radius */
+.MuiButton-root {
+  border-radius: 12px !important;
+}
+
+/* 2. Global TextField Radius (Outlined variant) */
+.MuiOutlinedInput-root {
+  border-radius: 12px !important;
+}
+
+/* 3. Global TextField Radius (Filled variant) */
+.MuiFilledInput-root {
+  border-radius: 12px !important;
+}
+
+/* Optional: remove the bottom underline radius for 'standard' if needed */
+.MuiInput-root {
+  border-radius: 12px !important;
+}
+
+
+/* global.css */
+
+/* 1. This handles the border for ALL TextFields, Selects, and DatePickers */
+.MuiOutlinedInput-root, 
+.MuiOutlinedInput-notchedOutline {
+  border-radius: 12px !important;
+}
+
+/* 2. This handles the background of 'Filled' inputs if you use them */
+.MuiFilledInput-root {
+  border-radius: 12px !important;
+}
+
+/* 3. This handles the dropdown menus (Select components) so they match */
+.MuiPaper-root.MuiMenu-paper {
+  border-radius: 12px !important;
+}
+
+/* 4. Global Button Radius for consistency */
+.MuiButton-root {
+  border-radius: 12px !important;
+  text-transform: none !important; /* Makes them look more modern */
+}
+
+
+/* global.css */
+
+.MuiDialog-paper {
+  border-radius: 20px !important;
+}

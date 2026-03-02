@@ -61,7 +61,7 @@ const BalanceCard: FC<Props> = ({
     sx={{
       flex: "1 1 300px",
       //   p: 3,
-      borderRadius: 0,
+      borderRadius: "18px",
       minWidth: "250px",
       p: 3,
       display: "flex",

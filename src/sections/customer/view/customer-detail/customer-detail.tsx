@@ -177,6 +177,7 @@ export function CustomerDetails() {
             color="inherit"
             startIcon={<Iconify icon="weui:back-filled" />}
             onClick={() => dispatch(setCustomerId(null))}
+            sx={{ borderRadius: "18px" }}
           >
             Ortga
           </Button>
@@ -198,6 +199,7 @@ export function CustomerDetails() {
           color="inherit"
           startIcon={<Iconify icon="weui:back-filled" />}
           onClick={() => dispatch(setCustomerId(null))}
+          sx={{ borderRadius: "18px" }}
         >
           Ortga
         </Button>
@@ -211,12 +213,12 @@ export function CustomerDetails() {
           />
         </Grid>
         <Grid xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 2 }}>
+          <Paper elevation={3} sx={{ p: 2, borderRadius: "18px" }}>
             <CustomerInfo customer={customer} />
           </Paper>
         </Grid>
         <Grid xs={12} md={6} display="flex" flexDirection="column" gap={3}>
-          <Paper elevation={3} sx={{ p: 2 }}>
+          <Paper elevation={3} sx={{ p: 2, borderRadius: "18px" }}>
             <Typography mb={3} variant="h6">
               Yuklangan hujjatlar
             </Typography>
@@ -230,7 +232,7 @@ export function CustomerDetails() {
                     p: 1.5,
                     border: "1px solid",
                     borderColor: "divider",
-                    borderRadius: 0,
+                    borderRadius: "18px",
                     "&:hover": {
                       borderColor: "primary.main",
                       bgcolor: "action.hover",
@@ -272,7 +274,7 @@ export function CustomerDetails() {
                     p: 1.5,
                     border: "1px solid",
                     borderColor: "divider",
-                    borderRadius: 0,
+                    borderRadius: "18px",
                   }}
                 >
                   <FaPassport size={20} style={{ opacity: 0.3 }} />
@@ -291,7 +293,7 @@ export function CustomerDetails() {
                     p: 1.5,
                     border: "1px solid",
                     borderColor: "divider",
-                    borderRadius: 0,
+                    borderRadius: "18px",
                     "&:hover": {
                       borderColor: "primary.main",
                       bgcolor: "action.hover",
@@ -336,7 +338,7 @@ export function CustomerDetails() {
                     p: 1.5,
                     border: "1px solid",
                     borderColor: "divider",
-                    borderRadius: 0,
+                    borderRadius: "18px",
                   }}
                 >
                   <FaRegFileLines size={20} style={{ opacity: 0.3 }} />
@@ -355,7 +357,7 @@ export function CustomerDetails() {
                     p: 1.5,
                     border: "1px solid",
                     borderColor: "divider",
-                    borderRadius: 0,
+                    borderRadius: "18px",
                     "&:hover": {
                       borderColor: "primary.main",
                       bgcolor: "action.hover",
@@ -397,7 +399,7 @@ export function CustomerDetails() {
                     p: 1.5,
                     border: "1px solid",
                     borderColor: "divider",
-                    borderRadius: 0,
+                    borderRadius: "18px",
                   }}
                 >
                   <TbPhoto size={20} style={{ opacity: 0.3 }} />
@@ -408,11 +410,11 @@ export function CustomerDetails() {
               )}
             </Stack>
           </Paper>
-          <Paper elevation={3} sx={{ p: 2 }}>
+          <Paper elevation={3} sx={{ p: 2, borderRadius: "18px" }}>
             <Typography mb={3} variant="h6">
               Yaqinlashayotgan to‘lovlar
             </Typography>
-            <TableContainer component={Paper} elevation={0}>
+            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: "18px", overflow: "hidden" }}>
               <Table size="small">
                 <TableHead>
                   <TableRow>
@@ -449,8 +451,8 @@ export function CustomerDetails() {
           <Suspense
             fallback={
               <Stack spacing={3}>
-                <Skeleton variant="rounded" width="100%" height={60} />
-                <Skeleton variant="rounded" width="100%" height={60} />
+                <Skeleton variant="rounded" width="100%" height={60} sx={{ borderRadius: "18px" }} />
+                <Skeleton variant="rounded" width="100%" height={60} sx={{ borderRadius: "18px" }} />
               </Stack>
             }
           >
@@ -476,6 +478,9 @@ export function CustomerDetails() {
         open={deleteDialog.open}
         onClose={closeDeleteDialog}
         aria-labelledby="delete-dialog-title"
+        PaperProps={{
+          sx: { borderRadius: "18px" }
+        }}
       >
         <DialogTitle id="delete-dialog-title">Faylni o'chirish</DialogTitle>
         <DialogContent>
@@ -484,10 +489,11 @@ export function CustomerDetails() {
             qilib bo'lmaydi.
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button 
             onClick={closeDeleteDialog} 
             color="inherit" 
+            sx={{ borderRadius: "18px" }}
             {...(isDeleting && { disabled: true })}
           >
             Bekor qilish
@@ -496,6 +502,7 @@ export function CustomerDetails() {
             onClick={confirmDeleteFile} 
             color="error" 
             variant="contained"
+            sx={{ borderRadius: "18px" }}
             {...(isDeleting && { disabled: true })}
           >
             {isDeleting ? "O'chirilmoqda..." : "O'chirish"}

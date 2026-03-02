@@ -152,7 +152,7 @@ export default function AuditLogFilters({
   ).length;
 
   return (
-    <Card sx={{ boxShadow: 1 }}>
+    <Card sx={{ boxShadow: 1, borderRadius:"18px" }}>
       <CardContent sx={{ py: 2, px: 3, "&:last-child": { pb: 2 } ,my: 2 }}>
         <Grid container spacing={2} alignItems="center">
           {/* Search Input */}
@@ -173,21 +173,21 @@ export default function AuditLogFilters({
               }}
             />
           </Grid>
+<Grid item xs={12} sm={3}>
 
-          <Grid item xs={12} sm={3}>
-            <DatePicker
-              label="Sana"
-              value={selectedDate}
-              onChange={handleDateChange}
-              format="DD/MM/YYYY"
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                  size: "small",
-                },
-              }}
-            />
-          </Grid>
+  <DatePicker
+    label="Sana"
+    value={selectedDate}
+    onChange={handleDateChange}
+    format="DD/MM/YYYY"
+    slotProps={{
+      textField: {
+        fullWidth: true,
+        size: "small",
+      },
+    }}
+    />
+</Grid>
 
           <Grid item xs={12} sm={3}>
             <FormControl fullWidth size="small">
@@ -252,6 +252,7 @@ export default function AuditLogFilters({
                   label={`${activeFiltersCount}`}
                   color="default"
                   variant="filled"
+                  sx={{borderRadius: "8px"}}
                 />
               )}
               <Button
@@ -294,6 +295,7 @@ export default function AuditLogFilters({
                   }}
                   color="default"
                   variant="filled"
+                  sx={{ borderRadius: "8px" }}
                 />
               )}
 
@@ -304,6 +306,7 @@ export default function AuditLogFilters({
                   onDelete={() => handleFilterChange("action", undefined)}
                   color="default"
                   variant="filled"
+                  sx={{ borderRadius: "8px" }}
                 />
               )}
 
@@ -314,6 +317,7 @@ export default function AuditLogFilters({
                   onDelete={() => handleFilterChange("search", undefined)}
                   color="default"
                   variant="filled"
+                  sx={{ borderRadius: "8px" }}
                 />
               )}
 
@@ -331,6 +335,7 @@ export default function AuditLogFilters({
                       }
                       color="default"
                       variant="filled"
+                      sx={{ borderRadius: "8px" }}
                     />
                   );
                 })()}

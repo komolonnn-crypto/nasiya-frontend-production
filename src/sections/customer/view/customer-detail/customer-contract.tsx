@@ -79,7 +79,7 @@ const CustomerContract: React.FC<IProps> = ({
           <Paper
             elevation={0}
             sx={{
-              borderRadius: 0,
+              borderRadius: "18px",
               overflow: "hidden",
               border: 1,
               borderColor: "divider",
@@ -114,6 +114,7 @@ const CustomerContract: React.FC<IProps> = ({
                         minWidth: 32,
                         fontSize: "0.75rem",
                         fontWeight: 700,
+                        borderRadius: "18px",
                       }}
                     />
                     <Typography
@@ -131,6 +132,7 @@ const CustomerContract: React.FC<IProps> = ({
                     sx={{
                       width: 100,
                       height: 30,
+                      borderRadius: "12px",
                     }}
                   />
 
@@ -204,7 +206,7 @@ const CustomerContract: React.FC<IProps> = ({
                       gap: 2,
                       p: 1.5,
                       bgcolor: "background.neutral",
-                      borderRadius: 0,
+                      borderRadius: "12px",
                     }}
                   >
                     <Box>
@@ -272,7 +274,7 @@ const CustomerContract: React.FC<IProps> = ({
                       gap: 2,
                       p: 1.5,
                       bgcolor: "background.neutral",
-                      borderRadius: 0,
+                      borderRadius: "12px",
                     }}
                   >
                     <Box>

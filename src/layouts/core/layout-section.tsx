@@ -27,6 +27,7 @@ export function LayoutSection({
   sidebarSection,
 }: LayoutSectionProps) {
   const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
 
   const inputGlobalStyles = (
     <GlobalStyles
@@ -34,6 +35,8 @@ export function LayoutSection({
         body: {
           ...baseVars(theme),
           ...cssVars,
+          // Ensures the scrollbar and body background match the theme
+          backgroundColor: isDark ? "#121212" : "#e5e7eb",
         },
       }}
     />
@@ -43,8 +46,17 @@ export function LayoutSection({
     <>
       {inputGlobalStyles}
 
-      <Box id="root__layout" className={layoutClasses.root} sx={sx ?? {}}>
+      <Box 
+        id="root__layout" 
+        className={layoutClasses.root} 
+        sx={{ 
+          display: 'flex', 
+          minHeight: '100vh', 
+          ...sx 
+        }}
+      >
         {sidebarSection}
+        
         <Box
           display="flex"
           flex="1 1 auto"
@@ -52,15 +64,30 @@ export function LayoutSection({
           className={layoutClasses.hasSidebar}
         >
           {headerSection}
+
+          {/* MAIN CONTENT AREA */}
           <Box
+            component="main"
             sx={{
-               p: 3,
-               minHeight: "100vh",
-              bgcolor: "#e5e7eb",
+              p: { xs: 2, sm: 3 }, // Responsive padding
+              flexGrow: 1,
+              minHeight: "100%",
+              display: 'flex',
+              flexDirection: 'column',
+              
+              // DARK MODE LOGIC:
+              // Light: Your previous #e5e7eb
+              // Dark: A deep neutral dark (#0F1114) that makes your cards "pop"
+              bgcolor: isDark ? "#0F1114" : "#e5e7eb",
+              
+              transition: theme.transitions.create(["background-color"], {
+                duration: theme.transitions.duration.standard,
+              }),
             }}
           >
             {children}
           </Box>
+          
           {footerSection}
         </Box>
       </Box>

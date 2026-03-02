@@ -1,15 +1,14 @@
 import type { CardProps } from "@mui/material/Card";
-import type { ChartOptions } from "@/components/chart"
+import type { ChartOptions } from "@/components/chart";
 
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-import CardHeader from "@mui/material/CardHeader";
 
-import { fNumber } from "@/utils/format-number"
-import { Chart, useChart, ChartLegends } from "@/components/chart"
-import { Typography } from "@mui/material";
-
+import { fNumber } from "@/utils/format-number";
+import { Chart, useChart, ChartLegends } from "@/components/chart";
+import { Box } from "@mui/material";
 
 type Props = CardProps & {
   title?: string;
@@ -31,13 +30,14 @@ export function AnalyticsCurrentVisits({
   ...other
 }: Props) {
   const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
 
   const chartSeries = chart.series.map((item) => item.value);
 
   const chartColors = chart.colors ?? [
     theme.palette.primary.main,
     theme.palette.warning.main,
-    theme.palette.secondary.dark,
+    theme.palette.info.main,
     theme.palette.error.main,
   ];
 
@@ -45,7 +45,10 @@ export function AnalyticsCurrentVisits({
     chart: { sparkline: { enabled: true } },
     colors: chartColors,
     labels: chart.series.map((item) => item.label),
-    stroke: { width: 0 },
+    stroke: { 
+      width: 2, 
+      colors: [isDark ? theme.palette.background.paper : "#ffffff"] 
+    },
     dataLabels: { enabled: true, dropShadow: { enabled: false } },
     tooltip: {
       y: {
@@ -63,35 +66,64 @@ export function AnalyticsCurrentVisits({
       sx={{
         height: "100%",
         p: "1.5rem",
-        bgcolor: "#ffffff",
+        bgcolor: "background.paper",
         borderRadius: "18px",
-        boxShadow: `
-      0 1px 2px rgba(0, 0, 0, 0.02),
-      0 4px 14px rgba(0, 0, 0, 0.03),
-      0 15px 35px rgba(0, 0, 0, 0.05)
-    `,
-        border: "0.5px solid rgba(0, 0, 0, 0.08)",
+        backgroundImage: "none",
+        boxShadow: isDark 
+          ? "0 4px 20px 0 rgba(0,0,0,0.4)" 
+          : "0 1px 2px rgba(0, 0, 0, 0.02), 0 4px 14px rgba(0, 0, 0, 0.03), 0 15px 35px rgba(0, 0, 0, 0.05)",
+        border: `0.5px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0, 0, 0, 0.08)"}`,
         transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+        display: 'flex',
+        flexDirection: 'column',
+        ...other.sx,
       }}
     >
-      {/* <CardHeader title={title} subheader={subheader} /> */}
-    <Typography sx={{textTransform:"uppercase", fontWeight:"fontWeightBold",fontSize:"1.25rem",lineHeight:"1rem",color:"var(--palette-grey-800)"}}>{title}</Typography>
-      
-      <Chart
-        type="pie"
-        series={chartSeries}
-        options={chartOptions}
-        width={{ xs: 240, xl: 260 }}
-        height={{ xs: 240, xl: 260 }}
-        sx={{ my: 6, mx: "auto" }}
-      />
+      <Typography 
+        sx={{ 
+          textTransform: "uppercase", 
+          fontWeight: "900", // Matches your Bar Chart title weight
+          fontSize: "0.75rem", // Matches Bar Chart title size
+          lineHeight: "1rem", 
+          color: "var(--layout-nav-item-color)", // Matches sidebars/header labels
+          mb: 1
+        }}
+      >
+        {title}
+      </Typography>
 
-      <Divider sx={{ borderStyle: "dashed" }} />
+      {subheader && (
+        <Typography variant="caption" sx={{ color: 'text.secondary', mb: 2 }}>
+          {subheader}
+        </Typography>
+      )}
+      
+      <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Chart
+          type="pie"
+          series={chartSeries}
+          options={chartOptions}
+          width={{ xs: 240, xl: 260 }}
+          height={{ xs: 240, xl: 260 }}
+          sx={{ my: 3, mx: "auto" }}
+        />
+      </Box>
+
+      <Divider sx={{ borderStyle: "dashed", my: 2 }} />
 
       <ChartLegends
         {...(chartOptions?.labels && { labels: chartOptions.labels })}
         {...(chartOptions?.colors && { colors: chartOptions.colors })}
-        sx={{ p: 3, justifyContent: "center" }}
+        sx={{ 
+          px: 1, 
+          pb: 1, 
+          justifyContent: "center",
+          '& .MuiTypography-root': {
+            fontSize: '0.75rem',
+            fontWeight: 600,
+            color: 'text.secondary'
+          }
+        }}
       />
     </Card>
   );

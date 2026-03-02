@@ -1,24 +1,21 @@
 import type { RootState } from "@/store";
-import type { SelectChangeEvent } from "@mui/material";
 import type { ChartOptions } from "@/components/chart";
 
 import { useSelector } from "react-redux";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import { Select, MenuItem, FormControl, Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import { ToggleButton, ToggleButtonGroup, Box } from "@mui/material";
 import { useTheme, alpha as hexAlpha } from "@mui/material/styles";
 
 import { useAppDispatch } from "@/hooks/useAppDispatch";
-
 import { setGranularity } from "@/store/slices/dashboardSlice";
 import { getStatistic } from "@/store/actions/dashboardActions";
 
 import { Chart, useChart } from "@/components/chart";
 
-import { ToggleButton, ToggleButtonGroup, Box } from "@mui/material";
-
+type Granularity = "daily" | "monthly" | "yearly";
 
 type ChartType = {
   colors?: string[];
@@ -31,26 +28,30 @@ type ChartType = {
 };
 
 export function AnalyticsWebsiteVisits() {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
   const dispatch = useAppDispatch();
+
   const { statistic, selectedGranularity } = useSelector(
-    (state: RootState) => state.dashboard,
+    (state: RootState) => state.dashboard
   );
 
-  const [localGranularity, setLocalGranularity] = useState(selectedGranularity);
-
-  const selectedStatistic = statistic[localGranularity];
+  const selectedStatistic = statistic[selectedGranularity];
 
   useEffect(() => {
     if (!selectedStatistic) {
-      dispatch(getStatistic(localGranularity));
+      dispatch(getStatistic(selectedGranularity));
     }
-  }, [dispatch, localGranularity, selectedStatistic]);
+  }, [dispatch, selectedGranularity, selectedStatistic]);
 
-  const handleGranularityChange = (event: SelectChangeEvent) => {
-    const value = event.target.value as "daily" | "monthly" | "yearly";
-    setLocalGranularity(value);
+  const handleGranularityChange = (
+    _: React.MouseEvent<HTMLElement>,
+    value: Granularity | null
+  ) => {
+    if (!value) return;
     dispatch(setGranularity(value));
   };
+
   const chart: ChartType = {
     categories: selectedStatistic?.categories || [],
     series: [
@@ -58,17 +59,15 @@ export function AnalyticsWebsiteVisits() {
         name: "To'lov",
         data:
           selectedStatistic?.series?.map((num: number) =>
-            Number(num.toFixed(2)),
+            Number(num.toFixed(2))
           ) || [],
       },
     ],
   };
 
-  const theme = useTheme();
-
+  // Chart bar color: Primary in light, Primary Light or Yellow in dark
   const chartColors = chart.colors ?? [
-    theme.palette.primary.dark,
-    hexAlpha(theme.palette.primary.light, 0.64),
+    isDark ? theme.palette.primary.light : theme.palette.primary.main,
   ];
 
   const chartOptions = useChart({
@@ -96,14 +95,13 @@ export function AnalyticsWebsiteVisits() {
       sx={{
         height: "100%",
         p: "1.5rem",
-        bgcolor: "#ffffff",
+        bgcolor: "background.paper", // Automatically switches color
         borderRadius: "18px",
-        boxShadow: `
-      0 1px 2px rgba(0, 0, 0, 0.02),
-      0 4px 14px rgba(0, 0, 0, 0.03),
-      0 15px 35px rgba(0, 0, 0, 0.05)
-    `,
-        border: "0.5px solid rgba(0, 0, 0, 0.08)",
+        backgroundImage: "none",
+        boxShadow: isDark 
+          ? "0 4px 20px 0 rgba(0,0,0,0.4)" 
+          : "0 1px 2px rgba(0, 0, 0, 0.02), 0 4px 14px rgba(0, 0, 0, 0.03), 0 15px 35px rgba(0, 0, 0, 0.05)",
+        border: `0.5px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0, 0, 0, 0.08)"}`,
         transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
       }}
     >
@@ -127,120 +125,67 @@ export function AnalyticsWebsiteVisits() {
           >
             Oylik tranzaksiyalar
           </Typography>
+
           <Typography
             sx={{
               fontWeight: "700",
               fontSize: "0.875rem",
               lineHeight: "1.25rem",
               mt: "0.25rem",
-              color: "black",
+              color: "text.primary", // Corrected for Dark Mode
             }}
           >
-            To'lovlar dinamikasi (Oxirgi {localGranularity === "daily" ? "30 kun" : localGranularity === "monthly" ? "12 oy" : "5 yil"})
+            To'lovlar dinamikasi (Oxirgi{" "}
+            {selectedGranularity === "daily"
+              ? "30 kun"
+              : selectedGranularity === "monthly"
+              ? "12 oy"
+              : "5 yil"}
+            )
           </Typography>
         </Box>
-        {/* <FormControl
-        fullWidth
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            borderRadius: "14px",
-            background: "rgba(255,255,255,0.7)",
 
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-
-            border: "0.5px solid rgba(0,0,0,0.08)",
-
-            boxShadow: `
-        0 1px 2px rgba(0,0,0,0.02),
-        0 4px 14px rgba(0,0,0,0.03)
-      `,
-
-            transition: "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
-
-            "& fieldset": {
-              border: "none",
-            },
-
-            "&:hover": {
-              background: "rgba(255,255,255,0.9)",
-
-              boxShadow: `
-          0 4px 12px rgba(0,0,0,0.05),
-          0 12px 28px rgba(0,0,0,0.06)
-        `,
-            },
-
-            "&.Mui-focused": {
-              background: "#fff",
-
-              boxShadow: `
-          0 0 0 3px rgba(0,122,255,0.15),
-          0 8px 24px rgba(0,0,0,0.06)
-        `,
-            },
-          },
-
-          "& .MuiSelect-select": {
-            padding: "14px 16px",
-            fontWeight: 500,
-          },
-        }}
-      >
-        <Select
-          value={localGranularity}
-          onChange={handleGranularityChange}
-          displayEmpty
-        >
-          <MenuItem value="daily">Kunlik</MenuItem>
-          <MenuItem value="monthly">Oylik</MenuItem>
-          <MenuItem value="yearly">Yillik</MenuItem>
-        </Select>
-      </FormControl> */}
+        {/* Toggle Container - Matches Header Nav Track */}
         <Box
           sx={{
-            background: "rgba(0,0,0,0.04)", // iOS light background
-            borderRadius: "14px",
+            background: "var(--layout-nav-item-hover-bg)",
+            borderRadius: "12px",
             padding: "4px",
             display: "inline-flex",
           }}
         >
           <ToggleButtonGroup
-            value={localGranularity}
+            value={selectedGranularity}
             exclusive
-            onChange={(e, value) => value && setLocalGranularity(value)}
+            onChange={handleGranularityChange}
             sx={{
               "& .MuiToggleButton-root": {
                 border: "none",
                 borderRadius: "10px",
                 padding: "6px 16px",
                 textTransform: "none",
-                fontWeight: 600,
-                fontSize: "13px",
+                fontWeight: 700,
+                fontSize: "12px",
                 lineHeight: "18px",
-                color: "rgba(0,0,0,0.45)", // inactive text color
-
-                transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
-                cursor: "pointer",
+                color: "var(--layout-nav-item-color)",
+                bgcolor: "transparent",
+                transition: "all 0.2s ease",
 
                 "&:hover": {
-                  color: "#000", // hover color same as active
+                  color: "var(--layout-nav-item-hover-color)",
+                  bgcolor: "rgba(255, 255, 255, 0.04)",
                 },
 
                 "&.Mui-selected": {
-                  fontWeight: "fontWeightSemiBold",
                   bgcolor: "var(--layout-nav-item-active-bg)",
-                  color: "var(--layout-nav-item-active-color)",
-
-                  boxShadow:
-                    "0 3px 8px rgba(0, 0, 0, 0.1), 0 3px 1px rgba(0, 0, 0, 0.04)",
-
-                  border: "0.5px solid rgba(0, 0, 0, 0.04)",
-                  transition: "all 0.2s ease",
-
+                  color: "var(--layout-nav-item-active-color)", // THIS IS YELLOW IN DARK MODE
+                  boxShadow: isDark 
+                    ? "0 4px 12px rgba(0,0,0,0.4)" 
+                    : "0 3px 8px rgba(0, 0, 0, 0.1)",
+                  
                   "&:hover": {
-                    color: "var(--layout-nav-item-active-color)",
                     bgcolor: "var(--layout-nav-item-active-bg)",
+                    color: "var(--layout-nav-item-active-color)",
                   },
                 },
               },
@@ -252,26 +197,30 @@ export function AnalyticsWebsiteVisits() {
           </ToggleButtonGroup>
         </Box>
       </Box>
-      {selectedStatistic && chart.categories && chart.categories.length > 0 ? (
+
+      {selectedStatistic &&
+      chart.categories &&
+      chart.categories.length > 0 ? (
         <Chart
           type="bar"
           series={chart.series}
           options={chartOptions}
           height={364}
-          // sx={{ py: 2.5, pl: 1, pr: 2.5 }}
         />
       ) : (
-        <div
-          style={{
+        <Box
+          sx={{
             height: 364,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            color: "text.secondary",
+            fontSize: "14px"
           }}
         >
           Ma&apos;lumotlar yuklanmoqda...
-        </div>
+        </Box>
       )}
     </Card>
   );
-}
+} 

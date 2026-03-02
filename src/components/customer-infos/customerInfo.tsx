@@ -195,6 +195,11 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
                         </>
                       ),
                     }}
+                    sx={{
+                      '& .MuiInputBase-root': {
+                        borderRadius: '12px',
+                      },
+                    }}
                   />
                 );
               }}
@@ -202,7 +207,7 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
                 setSelectedManager(value);
               }}
               {...(!canEditManager && { disabled: true })}
-              sx={{ flex: 1 }}
+              sx={{ flex: 1 ,borderRadius: "12px" }}
               // ListboxProps={{
               //   style: {
               //     maxHeight: 300, // scroll chiqmasin desangiz buni olib tashlashingiz mumkin

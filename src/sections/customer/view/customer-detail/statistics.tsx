@@ -71,7 +71,7 @@ const Statistics = ({
       sx={{
         flex: "1 1 300px",
         p: 3,
-        borderRadius: 0,
+        borderRadius: "18px",
         display: "flex",
         alignItems: "center",
         gap: 2,

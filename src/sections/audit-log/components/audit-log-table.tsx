@@ -624,10 +624,10 @@ export default function AuditLogTable({
   // };
 
   return (
-    <Card sx={{ boxShadow: 1, margin: 2 }}>
+    <Card sx={{ boxShadow: 1, margin: 2 ,borderRadius: "18px"}}>
       {title && (
         <CardHeader
-          sx={{ py: 0.5, px: 2 }}
+          sx={{ py: 1, px: 3 }}
           title={title}
           titleTypographyProps={{
             variant: "body2",

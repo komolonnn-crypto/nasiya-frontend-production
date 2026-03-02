@@ -119,6 +119,8 @@ export const excelTableContainerStyle: SxProps<Theme> = {
   maxHeight: 'calc(100vh - 280px)',
   overflow: 'auto',
   backgroundColor: 'var(--palette-background-paper)',
+  borderTopLeftRadius: '12px',
+  borderTopRightRadius: '12px',
   // Custom scrollbar
   '&::-webkit-scrollbar': {
     width: '12px',

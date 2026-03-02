@@ -96,12 +96,12 @@ const EmployeeDetails = () => {
         </Grid>
 
         <Grid xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
+          <Paper elevation={3} sx={{ p: 2, height: "100%", borderRadius:"18px" }}>
             <EmployeeInfo employee={employee} />
           </Paper>
         </Grid>
         <Grid xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 2, height: "100%" }}>
+          <Paper elevation={3} sx={{ p: 2, height: "100%" ,borderRadius:"18px"}}>
             <WithdrawAllBalanceCard employee={employee} />
           </Paper>
         </Grid>

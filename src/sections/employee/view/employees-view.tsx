@@ -48,39 +48,19 @@ export function EmployeesView() {
       <Stack spacing={5}>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography
-            // variant="h4"
-            sx={{
-              fontSize: "1.5rem", // text-2xl
-              fontWeight: 900, // font-black
-              color: "#000000", // text-black
-              letterSpacing: "-0.025em", // tracking-tight
-            }}
-            flexGrow={1}
-          >
-            Xodimlar
-          </Typography>
+  sx={{
+    fontSize: "1.5rem",
+    fontWeight: 900,
+    letterSpacing: "-0.025em",
+    flexGrow: 1,
+    color: (theme) => (theme.palette.mode === 'dark' ? 'grey.100' : 'grey.900'),
+  }}
+>
+  Xodimlar
+</Typography>
           <Button
-            variant="contained"
-            color="inherit"
-            sx={{
-              backgroundColor: "#1C1C1E",
-              color: "#FFFFFF",
-              px: "20px", // px-5
-              py: "10px", // py-2.5
-              borderRadius: "14px",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              fontSize: "0.75rem", // text-xs
-              fontWeight: 900, // font-black
-              textTransform: "uppercase",
-              letterSpacing: "0.1em", // tracking-widest
-              transition: "all 0.2s ease",
-              boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)", // shadow-lg + shadow-black/10
-              "&:hover": {
-                backgroundColor: "#000000",
-              },
-            }}
+              variant="contained"
+              color="inherit"
             startIcon={<Iconify icon="mingcute:add-line" width={16} height={16}/>}
             onClick={() => {
               dispatch(

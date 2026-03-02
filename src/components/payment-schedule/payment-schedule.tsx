@@ -294,7 +294,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     <>
       <Paper
         elevation={0}
-        sx={{ p: { xs: 1, sm: 1.5 }, border: 1, borderColor: "divider" }}
+        sx={{ p: { xs: 1, sm: 1.5 }, border: 1, borderColor: "divider", borderRadius: "18px" }}
       >
         <Box
           display="flex"
@@ -371,13 +371,14 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
               color="success"
               size="small"
               onClick={handlePayAll}
+              sx={{ borderRadius: "12px" }}
             >
               Barchasini to'lash ({remainingDebt.toLocaleString()} $)
             </Button>
           )}
         </Box>
 
-        <TableContainer sx={{ maxHeight: "60vh", overflowX: "auto" }}>
+        <TableContainer sx={{ maxHeight: "60vh", overflowX: "auto" ,borderRadius: "12px"}}>
           <Table
             size="small"
             stickyHeader
@@ -1096,7 +1097,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
             mt: 1.5,
             p: 1.5,
             bgcolor: "background.neutral",
-            borderRadius: 0,
+            borderRadius: "12px",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",

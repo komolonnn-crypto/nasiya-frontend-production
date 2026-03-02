@@ -66,7 +66,7 @@ const ContractDetails = () => {
       <Grid container spacing={3} my={2}>
         {/* Mijoz ma'lumotlari */}
         <Grid xs={12}>
-          <Paper elevation={3} sx={{ p: 2 }}>
+          <Paper elevation={3} sx={{ p: 2 ,borderRadius: "18px"}}>
             {contract?.customer && (
               <CustomerInfo customer={contractCustomer} top />
             )}

@@ -292,7 +292,12 @@ const PaymentModal: FC<PaymentModalProps> = ({
   const isExact = Math.abs(difference) <= 0.01;
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth   PaperProps={{
+    sx: {
+      borderRadius: "20px", // Matches your modern UI style
+      padding: "8px",       // Optional: adds some internal spacing
+    },
+  }}>
       <DialogTitle>
         {isPayAll ? "Barcha oylarni to'lash" : "To'lovni tasdiqlash"}
       </DialogTitle>
@@ -309,7 +314,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
             sx={{
               p: 2,
               bgcolor: isPayAll ? "rgba(var(--palette-success-mainChannel) / 0.1)" : "background.neutral",
-              borderRadius: 0,
+              borderRadius: "12px",
             }}
           >
             <Typography variant="caption" color="text.secondary">
@@ -398,7 +403,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
             sx={{
               p: 2,
               bgcolor: "background.neutral",
-              borderRadius: 0,
+              borderRadius: "12px",
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",

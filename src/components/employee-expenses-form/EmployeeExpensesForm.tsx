@@ -55,7 +55,7 @@ export const EmployeeExpensesTable = () => {
     ));
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{borderRadius:"18px"}}>
       <Typography variant="h6" p={2}>
         Xodimlar xarajatlari
       </Typography>
