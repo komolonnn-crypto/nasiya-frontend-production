@@ -1,4 +1,4 @@
-import type { Column } from "@/components/table/types"
+import type { Column } from "@/components/table/types";
 import {
   Chip,
   Box,
@@ -65,7 +65,11 @@ export const columnsCash: Column[] = [
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <MdAccessTime
                 size={16}
-                color={isExpired ? "var(--palette-error-main)" : "var(--palette-warning-main)"}
+                color={
+                  isExpired ?
+                    "var(--palette-error-main)"
+                  : "var(--palette-warning-main)"
+                }
               />
               <span>{day.toString().padStart(2, "0")}</span>
             </Box>
@@ -103,8 +107,7 @@ export const columnsCash: Column[] = [
                 fontSize: "0.75rem",
                 fontWeight: 600,
                 color: "primary.main",
-              }}
-            >
+              }}>
               {row.contractId}
             </Typography>
             <Tooltip title="Nusxa olish" arrow>
@@ -117,8 +120,7 @@ export const columnsCash: Column[] = [
                     bgcolor: "rgba(var(--palette-primary-mainChannel) / 0.08)",
                     color: "primary.main",
                   },
-                }}
-              >
+                }}>
                 <MdContentCopy size={14} />
               </IconButton>
             </Tooltip>
@@ -159,8 +161,7 @@ export const columnsCash: Column[] = [
                 textDecoration: "underline",
                 color: "primary.dark",
               },
-            }}
-          >
+            }}>
             {displayName || "Noma'lum"}
           </Typography>
         );
@@ -190,8 +191,7 @@ export const columnsCash: Column[] = [
             fontSize: "0.75rem",
             fontWeight: 500,
             color: "text.primary",
-          }}
-        >
+          }}>
           {managerName}
         </Typography>
       );
@@ -243,8 +243,8 @@ export const columnsCash: Column[] = [
     id: "amount",
     label: "Summa",
     sortable: true,
-    minWidth: 100,
-    width: 120,
+    minWidth: 110,
+    width: 130,
     renderCell: (row) => {
       // ✅ YANGI: Agar bu eslatma notification bo'lsa, "-" ko'rsatish
       if (row.isReminderNotification) {
@@ -257,23 +257,52 @@ export const columnsCash: Column[] = [
 
       const isRemainingPayment = !!row.linkedPaymentId;
 
-      const displayAmount = isRemainingPayment
-        ? row.actualAmount || 0
+      const displayAmount =
+        isRemainingPayment ?
+          row.actualAmount || 0
         : row.actualAmount || row.amount || 0;
 
+      // ✅ To'lov turi label va rangi
+      const paymentTypeConfig: Record<string, { label: string; color: any }> = {
+        initial: { label: "Boshlang'ich", color: "info" },
+        monthly: { label: "Oylik", color: "default" },
+        extra: { label: "Qo'shimcha", color: "secondary" },
+      };
+      const ptConfig =
+        row.paymentType ?
+          paymentTypeConfig[row.paymentType] || {
+            label: row.paymentType,
+            color: "default",
+          }
+        : null;
+
       return (
-        <Stack direction="column" spacing={0.5}>
+        <Stack direction="column" spacing={0.3}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Typography
               sx={{
                 fontWeight: 700,
                 fontSize: "0.85rem",
                 color: isRemainingPayment ? "warning.dark" : "success.dark",
-              }}
-            >
+              }}>
               ${displayAmount?.toLocaleString() || 0}
             </Typography>
           </Box>
+          {/* ✅ To'lov turi chip — har doim ko'rsatiladi */}
+          {ptConfig && (
+            <Chip
+              label={ptConfig.label}
+              size="small"
+              color={ptConfig.color}
+              variant={row.paymentType === "initial" ? "filled" : "outlined"}
+              sx={{
+                fontSize: "0.6rem",
+                height: "18px",
+                fontWeight: 600,
+                width: "fit-content",
+              }}
+            />
+          )}
           {isRemainingPayment && (
             <Chip
               label="QARZ"
@@ -375,16 +404,21 @@ export const columnsCash: Column[] = [
                 display: "flex",
                 alignItems: "center",
                 gap: 0.75,
-              }}
-            >
-              <MdAccessTime size={16} color={isPast ? "var(--palette-error-main)" : "var(--palette-text-secondary)"} />
+              }}>
+              <MdAccessTime
+                size={16}
+                color={
+                  isPast ?
+                    "var(--palette-error-main)"
+                  : "var(--palette-text-secondary)"
+                }
+              />
               <Typography
                 sx={{
                   fontSize: "0.75rem",
                   fontWeight: 500,
                   color: isPast ? "error.main" : "text.primary",
-                }}
-              >
+                }}>
                 {date.toLocaleDateString("uz-UZ")}
               </Typography>
             </Box>
@@ -428,12 +462,11 @@ export const columnsCash: Column[] = [
         return (
           <Tooltip
             title={
-              isExpired
-                ? "Muddati o'tgan eslatma. Keyingi tungi 00:00 da avtomatik o'chiriladi."
-                : "Bu eslatma notification, to'lov emas. Faqat ma'lumot uchun ko'rsatilmoqda."
+              isExpired ?
+                "Muddati o'tgan eslatma. Keyingi tungi 00:00 da avtomatik o'chiriladi."
+              : "Bu eslatma notification, to'lov emas. Faqat ma'lumot uchun ko'rsatilmoqda."
             }
-            arrow
-          >
+            arrow>
             <Chip
               icon={<MdAccessTime size={16} />}
               label={isExpired ? "Muddati o'tdi" : "Eslatma"}
@@ -510,7 +543,7 @@ export const columnsCash: Column[] = [
     minWidth: 50,
     width: 60,
     renderCell: (row, _onCustomerClick, onNotesClick) => {
-      // ✅ Eslatma uchun ham oddiy icon
+      // ✅ Eslatma uchun ham oddiy ikonka
       if (row.isReminderNotification && row.reminderComment) {
         // ✅ Muddati o'tgan eslatmani tekshirish
         const paymentDate = new Date(row.date);
@@ -532,11 +565,13 @@ export const columnsCash: Column[] = [
               sx={{
                 color: isExpired ? "error.main" : "warning.main",
                 "&:hover": {
-                  bgcolor: isExpired ? "rgba(var(--palette-error-mainChannel) / 0.08)" : "rgba(var(--palette-warning-mainChannel) / 0.08)",
+                  bgcolor:
+                    isExpired ?
+                      "rgba(var(--palette-error-mainChannel) / 0.08)"
+                    : "rgba(var(--palette-warning-mainChannel) / 0.08)",
                 },
                 p: 1,
-              }}
-            >
+              }}>
               <MdStickyNote2 size={22} />
             </IconButton>
           </Tooltip>
@@ -561,11 +596,13 @@ export const columnsCash: Column[] = [
               sx={{
                 color: hasNotes ? "primary.main" : "text.disabled",
                 "&:hover": {
-                  bgcolor: hasNotes ? "rgba(var(--palette-primary-mainChannel) / 0.08)" : "transparent",
+                  bgcolor:
+                    hasNotes ?
+                      "rgba(var(--palette-primary-mainChannel) / 0.08)"
+                    : "transparent",
                 },
                 p: 1,
-              }}
-            >
+              }}>
               <MdStickyNote2 size={22} />
             </IconButton>
           </Tooltip>
@@ -607,23 +644,20 @@ export const columnsCash: Column[] = [
         return (
           <Tooltip
             title={`Qolgan $${row.remainingAmount.toFixed(2)} ni to'lash sanasi`}
-            arrow
-          >
+            arrow>
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
                 gap: 1,
                 whiteSpace: "nowrap",
-              }}
-            >
+              }}>
               <Box
                 sx={{
                   fontWeight: 600,
                   fontSize: "0.7rem",
                   color: "text.primary",
-                }}
-              >
+                }}>
                 {formattedDate}
               </Box>
               <Box
@@ -631,8 +665,7 @@ export const columnsCash: Column[] = [
                   fontSize: "0.65rem",
                   color: "text.secondary",
                   fontWeight: 500,
-                }}
-              >
+                }}>
                 {formattedTime}
               </Box>
             </Box>

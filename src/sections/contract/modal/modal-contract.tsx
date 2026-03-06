@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import type { RootState } from "@/store"
-import type { ICustomer } from "@/types/customer"
-import type { IAddContract, IEditContract } from "@/types/contract"
-
-import { useSelector } from "react-redux";
-import { FaChevronDown } from "react-icons/fa";
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { MdCancel, MdDelete, MdCheckCircle } from "react-icons/md";
+import { FaChevronDown } from "react-icons/fa";
+import { useSelector } from "react-redux";
+
+import type { RootState } from "@/store";
+import type { ICustomer } from "@/types/customer";
+import type { IAddContract, IEditContract } from "@/types/contract";
 
 import Grid from "@mui/material/Unstable_Grid2";
 import {
@@ -37,21 +37,17 @@ import {
   AccordionSummary,
   FormControlLabel,
   createFilterOptions,
-  ToggleButton,
-  ToggleButtonGroup,
 } from "@mui/material";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { formatNumber } from "@/utils/format-number";
 
-import { formatNumber } from "@/utils/format-number"
+import { setCustomer } from "@/store/slices/customerSlice";
+import { setModal, closeModal } from "@/store/slices/modalSlice";
+import { getSelectCustomers } from "@/store/actions/customerActions";
+import { addContract, updateContract } from "@/store/actions/contractActions";
 
-import { grey } from "@/theme/core"
-import { setCustomer } from "@/store/slices/customerSlice"
-import { setModal, closeModal } from "@/store/slices/modalSlice"
-import { getSelectCustomers } from "@/store/actions/customerActions"
-import { addContract, updateContract } from "@/store/actions/contractActions"
-
-import { Iconify } from "@/components/iconify"
+import { Iconify } from "@/components/iconify";
 
 interface IPayment {
   date: string;
@@ -81,7 +77,6 @@ interface IForm {
   startDate: string;
   paymentDeadline?: string;
   payments?: IPayment[];
-  currency: "USD" | "UZS"; // ✅ YANGI: Pul birligi
 }
 
 const ModalContract = () => {
@@ -89,7 +84,7 @@ const ModalContract = () => {
   const [isTouched, setIsTouched] = useState(true);
   const { contractModal } = useSelector((state: RootState) => state.modal);
   const { selectCustomers, selectCustomer, isLoading, customer } = useSelector(
-    (state: RootState) => state.customer
+    (state: RootState) => state.customer,
   );
   const contract = contractModal || {};
   const theme = useTheme();
@@ -128,7 +123,6 @@ const ModalContract = () => {
     startDate: now.toISOString().split("T")[0]!,
     paymentDeadline: defaultEndDate.toISOString().split("T")[0]!,
     payments: [],
-    currency: "USD", // ✅ YANGI: Default pul birligi
   };
 
   const [formValues, setFormValues] = useState<IForm>(defaultFormValues);
@@ -174,7 +168,7 @@ const ModalContract = () => {
 
       setFormValues((prev) => ({ ...prev, [name]: numValue }));
     },
-    []
+    [],
   );
 
   const handleClose = useCallback(() => {
@@ -218,7 +212,7 @@ const ModalContract = () => {
 
       handleClose();
     },
-    [formValues, contract, contractModal?.type, dispatch, handleClose]
+    [formValues, contract, contractModal?.type, dispatch, handleClose],
   );
 
   const handleCustomerFocus = useCallback(() => {
@@ -238,7 +232,7 @@ const ModalContract = () => {
       formValues.notes.trim() !== "" &&
       formValues.price >= formValues.originalPrice &&
       (contractModal?.type === "edit" || !isTouched),
-    [formValues, isTouched, contractModal?.type]
+    [formValues, isTouched, contractModal?.type],
   );
 
   useEffect(() => {
@@ -254,7 +248,9 @@ const ModalContract = () => {
         price: contract.data?.price || 0,
         initialPayment: contract.data?.initialPayment || 0,
         percentage:
-          contract.data?.percentage || contract.data?.customer?.['percent'] || 30,
+          contract.data?.percentage ||
+          contract.data?.customer?.["percent"] ||
+          30,
         period: contract.data?.period || 12,
         initialPaymentDueDate:
           contract.data?.initialPaymentDueDate.split("T")[0] || "",
@@ -268,7 +264,6 @@ const ModalContract = () => {
         remainingAmount: 0,
         profitPrice: 0,
         startDate: contract.data?.startDate.toString().split("T")[0] || "",
-        currency: (contract.data?.currency as "USD" | "UZS") || "USD",
       });
     } else {
       setFormValues(defaultFormValues);
@@ -307,7 +302,7 @@ const ModalContract = () => {
   }, [totalPrice, remainingAmount, profitPrice]);
 
   useEffect(() => {
-    const percentage = customer?.['percent'] || 30;
+    const percentage = customer?.["percent"] || 30;
     setFormValues((prev) => ({
       ...prev,
       percentage,
@@ -323,12 +318,11 @@ const ModalContract = () => {
       }}
       maxWidth="xl"
       fullWidth
-      fullScreen={fullScreen}
-    >
+      fullScreen={fullScreen}>
       <DialogTitle>
-        {contractModal?.type === "edit"
-          ? "Shartnomani Tahrirlash"
-          : "Yangi Mahsulot Shartnomasi"}
+        {contractModal?.type === "edit" ?
+          "Shartnomani Tahrirlash"
+        : "Yangi Mahsulot Shartnomasi"}
       </DialogTitle>
       <DialogContent sx={{ p: { xs: 1, md: 2 } }}>
         <Grid container spacing={1}>
@@ -336,8 +330,7 @@ const ModalContract = () => {
             <Box
               display="flex"
               gap={3}
-              flexDirection={{ xs: "column", sm: "row" }}
-            >
+              flexDirection={{ xs: "column", sm: "row" }}>
               <Autocomplete
                 onFocus={handleCustomerFocus}
                 options={selectCustomers}
@@ -351,8 +344,12 @@ const ModalContract = () => {
                 noOptionsText="Mijozlar topilmadi"
                 renderInput={(params) => {
                   const { size, InputLabelProps, ...restParams } = params;
-                  const { className: labelClassName, style: labelStyle, ...restLabelProps } = InputLabelProps || {};
-                  
+                  const {
+                    className: labelClassName,
+                    style: labelStyle,
+                    ...restLabelProps
+                  } = InputLabelProps || {};
+
                   return (
                     <TextField
                       {...restParams}
@@ -367,9 +364,9 @@ const ModalContract = () => {
                         ...params.InputProps,
                         endAdornment: (
                           <>
-                            {isLoading ? (
+                            {isLoading ?
                               <CircularProgress color="inherit" size={20} />
-                            ) : null}
+                            : null}
                             {params.InputProps.endAdornment}
                           </>
                         ),
@@ -400,10 +397,9 @@ const ModalContract = () => {
                         setModal({
                           modal: "customerModal",
                           data: { type: "add", data: undefined },
-                        })
+                        }),
                       );
-                    }}
-                  >
+                    }}>
                     Qo&apos;shish
                   </Button>
                 </Tooltip>
@@ -416,8 +412,7 @@ const ModalContract = () => {
                 <Stack
                   direction="row"
                   justifyContent="space-between"
-                  alignItems="center"
-                >
+                  alignItems="center">
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar
                       sx={{ width: 50, height: 50 }}
@@ -426,19 +421,18 @@ const ModalContract = () => {
                     <Typography variant="h6" sx={{ cursor: "pointer" }}>
                       {customer?.fullName}
                     </Typography>
-                    {customer?.isActive ? (
+                    {customer?.isActive ?
                       <Tooltip title="Tasdiqlangan mijoz" placement="top">
                         <Typography>
                           <MdCheckCircle color="var(--palette-success-main)" />
                         </Typography>
                       </Tooltip>
-                    ) : (
-                      <Tooltip title="Hali tasdiqlanmagan" placement="top">
+                    : <Tooltip title="Hali tasdiqlanmagan" placement="top">
                         <Typography>
                           <MdCancel color="var(--palette-error-main)" />
                         </Typography>
                       </Tooltip>
-                    )}
+                    }
                   </Stack>
                   <IconButton
                     aria-label="delete"
@@ -448,10 +442,9 @@ const ModalContract = () => {
                         setModal({
                           modal: "customerModal",
                           data: { type: "edit", data: customer },
-                        })
+                        }),
                       );
-                    }}
-                  >
+                    }}>
                     <Iconify icon="solar:pen-bold" />
                   </IconButton>
                 </Stack>
@@ -477,9 +470,9 @@ const ModalContract = () => {
                       <ListItemText
                         primary="Tug'ilgan sana"
                         secondary={
-                          customer?.birthDate
-                            ? new Date(customer?.birthDate).toLocaleDateString()
-                            : "___"
+                          customer?.birthDate ?
+                            new Date(customer?.birthDate).toLocaleDateString()
+                          : "___"
                         }
                       />
                     </ListItem>
@@ -518,7 +511,7 @@ const ModalContract = () => {
             <Box p={2}>
               {customer && (
                 <Grid container spacing={1}>
-                  <Grid xs={12} md={5}>
+                  <Grid xs={12} md={6}>
                     <TextField
                       value={formValues.customId}
                       onChange={handleChange}
@@ -531,7 +524,7 @@ const ModalContract = () => {
                       helperText="Masalan: 26T00001"
                     />
                   </Grid>
-                  <Grid xs={12} md={5}>
+                  <Grid xs={12} md={6}>
                     <TextField
                       value={formValues.productName}
                       onChange={handleChange}
@@ -543,29 +536,6 @@ const ModalContract = () => {
                       label="Mahsulot nomi"
                       fullWidth
                     />
-                  </Grid>
-                  <Grid xs={12} md={2}>
-                    <Box sx={{ mt: 1, mb: 0.5 }}>
-                      <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: "block" }}>
-                        Pul birligi
-                      </Typography>
-                      <ToggleButtonGroup
-                        value={formValues.currency}
-                        exclusive
-                        onChange={(_e, val) => {
-                          if (val) setFormValues((prev) => ({ ...prev, currency: val }));
-                        }}
-                        size="small"
-                        fullWidth
-                      >
-                        <ToggleButton value="USD" sx={{ fontWeight: 700, fontSize: "0.75rem" }}>
-                          $ USD
-                        </ToggleButton>
-                        <ToggleButton value="UZS" sx={{ fontWeight: 700, fontSize: "0.75rem" }}>
-                          UZS
-                        </ToggleButton>
-                      </ToggleButtonGroup>
-                    </Box>
                   </Grid>
                   <Grid xs={6} md={4}>
                     <TextField
@@ -601,11 +571,10 @@ const ModalContract = () => {
                         handleNumberChange(e);
                         setIsTouched(true);
                       }}
-                      required
                       margin="dense"
                       id="initialPayment"
                       name="initialPayment"
-                      label={`Oldindan to'lov`}
+                      label="Oldindan to'lov (ixtiyoriy)"
                       fullWidth
                     />
                   </Grid>
@@ -675,8 +644,7 @@ const ModalContract = () => {
                       <Grid container spacing={1}>
                         <Grid
                           xs={6}
-                          sx={{ display: "flex", alignItems: "center" }}
-                        >
+                          sx={{ display: "flex", alignItems: "center" }}>
                           <Button
                             variant="contained"
                             color="primary"
@@ -686,8 +654,7 @@ const ModalContract = () => {
                             }}
                             // disabled={!isButtonValid}
                             fullWidth
-                            size="large"
-                          >
+                            size="large">
                             Oylik to&apos;lov
                           </Button>
                         </Grid>
@@ -733,8 +700,7 @@ const ModalContract = () => {
                         mt: 2,
                         bgcolor: "background.neutral",
                         borderRadius: 0,
-                      }}
-                    >
+                      }}>
                       <AccordionSummary expandIcon={<FaChevronDown />}>
                         <Typography variant="subtitle1">
                           Qo&lsquo;shimcha ma&#39;lumotlar
@@ -848,7 +814,9 @@ const ModalContract = () => {
                         shrink: true,
                       }}
                       aria-readonly
-                      {...(!(formValues.payments && formValues.payments.length > 0) && { disabled: true })}
+                      {...(!(
+                        formValues.payments && formValues.payments.length > 0
+                      ) && { disabled: true })}
                     />
                   </Grid>
                   <Grid xs={6}>
@@ -935,8 +903,7 @@ const ModalContract = () => {
                           const payments = [...(formValues.payments || [])];
                           payments.splice(idx, 1); // indexdagi elementni olib tashlash
                           setFormValues((prev) => ({ ...prev, payments }));
-                        }}
-                      >
+                        }}>
                         <MdDelete />
                       </IconButton>
                     </Grid>
@@ -951,22 +918,17 @@ const ModalContract = () => {
         <Button color="error" onClick={handleClose}>
           Bekor qilish
         </Button>
-        {contractModal.type === "edit" ? (
+        {contractModal.type === "edit" ?
           <Button
             color="success"
             type="submit"
-            {...((!isFormValid && customer?.isActive) && { disabled: true })}
-          >
+            {...(!isFormValid && customer?.isActive && { disabled: true })}>
             Tasdiqlash
           </Button>
-        ) : (
-          <Button 
-            type="submit" 
-            {...(!isFormValid && { disabled: true })}
-          >
+        : <Button type="submit" {...(!isFormValid && { disabled: true })}>
             Saqlash
           </Button>
-        )}
+        }
       </DialogActions>
     </Dialog>
   );

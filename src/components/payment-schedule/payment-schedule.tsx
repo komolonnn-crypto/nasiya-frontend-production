@@ -198,6 +198,15 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     }
   };
 
+  // ✅ Boshlang'ich to'lov recordlari — component darajasida hisoblash
+  const paidInitialRecord = payments.find(
+    (p) => p.paymentType === "initial" && p.isPaid,
+  );
+  const pendingInitialRecord = payments.find(
+    (p) => p.paymentType === "initial" && !p.isPaid && p.status === "PENDING",
+  );
+  const hasAnyInitialPayment = !!paidInitialRecord || !!pendingInitialRecord;
+
   const generateSchedule = (): PaymentScheduleItem[] => {
     const schedule: PaymentScheduleItem[] = [];
     const start = new Date(startDate);
@@ -207,24 +216,26 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
       return schedule;
     }
 
-    const initialPaymentRecord = payments.find(
-      (p) => p.paymentType === "initial" && p.isPaid,
-    );
-    const isInitialPaid = !!initialPaymentRecord;
+    // ✅ Initial row HAR DOIM ko'rsatiladi:
+    // - PENDING yoki PAID bo'lsa → haqiqiy summa
+    // - Admin belgilagan bo'lsa → o'sha summa
+    // - Hech narsa yo'q → 0 (UI'da "Mavjud emas" ko'rsatiladi)
+    const isInitialPaid = !!paidInitialRecord;
+    const initialDate = start;
+    const rowAmount =
+      paidInitialRecord?.amount ||
+      pendingInitialRecord?.actualAmount ||
+      pendingInitialRecord?.amount ||
+      initialPayment ||
+      0;
 
-    if (initialPayment > 0) {
-      // ✅ TUZATILDI: Boshlang'ich to'lov sanasi = startDate (shartnoma boshlanish sanasi)
-      // initialPaymentDueDate emas - bu har oy to'lanadigan kun
-      const initialDate = start; // startDate ishlatish
-
-      schedule.push({
-        month: 0,
-        date: format(initialDate, "yyyy-MM-dd"),
-        amount: initialPayment,
-        isPaid: isInitialPaid,
-        isInitial: true,
-      });
-    }
+    schedule.push({
+      month: 0,
+      date: format(initialDate, "yyyy-MM-dd"),
+      amount: rowAmount,
+      isPaid: isInitialPaid,
+      isInitial: true,
+    });
     const monthlyPayments = payments
       .filter((p) => p.paymentType !== "initial" && p.isPaid)
       .sort((a, b) => {
@@ -686,18 +697,24 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                     <React.Fragment key={`payment-${item.month}`}>
                       <TableRow
                         sx={{
-                          bgcolor: item.isPaid
-                            ? "rgba(var(--palette-success-mainChannel) / 0.1)"
-                            : isPast && !item.isPaid
-                              ? "rgba(var(--palette-error-mainChannel) / 0.1)"
-                              : "inherit",
+                          bgcolor:
+                            item.isPaid ?
+                              "rgba(var(--palette-success-mainChannel) / 0.1)"
+                            : item.isInitial && pendingInitialRecord ?
+                              "rgba(var(--palette-warning-mainChannel) / 0.08)"
+                            : isPast && !item.isPaid ?
+                              "rgba(var(--palette-error-mainChannel) / 0.1)"
+                            : "inherit",
                           borderBottom: "1px solid rgba(var(--palette-grey-500Channel) / 0.2)",
                           "&:hover": {
-                            bgcolor: item.isPaid
-                              ? "rgba(var(--palette-success-mainChannel) / 0.18)"
-                              : isPast && !item.isPaid
-                                ? "rgba(var(--palette-error-mainChannel) / 0.18)"
-                                : "background.neutral",
+                            bgcolor:
+                              item.isPaid ?
+                                "rgba(var(--palette-success-mainChannel) / 0.18)"
+                              : item.isInitial && pendingInitialRecord ?
+                                "rgba(var(--palette-warning-mainChannel) / 0.14)"
+                              : isPast && !item.isPaid ?
+                                "rgba(var(--palette-error-mainChannel) / 0.18)"
+                              : "background.neutral",
                           },
                           "&:last-child": {
                             borderBottom: "1px solid rgba(var(--palette-grey-500Channel) / 0.2)",
@@ -762,30 +779,32 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                             borderBottom: "1px solid rgba(var(--palette-grey-500Channel) / 0.2)",
                           }}
                         >
-                          {item.isPaid ? (
+                          {item.isInitial && pendingInitialRecord && !item.isPaid ? (
+                            // PENDING initial: yuborilgan sanani ko'rsatish
+                            <Typography variant="body2" fontSize="0.75rem" color="warning.main">
+                              {pendingInitialRecord.date
+                                ? format(new Date(pendingInitialRecord.date), "dd.MM.yyyy")
+                                : "—"}
+                            </Typography>
+                          ) : item.isPaid ? (
                             <Typography
                               variant="body2"
                               fontSize="0.75rem"
-                              color={
-                                delayDays > 0 ? "error.main" : "success.main"
-                              }
+                              color={delayDays > 0 ? "error.main" : "success.main"}
                             >
-                              {item.isInitial
-                                ? format(new Date(item.date), "dd.MM.yyyy")
-                                : actualPayment && actualPayment.confirmedAt
-                                  ? format(
-                                      new Date(actualPayment.confirmedAt),
-                                      "dd.MM.yyyy",
-                                    )
-                                  : actualPayment
-                                    ? format(
-                                        new Date(actualPayment.date),
-                                        "dd.MM.yyyy",
-                                      )
-                                    : format(new Date(item.date), "dd.MM.yyyy")}
-                              {!item.isInitial &&
-                                delayDays > 0 &&
-                                ` (+${delayDays})`}
+                              {item.isInitial ?
+                                // PAID initial: tasdiqlangan sana + soat
+                                paidInitialRecord?.confirmedAt ?
+                                  format(new Date(paidInitialRecord.confirmedAt), "dd.MM.yyyy HH:mm")
+                                : paidInitialRecord?.date ?
+                                  format(new Date(paidInitialRecord.date), "dd.MM.yyyy")
+                                : "—"
+                              : actualPayment && actualPayment.confirmedAt ?
+                                format(new Date(actualPayment.confirmedAt), "dd.MM.yyyy")
+                              : actualPayment ?
+                                format(new Date(actualPayment.date), "dd.MM.yyyy")
+                              : format(new Date(item.date), "dd.MM.yyyy")}
+                              {!item.isInitial && delayDays > 0 && ` (+${delayDays})`}
                             </Typography>
                           ) : (
                             <Typography variant="body2" color="text.disabled">
@@ -794,7 +813,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           )}
                         </TableCell>
 
-                        {/* Summa - Oylik to'lov (har doim bir xil) */}
+                        {/* Summa */}
                         <TableCell
                           align="right"
                           sx={{
@@ -807,8 +826,15 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                             variant="body2"
                             fontWeight="medium"
                             fontSize={{ xs: "0.688rem", sm: "0.75rem" }}
+                            color={
+                              item.isInitial && !hasAnyInitialPayment && !initialPayment
+                                ? "text.disabled"
+                                : "inherit"
+                            }
                           >
-                            {item.amount.toLocaleString()} $
+                            {item.isInitial && !hasAnyInitialPayment && !initialPayment
+                              ? "—"
+                              : `${item.amount.toLocaleString()} $`}
                           </Typography>
                         </TableCell>
 
@@ -821,7 +847,17 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                             borderBottom: "1px solid rgba(var(--palette-grey-500Channel) / 0.2)",
                           }}
                         >
-                          {item.isPaid ? (
+                          {item.isInitial && !item.isPaid && pendingInitialRecord ? (
+                            // PENDING initial — yuborilgan summa
+                            <Box display="flex" flexDirection="column" alignItems="flex-end" gap={0.2}>
+                              <Typography variant="body2" fontWeight="medium" color="warning.main" fontSize="0.813rem">
+                                {(pendingInitialRecord.actualAmount || pendingInitialRecord.amount || 0).toLocaleString()} $
+                              </Typography>
+                              <Typography variant="caption" color="warning.dark" fontSize="0.6rem" fontWeight={600}>
+                                (kutilmoqda)
+                              </Typography>
+                            </Box>
+                          ) : item.isPaid ? (
                             <Box
                               display="flex"
                               flexDirection="column"
@@ -867,24 +903,41 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                             borderBottom: "1px solid rgba(var(--palette-grey-500Channel) / 0.2)",
                           }}
                         >
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontSize: { xs: "0.688rem", sm: "0.75rem" },
-                              fontWeight: 600,
-                              color: item.isPaid
-                                ? "success.main"
-                                : isPast
-                                  ? "error.main"
-                                  : "text.secondary",
-                            }}
-                          >
-                            {item.isPaid
-                              ? "Paid"
-                              : isPast
-                                ? "Kechikkan"
-                                : "Kutilmoqda"}
-                          </Typography>
+                          {item.isInitial ? (
+                            // ✅ Initial to'lov uchun aniq holat
+                            item.isPaid ? (
+                              <Typography variant="body2" sx={{ fontSize: "0.75rem", fontWeight: 700, color: "success.main" }}>
+                                To'landi
+                              </Typography>
+                            ) : pendingInitialRecord ? (
+                              <Typography variant="body2" sx={{ fontSize: { xs: "0.6rem", sm: "0.7rem" }, fontWeight: 700, color: "warning.dark" }}>
+                                Kassada kutilmoqda
+                              </Typography>
+                            ) : !hasAnyInitialPayment && !initialPayment ? (
+                              <Typography variant="body2" sx={{ fontSize: "0.688rem", fontWeight: 500, color: "text.disabled", fontStyle: "italic" }}>
+                                Mavjud emas
+                              </Typography>
+                            ) : (
+                              <Typography variant="body2" sx={{ fontSize: "0.688rem", fontWeight: 600, color: "error.main" }}>
+                                To'lanmagan
+                              </Typography>
+                            )
+                          ) : (
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontSize: { xs: "0.688rem", sm: "0.75rem" },
+                                fontWeight: 600,
+                                color: item.isPaid
+                                  ? "success.main"
+                                  : isPast
+                                    ? "error.main"
+                                    : "text.secondary",
+                              }}
+                            >
+                              {item.isPaid ? "To'landi" : isPast ? "Kechikkan" : "Kutilmoqda"}
+                            </Typography>
+                          )}
                         </TableCell>
 
                         {/* Amal */}
@@ -897,7 +950,20 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               borderBottom: "1px solid rgba(var(--palette-grey-500Channel) / 0.2)",
                             }}
                           >
-                            {!item.isPaid ? (
+                            {/* ✅ Initial to'lov uchun alohida amal logikasi */}
+                            {item.isInitial && !item.isPaid ? (
+                              pendingInitialRecord ? (
+                                // PENDING: kassada kutilmoqda, hech qanday tugma yo'q
+                                <Typography variant="caption" color="warning.dark" sx={{ fontSize: "0.65rem", fontWeight: 600 }}>
+                                  Kassa kutmoqda
+                                </Typography>
+                              ) : (
+                                // Mavjud emas yoki to'lanmagan: tugma yo'q
+                                <Typography variant="caption" color="text.disabled" sx={{ fontSize: "0.65rem" }}>
+                                  —
+                                </Typography>
+                              )
+                            ) : !item.isInitial && !item.isPaid ? (
                               <Typography
                                 variant="body2"
                                 onClick={() => handlePayment(item.amount)}
@@ -910,9 +976,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                   alignItems: "center",
                                   justifyContent: "center",
                                   gap: 0.5,
-                                  "&:hover": {
-                                    opacity: 0.8,
-                                  },
+                                  "&:hover": { opacity: 0.8 },
                                 }}
                               >
                                 <Iconify icon="mdi:cash" width={16} />
@@ -979,7 +1043,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           </TableCell>
                         )}
 
-                        {/* ✅ YANGI: Izoh icon */}
+                        {/* ✅ Izoh icon */}
                         <TableCell
                           align="center"
                           sx={{
@@ -989,10 +1053,18 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           }}
                         >
                           {(() => {
-                            const noteText = actualPayment?.notes
-                              ? typeof actualPayment.notes === "string"
-                                ? actualPayment.notes
-                                : actualPayment.notes?.text || ""
+                            // PENDING initial uchun ham notes ko'rsat
+                            const noteSource =
+                              item.isInitial && !item.isPaid && pendingInitialRecord
+                                ? pendingInitialRecord.notes
+                                : item.isInitial && item.isPaid && paidInitialRecord
+                                  ? paidInitialRecord.notes
+                                  : actualPayment?.notes;
+
+                            const noteText = noteSource
+                              ? typeof noteSource === "string"
+                                ? noteSource
+                                : noteSource?.text || ""
                               : "";
                             return noteText ? (
                               <Tooltip title="Izohni ko'rish">
