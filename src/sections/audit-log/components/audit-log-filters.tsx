@@ -174,21 +174,48 @@ export default function AuditLogFilters({
             />
           </Grid>
 <Grid item xs={12} sm={3}>
-
-  <DatePicker
+  <TextField
+    fullWidth
+    size="small"
     label="Sana"
-    value={selectedDate}
-    onChange={handleDateChange}
-    format="DD/MM/YYYY"
-    slotProps={{
-      textField: {
-        fullWidth: true,
-        size: "small",
+    type="date"
+    value={localFilters.date || ""}
+    onChange={(e) => handleFilterChange("date", e.target.value)}
+    InputLabelProps={{
+      shrink: true,
+    }}
+    InputProps={{
+      // 1. Ikonkani o'ng tomonga (endAdornment) qo'yamiz
+      endAdornment: (
+        <InputAdornment position="end">
+          <Iconify icon="eva:calendar-fill" width={20} />
+        </InputAdornment>
+      ),
+    }}
+    sx={{
+      // 2. Brauzerning standart (ko'k) ikonkasini yashirish va o'rniga biznikini ishlashini ta'minlash
+      "& input::-webkit-calendar-picker-indicator": {
+        opacity: 0, // Standart ikonkani ko'rinmas qilamiz
+        position: 'absolute',
+        right: 0,
+        width: '40px',
+        height: '100%',
+        cursor: 'pointer',
+        zIndex: 1,
+      },
+      // 3. Radius va Dizayn
+      "& .MuiOutlinedInput-root": {
+        borderRadius: "12px", 
+        "& fieldset": {
+          borderRadius: "12px",
+        },
+        "& .MuiInputAdornment-root": {
+          pointerEvents: 'none', // Ikonka bosilishga xalaqit bermasligi uchun
+        }
       },
     }}
-    />
+  />
 </Grid>
-
           <Grid item xs={12} sm={3}>
             <FormControl fullWidth size="small">
               <InputLabel>Harakat</InputLabel>

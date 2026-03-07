@@ -51,7 +51,7 @@ const ContractDetails = () => {
       <Box
         display="flex"
         alignItems="center"
-        mb={5}
+        // mb={5}
         justifyContent="space-between"
       >
         <Button

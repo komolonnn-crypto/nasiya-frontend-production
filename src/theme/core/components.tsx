@@ -231,7 +231,7 @@ const MuiRadio: Components<Theme>['MuiRadio'] = {
 const MuiChip: Components<Theme>['MuiChip'] = {
   styleOverrides: {
     root: {
-      borderRadius: 0,
+      borderRadius: "8px",
     },
   },
 };

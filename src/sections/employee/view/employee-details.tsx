@@ -79,7 +79,7 @@ const EmployeeDetails = () => {
       <Box
         display="flex"
         alignItems="center"
-        mb={5}
+        // mb={2}
         justifyContent="space-between"
       >
         <Button

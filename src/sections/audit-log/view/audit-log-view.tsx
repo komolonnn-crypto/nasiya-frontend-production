@@ -199,7 +199,7 @@ export default function AuditLogView() {
         alignItems="center"
         justifyContent="space-between"
         mb={2}
-        mt={2}
+        mt={0}
         px={2}
       >
         <Typography variant="h4">Audit Log</Typography>

@@ -815,7 +815,7 @@ export default function AuditLogTable({
                               variant="caption"
                               sx={{ fontSize: "0.6rem" }}
                             >
-                              —
+                              {log.metadata?.paymentCreatorId || "-"}
                             </Typography>
                           )}
                         </TableCell>
