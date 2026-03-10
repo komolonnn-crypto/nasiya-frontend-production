@@ -1,5 +1,5 @@
 // src/components/table/GenericTable.tsx
-import type { useTableLogic } from "@/hooks/useTableLogic"
+import type { useTableLogic } from "@/hooks/useTableLogic";
 
 import { Card } from "@mui/material";
 
@@ -19,7 +19,7 @@ interface GenericTableProps<T extends Record<string, any>> {
   renderActions?: (row: T) => React.ReactNode;
   onRowClick?: (row: T) => void;
   onCustomerClick?: (customer: any) => void;
-  onNotesClick?: (row: T) => void; 
+  onNotesClick?: (row: T) => void;
   logic: ReturnType<typeof useTableLogic<T>>;
   setSelectedRows?: (selected: string[]) => void;
   selectedRows?: string[];
@@ -28,13 +28,12 @@ interface GenericTableProps<T extends Record<string, any>> {
 }
 
 export function GenericTable<T extends Record<string, any>>({
-
   selectable = false,
   columns,
   renderActions,
   onRowClick,
   onCustomerClick,
-  onNotesClick, 
+  onNotesClick,
   logic,
   setSelectedRows,
   selectedRows,
@@ -62,7 +61,6 @@ export function GenericTable<T extends Record<string, any>>({
     handleSort,
     handleColumnToggle,
   } = logic;
-
 
   return (
     <>
@@ -92,16 +90,16 @@ export function GenericTable<T extends Record<string, any>>({
         selectedColumns={selectedColumns}
         onColumnToggle={handleColumnToggle}
       />
-      <Card sx={{ 
-        ...excelCardStyle,
-        overflow: "hidden", 
-        height: "100%",
-        // maxHeight: "calc(100vh - 200px)",
-        // boxShadow: 3,
-        border: "none",
-        borderRadius: "18px"  
-        
-      }}>
+      <Card
+        sx={{
+          ...excelCardStyle,
+          overflow: "hidden",
+          height: "100%",
+          // maxHeight: "calc(100vh - 200px)",
+          // boxShadow: 3,
+          border: "none",
+          borderRadius: "18px",
+        }}>
         <TableToolbar
           onFilterClick={(e) => setFilterAnchorEl(e.currentTarget)}
           onSortClick={(e) => setSortAnchorEl(e.currentTarget)}

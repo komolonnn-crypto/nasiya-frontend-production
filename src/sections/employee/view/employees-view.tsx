@@ -48,20 +48,22 @@ export function EmployeesView() {
       <Stack spacing={5}>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography
-  sx={{
-    fontSize: "1.5rem",
-    fontWeight: 900,
-    letterSpacing: "-0.025em",
-    flexGrow: 1,
-    color: (theme) => (theme.palette.mode === 'dark' ? 'grey.100' : 'grey.900'),
-  }}
->
-  Xodimlar
-</Typography>
+            sx={{
+              fontSize: "1.5rem",
+              fontWeight: 900,
+              letterSpacing: "-0.025em",
+              flexGrow: 1,
+              color: (theme) =>
+                theme.palette.mode === "dark" ? "grey.100" : "grey.900",
+            }}>
+            Xodimlar
+          </Typography>
           <Button
-              variant="contained"
-              color="inherit"
-            startIcon={<Iconify icon="mingcute:add-line" width={16} height={16}/>}
+            variant="contained"
+            color="inherit"
+            startIcon={
+              <Iconify icon="mingcute:add-line" width={16} height={16} />
+            }
             onClick={() => {
               dispatch(
                 setModal({
@@ -69,8 +71,7 @@ export function EmployeesView() {
                   data: { type: "add", data: undefined },
                 }),
               );
-            }}
-          >
+            }}>
             Qo&apos;shish
           </Button>
         </Box>

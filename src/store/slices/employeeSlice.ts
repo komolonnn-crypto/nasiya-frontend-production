@@ -1,6 +1,6 @@
-import type { IMeta } from "@/types/meta"
-import type { IExpense } from "@/types/expense"
-import type { IEmployee } from "@/types/employee"
+import type { IMeta } from "@/types/meta";
+import type { IExpense } from "@/types/expense";
+import type { IEmployee } from "@/types/employee";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { createSlice } from "@reduxjs/toolkit";
@@ -49,7 +49,7 @@ const employeeSlice = createSlice({
     },
     setExpenses(
       state,
-      action: PayloadAction<{ expenses: IExpense[]; meta: IMeta }>
+      action: PayloadAction<{ expenses: IExpense[]; meta: IMeta }>,
     ) {
       state.expenses = action.payload.expenses;
       state.expensesMeta = action.payload.meta;

@@ -38,9 +38,11 @@ interface AuditLogState {
   } | null;
 
   dailyActivity: {
-    date: string;
+    date: string | null;
     activities: IAuditLog[];
     total: number;
+    limit: number;
+    page: number;
   } | null;
 
   activityStats: {

@@ -1,4 +1,4 @@
-import type { ICustomer } from "@/types/customer"
+import type { ICustomer } from "@/types/customer";
 
 import { useState, useCallback } from "react";
 import { MdDelete, MdWarning, MdRefresh } from "react-icons/md";
@@ -19,20 +19,20 @@ import Popover from "@mui/material/Popover";
 import MenuList from "@mui/material/MenuList";
 import MenuItem, { menuItemClasses } from "@mui/material/MenuItem";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import { setModal } from "@/store/slices/modalSlice"
+import { setModal } from "@/store/slices/modalSlice";
 import {
   deleteCustomer,
   restorationCustomer,
 } from "@/store/actions/customerActions";
 
-import { Iconify } from "@/components/iconify"
+import { Iconify } from "@/components/iconify";
 
 export default function ActionCustomer({ customer }: { customer: ICustomer }) {
   const dispatch = useAppDispatch();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(
-    null
+    null,
   );
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [restoreDialog, setRestoreDialog] = useState(false);
@@ -41,7 +41,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
     (event: React.MouseEvent<HTMLButtonElement>) => {
       setOpenPopover(event.currentTarget);
     },
-    []
+    [],
   );
 
   const handleClosePopover = useCallback(() => {
@@ -53,7 +53,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
       setModal({
         modal: "customerModal",
         data: { type: "edit", data: customer },
-      })
+      }),
     );
     handleClosePopover();
   }, [dispatch, customer, handleClosePopover]);
@@ -80,8 +80,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
         anchorEl={openPopover}
         onClose={handleClosePopover}
         anchorOrigin={{ vertical: "top", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-      >
+        transformOrigin={{ vertical: "top", horizontal: "right" }}>
         <MenuList
           disablePadding
           sx={{
@@ -96,8 +95,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
               borderRadius: 0,
               [`&.${menuItemClasses.selected}`]: { bgcolor: "action.selected" },
             },
-          }}
-        >
+          }}>
           <MenuItem onClick={handleSelect}>
             <Iconify icon="solar:pen-bold" />
             Tahrirlash
@@ -108,8 +106,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
                 setDeleteDialog(true);
                 handleClosePopover();
               }}
-              sx={{ color: "error.main" }}
-            >
+              sx={{ color: "error.main" }}>
               <Iconify icon="solar:trash-bin-trash-bold" />
               O`chirish
             </MenuItem>
@@ -120,8 +117,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
                 setRestoreDialog(true);
                 handleClosePopover();
               }}
-              sx={{ color: "success.main" }}
-            >
+              sx={{ color: "success.main" }}>
               <Iconify icon="solar:refresh-circle-linear" />
               Tiklash
             </MenuItem>
@@ -134,8 +130,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
         open={deleteDialog}
         onClose={() => setDeleteDialog(false)}
         maxWidth="sm"
-        fullWidth
-      >
+        fullWidth>
         <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <MdWarning color="var(--palette-warning-main)" size={24} />
           Mijozni o&lsquo;chirish
@@ -152,8 +147,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
               borderRadius: 0,
               border: "1px solid",
               borderColor: "rgba(var(--palette-error-mainChannel) / 0.3)",
-            }}
-          >
+            }}>
             <Stack spacing={1}>
               <Box>
                 <Typography variant="caption" color="text.secondary">
@@ -168,7 +162,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
                   Telefon:
                 </Typography>
                 <Typography variant="body1" fontWeight="medium">
-                  {customer.phoneNumber || "—"}
+                  {customer.phoneNumber || "———"}
                 </Typography>
               </Box>
             </Stack>
@@ -182,14 +176,12 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
               p: 1,
               bgcolor: "rgba(var(--palette-warning-mainChannel) / 0.1)",
               borderRadius: 0,
-            }}
-          >
+            }}>
             <MdWarning size={18} color="var(--palette-warning-main)" />
             <Typography
               variant="caption"
               color="warning.main"
-              fontWeight="medium"
-            >
+              fontWeight="medium">
               Diqqat: O&lsquo;chirilgan mijozni keyinchalik tiklash mumkin.
             </Typography>
           </Box>
@@ -198,16 +190,14 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
           <Button
             onClick={() => setDeleteDialog(false)}
             color="inherit"
-            variant="outlined"
-          >
+            variant="outlined">
             Bekor qilish
           </Button>
           <Button
             onClick={handleDelete}
             color="error"
             variant="contained"
-            startIcon={<MdDelete />}
-          >
+            startIcon={<MdDelete />}>
             O&lsquo;chirish
           </Button>
         </DialogActions>
@@ -218,8 +208,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
         open={restoreDialog}
         onClose={() => setRestoreDialog(false)}
         maxWidth="sm"
-        fullWidth
-      >
+        fullWidth>
         <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <MdRefresh color="var(--palette-success-main)" size={24} />
           Mijozni tiklash
@@ -234,8 +223,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
               borderRadius: 0,
               border: "1px solid",
               borderColor: "rgba(var(--palette-success-mainChannel) / 0.3)",
-            }}
-          >
+            }}>
             <Stack spacing={1}>
               <Box>
                 <Typography variant="caption" color="text.secondary">
@@ -258,8 +246,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
           <Typography
             variant="caption"
             color="text.secondary"
-            sx={{ mt: 2, display: "block" }}
-          >
+            sx={{ mt: 2, display: "block" }}>
             Tiklanganidan so&lsquo;ng mijoz qayta faol bo&lsquo;ladi.
           </Typography>
         </DialogContent>
@@ -267,16 +254,14 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
           <Button
             onClick={() => setRestoreDialog(false)}
             color="inherit"
-            variant="outlined"
-          >
+            variant="outlined">
             Bekor qilish
           </Button>
           <Button
             onClick={restorationDelete}
             color="success"
             variant="contained"
-            startIcon={<MdRefresh />}
-          >
+            startIcon={<MdRefresh />}>
             Tiklash
           </Button>
         </DialogActions>

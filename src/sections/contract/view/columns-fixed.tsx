@@ -8,11 +8,16 @@ export const columnsPageContract: Column[] = [
   {
     id: "day",
     label: "Kun",
+    align: "center",
+    width: 50,
     sortable: true,
     filterable: false,
     renderCell: (row) => {
       // ✅ FIXED: originalPaymentDay ni birinchi tekshirish
-      if (row.originalPaymentDay !== undefined && row.originalPaymentDay !== null) {
+      if (
+        row.originalPaymentDay !== undefined &&
+        row.originalPaymentDay !== null
+      ) {
         return String(row.originalPaymentDay).padStart(2, "0");
       }
       // Fallback: initialPaymentDueDate
@@ -32,6 +37,7 @@ export const columnsPageContract: Column[] = [
   {
     id: "customId",
     label: "Shartnoma ID",
+    align: "center",
     sortable: true,
     filterable: false,
     renderCell: (row) => {
@@ -39,8 +45,8 @@ export const columnsPageContract: Column[] = [
         e.stopPropagation();
         if (row.customId) {
           navigator.clipboard.writeText(row.customId);
-          enqueueSnackbar(`${row.customId} nusxa olindi`, { 
-            variant: 'success',
+          enqueueSnackbar(`${row.customId} nusxa olindi`, {
+            variant: "success",
             autoHideDuration: 2000,
           });
         }
@@ -51,20 +57,27 @@ export const columnsPageContract: Column[] = [
       }
 
       return (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>{row.customId}</span>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 0.5,
+          }}>
+          <span style={{ fontSize: "0.75rem", fontWeight: 600 }}>
+            {row.customId}
+          </span>
           <Tooltip title="Nusxa olish" arrow>
             <IconButton
               size="small"
               onClick={handleCopy}
               sx={{
                 p: 0.25,
-                '&:hover': {
-                  bgcolor: 'rgba(var(--palette-primary-mainChannel) / 0.08)',
-                  color: 'primary.main',
+                "&:hover": {
+                  bgcolor: "rgba(var(--palette-primary-mainChannel) / 0.08)",
+                  color: "primary.main",
                 },
-              }}
-            >
+              }}>
               <MdContentCopy size={14} />
             </IconButton>
           </Tooltip>
@@ -76,6 +89,7 @@ export const columnsPageContract: Column[] = [
   {
     id: "customerName",
     label: "Mijoz",
+    align: "center",
     sortable: true,
     renderCell: (row) => {
       if (row.customerName && typeof row.customerName === "string") {
@@ -88,10 +102,16 @@ export const columnsPageContract: Column[] = [
       return row.customerName || "—";
     },
   },
-  { id: "productName", label: "Mahsulot Nomi", sortable: true },
+  {
+    id: "productName",
+    label: "Mahsulot Nomi",
+    sortable: true,
+    align: "center",
+  },
   {
     id: "startDate",
     label: "Shartnoma Sanasi",
+    align: "center",
     renderCell: (row) => {
       if (row.startDate) {
         // ✅ FIXED: Local date'ni to'g'ri format qilish (timezone fix)
@@ -105,12 +125,14 @@ export const columnsPageContract: Column[] = [
   {
     id: "totalPrice",
     label: "Narxi",
+    align: "center",
     format: (value: number) => `$${value.toLocaleString()}`,
     sortable: true,
   },
   {
     id: "initialPayment",
     label: "Oldindan To'lov",
+    align: "center",
     format: (value: number) => `$${value.toLocaleString()}`,
     sortable: true,
   },
@@ -152,7 +174,7 @@ export const columnsPageContract: Column[] = [
       const activeItems = items.filter((item) => item.value);
 
       if (activeItems.length === 0) {
-        return "—";
+        return "———";
       }
 
       return (
@@ -160,8 +182,7 @@ export const columnsPageContract: Column[] = [
           direction="row"
           spacing={0.5}
           justifyContent="center"
-          flexWrap="wrap"
-        >
+          flexWrap="wrap">
           {activeItems.map((item) => (
             <Tooltip key={item.key} title={item.label}>
               <Chip
@@ -180,24 +201,32 @@ export const columnsPageContract: Column[] = [
 ];
 
 export const columnsPageNewContract: Column[] = [
-  { id: "productName", label: "Mahsulot Nomi", sortable: true },
-  { id: "customerName", label: "Mijoz", sortable: true },
-  { id: "sellerName", label: "Seller", sortable: true },
+  {
+    id: "productName",
+    label: "Mahsulot Nomi",
+    sortable: true,
+    align: "center",
+  },
+  { id: "customerName", label: "Mijoz", sortable: true, align: "center" },
+  { id: "sellerName", label: "Seller", sortable: true, align: "center" },
   {
     id: "price",
     label: "Narxi",
+    align: "center",
     format: (value: number) => `$${value.toLocaleString()}`,
     sortable: true,
   },
   {
     id: "initialPayment",
     label: "Oldindan To'lov",
+    align: "center",
     format: (value: number) => `$${value.toLocaleString()}`,
     sortable: true,
   },
   {
     id: "notes",
     label: "Izoh",
+    align: "center",
     filterable: false,
   },
   {

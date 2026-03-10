@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   Card,
   CardContent,
@@ -9,14 +11,16 @@ import {
   Skeleton,
   Paper,
   LinearProgress,
-} from '@mui/material';
-import { useState } from 'react';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs, { Dayjs } from 'dayjs';
+} from "@mui/material";
 
-import { Iconify } from '@/components/iconify'
-import { AUDIT_ACTION_LABELS, AUDIT_ENTITY_LABELS } from '@/types/audit-log'
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs, { Dayjs } from "dayjs";
+import { Iconify } from "@/components/iconify";
 
+import {
+  AUDIT_ACTION_LABELS,
+  AUDIT_ENTITY_LABELS,
+} from "@/types/auditlog-page-types";
 
 interface StatsData {
   period: {
@@ -39,35 +43,41 @@ interface AuditLogStatsProps {
   onDateRangeChange: (start: string, end: string) => void;
 }
 
-export default function AuditLogStats({ stats, loading, onDateRangeChange }: AuditLogStatsProps) {
-  const [startDate, setStartDate] = useState<Dayjs>(dayjs().subtract(7, 'day'));
+export default function AuditLogStats({
+  stats,
+  loading,
+  onDateRangeChange,
+}: AuditLogStatsProps) {
+  const [startDate, setStartDate] = useState<Dayjs>(dayjs().subtract(7, "day"));
   const [endDate, setEndDate] = useState<Dayjs>(dayjs());
 
   const handleDateRangeUpdate = () => {
     onDateRangeChange(
-      startDate.format('YYYY-MM-DD'),
-      endDate.format('YYYY-MM-DD')
+      startDate.format("YYYY-MM-DD"),
+      endDate.format("YYYY-MM-DD"),
     );
   };
 
   const handleQuickRange = (days: number) => {
     const end = dayjs();
-    const start = end.subtract(days, 'day');
+    const start = end.subtract(days, "day");
     setStartDate(start);
     setEndDate(end);
-    onDateRangeChange(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+    onDateRangeChange(start.format("YYYY-MM-DD"), end.format("YYYY-MM-DD"));
   };
 
-  const totalActivities = stats?.stats.reduce((sum, entity) => sum + entity.totalCount, 0) || 0;
-  const mostActiveEntity = stats?.stats.reduce((max, entity) => 
-    entity.totalCount > (max?.totalCount || 0) ? entity : max, 
-    stats.stats[0]
+  const totalActivities =
+    stats?.stats.reduce((sum, entity) => sum + entity.totalCount, 0) || 0;
+  const mostActiveEntity = stats?.stats.reduce(
+    (max, entity) =>
+      entity.totalCount > (max?.totalCount || 0) ? entity : max,
+    stats.stats[0],
   );
 
   const quickRanges = [
-    { label: 'Oxirgi 7 kun', days: 7 },
-    { label: 'Oxirgi 30 kun', days: 30 },
-    { label: 'Oxirgi 90 kun', days: 90 },
+    { label: "Oxirgi 7 kun", days: 7 },
+    { label: "Oxirgi 30 kun", days: 30 },
+    { label: "Oxirgi 90 kun", days: 90 },
   ];
 
   if (loading) {
@@ -102,33 +112,37 @@ export default function AuditLogStats({ stats, loading, onDateRangeChange }: Aud
         <CardContent>
           <Stack spacing={3}>
             <Typography variant="h6">Statistika davri</Typography>
-            
-            <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" useFlexGap>
+
+            <Stack
+              direction="row"
+              spacing={2}
+              alignItems="center"
+              flexWrap="wrap"
+              useFlexGap>
               <DatePicker
                 label="Boshlanish sanasi"
                 value={startDate}
                 onChange={(date) => setStartDate(date!)}
                 format="DD/MM/YYYY"
                 slotProps={{
-                  textField: { size: 'small', sx: { minWidth: 160 } }
+                  textField: { size: "small", sx: { minWidth: 160 } },
                 }}
               />
-              
+
               <DatePicker
                 label="Tugash sanasi"
                 value={endDate}
                 onChange={(date) => setEndDate(date!)}
                 format="DD/MM/YYYY"
                 slotProps={{
-                  textField: { size: 'small', sx: { minWidth: 160 } }
+                  textField: { size: "small", sx: { minWidth: 160 } },
                 }}
               />
-              
+
               <Button
                 variant="contained"
                 startIcon={<Iconify icon="eva:search-fill" />}
-                onClick={handleDateRangeUpdate}
-              >
+                onClick={handleDateRangeUpdate}>
                 Yangilash
               </Button>
             </Stack>
@@ -139,8 +153,7 @@ export default function AuditLogStats({ stats, loading, onDateRangeChange }: Aud
                   key={range.days}
                   size="small"
                   variant="outlined"
-                  onClick={() => handleQuickRange(range.days)}
-                >
+                  onClick={() => handleQuickRange(range.days)}>
                   {range.label}
                 </Button>
               ))}
@@ -160,22 +173,31 @@ export default function AuditLogStats({ stats, loading, onDateRangeChange }: Aud
                     sx={{
                       width: 64,
                       height: 64,
-                      borderRadius: '50%',
-                      bgcolor: 'rgba(var(--palette-primary-mainChannel) / 0.12)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'primary.main',
-                    }}
-                  >
+                      borderRadius: "50%",
+                      bgcolor:
+                        "rgba(var(--palette-primary-mainChannel) / 0.12)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "primary.main",
+                    }}>
                     <Iconify icon="eva:activity-fill" width={32} />
                   </Box>
-                  <Typography variant="h3">{totalActivities.toLocaleString()}</Typography>
-                  <Typography variant="subtitle1" color="text.secondary" textAlign="center">
+                  <Typography variant="h3">
+                    {totalActivities.toLocaleString()}
+                  </Typography>
+                  <Typography
+                    variant="subtitle1"
+                    color="text.secondary"
+                    textAlign="center">
                     Jami faoliyat
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" textAlign="center">
-                    {dayjs(stats.period.start).format('DD.MM.YYYY')} - {dayjs(stats.period.end).format('DD.MM.YYYY')}
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    textAlign="center">
+                    {dayjs(stats.period.start).format("DD.MM.YYYY")} -{" "}
+                    {dayjs(stats.period.end).format("DD.MM.YYYY")}
                   </Typography>
                 </Stack>
               </CardContent>
@@ -190,21 +212,27 @@ export default function AuditLogStats({ stats, loading, onDateRangeChange }: Aud
                     sx={{
                       width: 64,
                       height: 64,
-                      borderRadius: '50%',
-                      bgcolor: 'rgba(var(--palette-success-mainChannel) / 0.12)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'success.main',
-                    }}
-                  >
+                      borderRadius: "50%",
+                      bgcolor:
+                        "rgba(var(--palette-success-mainChannel) / 0.12)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "success.main",
+                    }}>
                     <Iconify icon="eva:trending-up-fill" width={32} />
                   </Box>
                   <Typography variant="h3">{stats.stats.length}</Typography>
-                  <Typography variant="subtitle1" color="text.secondary" textAlign="center">
+                  <Typography
+                    variant="subtitle1"
+                    color="text.secondary"
+                    textAlign="center">
                     Faol entity turlari
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" textAlign="center">
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    textAlign="center">
                     Turli xil obyekt turlari
                   </Typography>
                 </Stack>
@@ -220,22 +248,34 @@ export default function AuditLogStats({ stats, loading, onDateRangeChange }: Aud
                     sx={{
                       width: 64,
                       height: 64,
-                      borderRadius: '50%',
-                      bgcolor: 'rgba(var(--palette-warning-mainChannel) / 0.12)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'warning.main',
-                    }}
-                  >
+                      borderRadius: "50%",
+                      bgcolor:
+                        "rgba(var(--palette-warning-mainChannel) / 0.12)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "warning.main",
+                    }}>
                     <Iconify icon="eva:star-fill" width={32} />
                   </Box>
-                  <Typography variant="h3">{mostActiveEntity?.totalCount || 0}</Typography>
-                  <Typography variant="subtitle1" color="text.secondary" textAlign="center">
+                  <Typography variant="h3">
+                    {mostActiveEntity?.totalCount || 0}
+                  </Typography>
+                  <Typography
+                    variant="subtitle1"
+                    color="text.secondary"
+                    textAlign="center">
                     Eng faol entity
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" textAlign="center">
-                    {mostActiveEntity ? AUDIT_ENTITY_LABELS[mostActiveEntity._id as keyof typeof AUDIT_ENTITY_LABELS] : 'Noma\'lum'}
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    textAlign="center">
+                    {mostActiveEntity ?
+                      AUDIT_ENTITY_LABELS[
+                        mostActiveEntity._id as keyof typeof AUDIT_ENTITY_LABELS
+                      ]
+                    : "Noma'lum"}
                   </Typography>
                 </Stack>
               </CardContent>
@@ -245,16 +285,21 @@ export default function AuditLogStats({ stats, loading, onDateRangeChange }: Aud
       )}
 
       {/* Entity Statistics */}
-      {stats && stats.stats.length > 0 ? (
+      {stats && stats.stats.length > 0 ?
         <Grid container spacing={3}>
           {stats.stats.map((entityStat) => (
             <Grid item xs={12} md={6} key={entityStat._id}>
               <Card>
                 <CardContent>
                   <Stack spacing={2}>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between">
                       <Typography variant="h6">
-                        {AUDIT_ENTITY_LABELS[entityStat._id as keyof typeof AUDIT_ENTITY_LABELS] || entityStat._id}
+                        {AUDIT_ENTITY_LABELS[
+                          entityStat._id as keyof typeof AUDIT_ENTITY_LABELS
+                        ] || entityStat._id}
                       </Typography>
                       <Typography variant="h4" color="primary.main">
                         {entityStat.totalCount}
@@ -263,32 +308,47 @@ export default function AuditLogStats({ stats, loading, onDateRangeChange }: Aud
 
                     <Stack spacing={1.5}>
                       {entityStat.actions.map((actionStat) => {
-                        const percentage = (actionStat.count / entityStat.totalCount) * 100;
+                        const percentage =
+                          (actionStat.count / entityStat.totalCount) * 100;
                         return (
-                          <Paper key={actionStat.action} sx={{ p: 2, bgcolor: 'background.neutral' }}>
+                          <Paper
+                            key={actionStat.action}
+                            sx={{ p: 2, bgcolor: "background.neutral" }}>
                             <Stack spacing={1}>
-                              <Stack direction="row" alignItems="center" justifyContent="space-between">
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="space-between">
                                 <Typography variant="subtitle2">
-                                  {AUDIT_ACTION_LABELS[actionStat.action as keyof typeof AUDIT_ACTION_LABELS] || actionStat.action}
+                                  {AUDIT_ACTION_LABELS[
+                                    actionStat.action as keyof typeof AUDIT_ACTION_LABELS
+                                  ] || actionStat.action}
                                 </Typography>
-                                <Stack direction="row" alignItems="center" spacing={1}>
-                                  <Typography variant="body2" color="text.secondary">
+                                <Stack
+                                  direction="row"
+                                  alignItems="center"
+                                  spacing={1}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary">
                                     {actionStat.count}
                                   </Typography>
-                                  <Typography variant="body2" color="text.secondary">
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary">
                                     ({percentage.toFixed(1)}%)
                                   </Typography>
                                 </Stack>
                               </Stack>
-                              
+
                               <LinearProgress
                                 variant="determinate"
                                 value={percentage}
                                 sx={{
                                   height: 6,
                                   borderRadius: 0,
-                                  bgcolor: 'action.disabledBackground',
-                                  '& .MuiLinearProgress-bar': {
+                                  bgcolor: "action.disabledBackground",
+                                  "& .MuiLinearProgress-bar": {
                                     borderRadius: 0,
                                   },
                                 }}
@@ -304,23 +364,29 @@ export default function AuditLogStats({ stats, loading, onDateRangeChange }: Aud
             </Grid>
           ))}
         </Grid>
-      ) : (
-        !loading && (
+      : !loading && (
           <Card>
             <CardContent>
               <Stack spacing={2} alignItems="center" sx={{ py: 6 }}>
-                <Iconify icon="eva:file-text-outline" width={64} sx={{ color: 'text.disabled' }} />
+                <Iconify
+                  icon="eva:file-text-outline"
+                  width={64}
+                  sx={{ color: "text.disabled" }}
+                />
                 <Typography variant="h6" color="text.secondary">
                   Tanlangan davr uchun ma'lumotlar topilmadi
                 </Typography>
-                <Typography variant="body2" color="text.secondary" textAlign="center">
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  textAlign="center">
                   Boshqa sana oralig'ini tanlang yoki filterlarni o'zgartiring
                 </Typography>
               </Stack>
             </CardContent>
           </Card>
         )
-      )}
+      }
     </Stack>
   );
 }

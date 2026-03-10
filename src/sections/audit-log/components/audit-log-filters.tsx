@@ -1,7 +1,4 @@
-import type {
-  AuditLogFilters as FilterType,
-  AuditAction,
-} from "@/types/audit-log";
+import { useState, useEffect } from "react";
 
 import {
   Card,
@@ -18,14 +15,22 @@ import {
   TextField,
   InputAdornment,
 } from "@mui/material";
-import { useState, useEffect } from "react";
+
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import axios from "axios";
-
-import { Iconify } from "@/components/iconify";
-import { AUDIT_ACTION_LABELS } from "@/types/audit-log";
 import axiosInstance from "@/server/api";
+import { Iconify } from "@/components/iconify";
+
+import type {
+  AuditLogFilters as FilterType,
+  AuditAction,
+  AuditEntity,
+} from "@/types/auditlog-page-types";
+import {
+  AUDIT_ACTION_LABELS,
+  AUDIT_ENTITY_LABELS,
+} from "@/types/auditlog-page-types";
 
 // Manager interface
 interface Manager {
@@ -122,6 +127,13 @@ export default function AuditLogFilters({
     }),
   );
 
+  const entityOptions = Object.entries(AUDIT_ENTITY_LABELS).map(
+    ([value, label]) => ({
+      value,
+      label,
+    }),
+  );
+
   const handleFilterChange = (field: keyof FilterType, value: any) => {
     const newFilters = { ...localFilters, [field]: value, page: 1 };
     setLocalFilters(newFilters);
@@ -152,8 +164,8 @@ export default function AuditLogFilters({
   ).length;
 
   return (
-    <Card sx={{ boxShadow: 1, borderRadius:"18px" }}>
-      <CardContent sx={{ py: 2, px: 3, "&:last-child": { pb: 2 } ,my: 2 }}>
+    <Card sx={{ boxShadow: 1, borderRadius: "18px" }}>
+      <CardContent sx={{ py: 2, px: 3, "&:last-child": { pb: 2 }, my: 2 }}>
         <Grid container spacing={2} alignItems="center">
           {/* Search Input */}
           <Grid item xs={12} sm={3}>
@@ -173,21 +185,20 @@ export default function AuditLogFilters({
               }}
             />
           </Grid>
-<Grid item xs={12} sm={3}>
-
-  <DatePicker
-    label="Sana"
-    value={selectedDate}
-    onChange={handleDateChange}
-    format="DD/MM/YYYY"
-    slotProps={{
-      textField: {
-        fullWidth: true,
-        size: "small",
-      },
-    }}
-    />
-</Grid>
+          <Grid item xs={12} sm={3}>
+            <DatePicker
+              label="Sana"
+              value={selectedDate}
+              onChange={handleDateChange}
+              format="DD/MM/YYYY"
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  size: "small",
+                },
+              }}
+            />
+          </Grid>
 
           <Grid item xs={12} sm={3}>
             <FormControl fullWidth size="small">
@@ -197,12 +208,35 @@ export default function AuditLogFilters({
                 label="Harakat"
                 onChange={(e) =>
                   handleFilterChange("action", e.target.value || undefined)
-                }
-              >
+                }>
                 <MenuItem value="">
                   <em>Hammasi</em>
                 </MenuItem>
                 {actionOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={3}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Bo'lim</InputLabel>
+              <Select
+                value={localFilters.entity || ""}
+                label="Bo'lim"
+                onChange={(e) =>
+                  handleFilterChange(
+                    "entity",
+                    (e.target.value as AuditEntity) || undefined,
+                  )
+                }>
+                <MenuItem value="">
+                  <em>Hammasi</em>
+                </MenuItem>
+                {entityOptions.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
@@ -220,26 +254,24 @@ export default function AuditLogFilters({
                 onChange={(e) =>
                   handleFilterChange("employeeId", e.target.value || undefined)
                 }
-                disabled={loadingManagers}
-              >
+                disabled={loadingManagers}>
                 <MenuItem value="">
                   <em>Hammasi</em>
                 </MenuItem>
-                {loadingManagers ? (
+                {loadingManagers ?
                   <MenuItem disabled>
                     <em>Yuklanmoqda...</em>
                   </MenuItem>
-                ) : managers.length === 0 ? (
+                : managers.length === 0 ?
                   <MenuItem disabled>
                     <em>Manager'lar topilmadi</em>
                   </MenuItem>
-                ) : (
-                  managers.map((manager) => (
+                : managers.map((manager) => (
                     <MenuItem key={manager._id} value={manager._id}>
                       {manager.firstName} {manager.lastName}
                     </MenuItem>
                   ))
-                )}
+                }
               </Select>
             </FormControl>
           </Grid>
@@ -252,7 +284,7 @@ export default function AuditLogFilters({
                   label={`${activeFiltersCount}`}
                   color="default"
                   variant="filled"
-                  sx={{borderRadius: "8px"}}
+                  sx={{ borderRadius: "8px" }}
                 />
               )}
               <Button
@@ -260,8 +292,7 @@ export default function AuditLogFilters({
                 size="small"
                 color="success"
                 startIcon={<Iconify icon="eva:refresh-outline" />}
-                onClick={handleClearFilters}
-              >
+                onClick={handleClearFilters}>
                 Tozalash
               </Button>
               <Button
@@ -274,8 +305,7 @@ export default function AuditLogFilters({
                 }}
                 startIcon={<Iconify icon="eva:search-fill" />}
                 onClick={handleApplyFilters}
-                {...(loading && { disabled: true })}
-              >
+                {...(loading && { disabled: true })}>
                 Qidirish
               </Button>
             </Stack>
@@ -310,6 +340,17 @@ export default function AuditLogFilters({
                 />
               )}
 
+              {localFilters.entity && (
+                <Chip
+                  size="small"
+                  label={`Bo'lim: ${AUDIT_ENTITY_LABELS[localFilters.entity as AuditEntity]}`}
+                  onDelete={() => handleFilterChange("entity", undefined)}
+                  color="default"
+                  variant="filled"
+                  sx={{ borderRadius: "8px" }}
+                />
+              )}
+
               {localFilters.search && (
                 <Chip
                   size="small"
@@ -323,8 +364,9 @@ export default function AuditLogFilters({
 
               {localFilters.employeeId &&
                 (() => {
-                  const employee = Array.isArray(managers)
-                    ? managers.find((m) => m._id === localFilters.employeeId)
+                  const employee =
+                    Array.isArray(managers) ?
+                      managers.find((m) => m._id === localFilters.employeeId)
                     : null;
                   return (
                     <Chip

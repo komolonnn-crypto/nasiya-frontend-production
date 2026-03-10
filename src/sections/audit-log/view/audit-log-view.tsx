@@ -1,6 +1,8 @@
+import { useState, useEffect, useCallback } from "react";
+
+import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 
-import { useState, useEffect, useCallback } from "react";
 import {
   Box,
   Container,
@@ -9,11 +11,11 @@ import {
   Alert,
   Button,
 } from "@mui/material";
+
+import type { AuditLogFilters as FilterType } from "@/types/auditlog-page-types";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { Iconify } from "@/components/iconify";
 import dayjs, { Dayjs } from "dayjs";
-
-import { useAppDispatch } from "@/hooks/useAppDispatch";
-import { useSelector } from "react-redux";
 
 import {
   fetchDailyActivity,
@@ -22,36 +24,10 @@ import {
 
 import AuditLogTable from "@/sections/audit-log/components/audit-log-table";
 import AuditLogFilters from "@/sections/audit-log/components/audit-log-filters";
-import type { AuditLogFilters as FilterType } from "@/types/audit-log";
 
 // ----------------------------------------------------------------------
 
 const STORAGE_KEY = "audit_log_filters";
-
-// ✅ localStorage'dan filterlarni yuklash
-const loadFiltersFromStorage = (): FilterType => {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      console.log("📦 Saqlangan filterlar yuklandi:", parsed);
-
-      // ✅ employeeId ni tozalash (API'dan yangi list kelganda tekshiriladi)
-      // Agar localStorage'dagi employeeId API'da bo'lmasa, error chiqadi
-      // Shuning uchun dastlab employeeId'ni olib tashlaymiz, keyin UI'da qayta tiklanadi
-      const { employeeId, ...rest } = parsed;
-
-      return rest;
-    }
-  } catch (error) {
-    console.error("❌ Filterlarni yuklashda xato:", error);
-  }
-  // Default
-  return {
-    limit: 100,
-    page: 1,
-  };
-};
 
 export default function AuditLogView() {
   const dispatch = useAppDispatch();
@@ -62,13 +38,12 @@ export default function AuditLogView() {
 
   const [_activeTab, _setActiveTab] = useState<"logs" | "stats">("logs");
   const [_selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
-  const [filters, setFilters] = useState<FilterType>(loadFiltersFromStorage);
-  const [_limit, setLimit] = useState<number>(filters.limit || 100);
+  const [filters, setFilters] = useState<FilterType>({ limit: 100, page: 1 });
+  const [_limit, setLimit] = useState<number>(100);
 
-  // Dastlabki yuklash
+  // Dastlabki yuklash — hech qanday filter yo'q, barcha amallar ko'rinadi
   useEffect(() => {
-    console.log("🔄 Sahifa yuklandi, saqlangan filterlar:", filters);
-    dispatch(fetchDailyActivity(filters));
+    dispatch(fetchDailyActivity({ limit: 100, page: 1 }));
 
     // Oxirgi 30 kun statistikasi
     const endDate = dayjs().format("YYYY-MM-DD");
@@ -80,18 +55,6 @@ export default function AuditLogView() {
   const handleFiltersChange = (newFilters: Partial<FilterType>) => {
     const updatedFilters = { ...filters, ...newFilters };
     setFilters(updatedFilters);
-
-    console.log("🔍 FILTER APPLIED:", updatedFilters);
-    console.log("📡 employeeId:", updatedFilters.employeeId);
-
-    // ✅ localStorage'ga saqlash
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedFilters));
-      console.log("💾 Filterlar saqlandi:", updatedFilters);
-    } catch (error) {
-      console.error("❌ Filterlarni saqlashda xato:", error);
-    }
-
     dispatch(fetchDailyActivity(updatedFilters));
   };
 
@@ -99,15 +62,11 @@ export default function AuditLogView() {
   const handleClearFilters = () => {
     const clearedFilters: FilterType = { limit: 100, page: 1 };
     setFilters(clearedFilters);
-
-    // ✅ localStorage'dan o'chirish
     try {
       localStorage.removeItem(STORAGE_KEY);
-      console.log("🗑️ Filterlar tozalandi");
-    } catch (error) {
-      console.error("❌ Filterlarni tozalashda xato:", error);
+    } catch {
+      // ignore
     }
-
     dispatch(fetchDailyActivity(clearedFilters));
   };
 
@@ -200,16 +159,14 @@ export default function AuditLogView() {
         justifyContent="space-between"
         mb={2}
         mt={2}
-        px={2}
-      >
+        px={2}>
         <Typography variant="h4">Audit Log</Typography>
         <Button
           variant="contained"
           startIcon={<Iconify icon="eva:download-fill" />}
           onClick={handleExport}
           {...((!dailyActivity?.activities ||
-            dailyActivity.activities.length === 0) && { disabled: true })}
-        >
+            dailyActivity.activities.length === 0) && { disabled: true })}>
           CSV Export
         </Button>
       </Stack>

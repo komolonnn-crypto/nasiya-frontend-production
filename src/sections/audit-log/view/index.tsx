@@ -1,1 +1,1 @@
-export { default as AuditLogView } from './audit-log-view';
+export { default as AuditLogView } from "./audit-log-view";

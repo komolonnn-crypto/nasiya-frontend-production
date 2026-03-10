@@ -23,6 +23,7 @@ export enum AuditEntity {
   AUTH = "auth",
   EXCEL_IMPORT = "excel_import",
   EXPENSES = "expenses",
+  DEBTOR = "debtor",
 }
 
 export interface IAuditMetadata {
@@ -83,15 +84,18 @@ export interface IAuditLog {
   timestamp: string;
   createdAt: string;
   updatedAt: string;
+  contractId: string;
 }
 
 export interface AuditLogDailyResponse {
   status: string;
   message: string;
   data: {
-    date: string;
+    date: string | null; // null = filter yo'q (barcha yozuvlar)
     activities: IAuditLog[];
     total: number;
+    limit: number;
+    page: number;
     pagination?: {
       page: number;
       limit: number;
@@ -203,6 +207,7 @@ export const AUDIT_ENTITY_LABELS: Record<AuditEntity, string> = {
   [AuditEntity.AUTH]: "Autentifikatsiya",
   [AuditEntity.EXCEL_IMPORT]: "Excel Import",
   [AuditEntity.EXPENSES]: "Xarajatlar",
+  [AuditEntity.DEBTOR]: "Qarzdor",
 };
 
 export const AUDIT_ACTION_COLORS: Record<AuditAction, string> = {
@@ -220,3 +225,43 @@ export const AUDIT_ACTION_COLORS: Record<AuditAction, string> = {
   [AuditAction.CONFIRM]: "success",
   [AuditAction.REJECT]: "error",
 };
+
+export type Header = {
+  label: string;
+  width?: number;
+  align?: "left" | "right" | "center";
+};
+
+export const headers: Header[] = [
+  { label: "Icon" },
+  { label: "Xodim" },
+  { label: "Harakat" },
+  { label: "Bo'lim" },
+  { label: "Shartnoma ID" },
+  { label: "Mijoz" },
+  { label: "Xodim" },
+  { label: "Summa" },
+  { label: "Kun" },
+  { label: "Soat" },
+  { label: "Actions" },
+];
+
+export interface AuditLogTableProps {
+  data: IAuditLog[];
+  loading: boolean;
+  title?: string;
+  subtitle?: string;
+  page?: number;
+  limit?: number;
+  total?: number;
+  onPageChange?: (event: unknown, newPage: number) => void;
+  onLimitChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  maxHeight?: string;
+}
+
+export interface ExpandedRowProps {
+  log: IAuditLog;
+  allLogs: IAuditLog[];
+}
+
+export const rows = 10;

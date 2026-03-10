@@ -1,7 +1,15 @@
-import { Grid, Card, CardContent, Typography, Stack, Box, Skeleton } from '@mui/material';
-import { Dayjs } from 'dayjs';
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Stack,
+  Box,
+  Skeleton,
+} from "@mui/material";
 
-import { Iconify } from '@/components/iconify'
+import { Dayjs } from "dayjs";
+import { Iconify } from "@/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -10,23 +18,30 @@ interface SummaryCardProps {
   value: number;
   subtitle?: string;
   icon: string;
-  color?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info';
+  color?: "primary" | "secondary" | "success" | "warning" | "error" | "info";
   loading?: boolean;
 }
 
 const COLOR_ALPHA_BG: Record<string, string> = {
-  primary: 'rgba(var(--palette-primary-mainChannel) / 0.12)',
-  secondary: 'rgba(var(--palette-secondary-mainChannel) / 0.12)',
-  success: 'rgba(var(--palette-success-mainChannel) / 0.12)',
-  warning: 'rgba(var(--palette-warning-mainChannel) / 0.12)',
-  error: 'rgba(var(--palette-error-mainChannel) / 0.12)',
-  info: 'rgba(var(--palette-info-mainChannel) / 0.12)',
+  primary: "rgba(var(--palette-primary-mainChannel) / 0.12)",
+  secondary: "rgba(var(--palette-secondary-mainChannel) / 0.12)",
+  success: "rgba(var(--palette-success-mainChannel) / 0.12)",
+  warning: "rgba(var(--palette-warning-mainChannel) / 0.12)",
+  error: "rgba(var(--palette-error-mainChannel) / 0.12)",
+  info: "rgba(var(--palette-info-mainChannel) / 0.12)",
 };
 
-function SummaryCard({ title, value, subtitle, icon, color = 'primary', loading }: SummaryCardProps) {
+function SummaryCard({
+  title,
+  value,
+  subtitle,
+  icon,
+  color = "primary",
+  loading,
+}: SummaryCardProps) {
   if (loading) {
     return (
-      <Card sx={{ height: '100%' }}>
+      <Card sx={{ height: "100%" }}>
         <CardContent>
           <Stack spacing={2}>
             <Skeleton variant="circular" width={48} height={48} />
@@ -39,21 +54,25 @@ function SummaryCard({ title, value, subtitle, icon, color = 'primary', loading 
   }
 
   return (
-    <Card sx={{ height: '100%', transition: 'all 0.3s ease', '&:hover': { transform: 'translateY(-4px)', boxShadow: 4 } }}>
+    <Card
+      sx={{
+        height: "100%",
+        transition: "all 0.3s ease",
+        "&:hover": { transform: "translateY(-4px)", boxShadow: 4 },
+      }}>
       <CardContent>
         <Stack spacing={2}>
           <Box
             sx={{
               width: 48,
               height: 48,
-              borderRadius: '50%',
-              bgcolor: COLOR_ALPHA_BG[color] || COLOR_ALPHA_BG.primary,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              borderRadius: "50%",
+              bgcolor: COLOR_ALPHA_BG[color] || COLOR_ALPHA_BG["primary"],
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               color: `${color}.main`,
-            }}
-          >
+            }}>
             <Iconify icon={icon} width={24} />
           </Box>
 
@@ -108,9 +127,13 @@ interface AuditLogSummaryProps {
   selectedDate: Dayjs;
 }
 
-export default function AuditLogSummary({ summary, loading, selectedDate }: AuditLogSummaryProps) {
-  const isToday = selectedDate.isSame(new Date(), 'day');
-  const dateText = isToday ? "Bugun" : selectedDate.format('DD.MM.YYYY');
+export default function AuditLogSummary({
+  summary,
+  loading,
+  selectedDate,
+}: AuditLogSummaryProps) {
+  const isToday = selectedDate.isSame(new Date(), "day");
+  const dateText = isToday ? "Bugun" : selectedDate.format("DD.MM.YYYY");
 
   if (!summary && !loading) {
     return (
@@ -200,11 +223,27 @@ export default function AuditLogSummary({ summary, loading, selectedDate }: Audi
 
       {/* Placeholder cards for better layout */}
       <Grid item xs={12} sm={6} md={3}>
-        <Card sx={{ height: '100%', border: '2px dashed', borderColor: 'grey.300' }}>
+        <Card
+          sx={{
+            height: "100%",
+            border: "2px dashed",
+            borderColor: "grey.300",
+          }}>
           <CardContent>
-            <Stack spacing={2} alignItems="center" justifyContent="center" sx={{ height: '100%', minHeight: 140 }}>
-              <Iconify icon="eva:plus-circle-outline" width={32} color="grey.500" />
-              <Typography variant="body2" color="text.secondary" textAlign="center">
+            <Stack
+              spacing={2}
+              alignItems="center"
+              justifyContent="center"
+              sx={{ height: "100%", minHeight: 140 }}>
+              <Iconify
+                icon="eva:plus-circle-outline"
+                width={32}
+                color="grey.500"
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                textAlign="center">
                 Qo'shimcha metrika
               </Typography>
             </Stack>
@@ -213,11 +252,27 @@ export default function AuditLogSummary({ summary, loading, selectedDate }: Audi
       </Grid>
 
       <Grid item xs={12} sm={6} md={3}>
-        <Card sx={{ height: '100%', border: '2px dashed', borderColor: 'grey.300' }}>
+        <Card
+          sx={{
+            height: "100%",
+            border: "2px dashed",
+            borderColor: "grey.300",
+          }}>
           <CardContent>
-            <Stack spacing={2} alignItems="center" justifyContent="center" sx={{ height: '100%', minHeight: 140 }}>
-              <Iconify icon="eva:plus-circle-outline" width={32} color="grey.500" />
-              <Typography variant="body2" color="text.secondary" textAlign="center">
+            <Stack
+              spacing={2}
+              alignItems="center"
+              justifyContent="center"
+              sx={{ height: "100%", minHeight: 140 }}>
+              <Iconify
+                icon="eva:plus-circle-outline"
+                width={32}
+                color="grey.500"
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                textAlign="center">
                 Qo'shimcha metrika
               </Typography>
             </Stack>
