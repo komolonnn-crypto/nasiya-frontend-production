@@ -1,4 +1,3 @@
-import type { Column } from "@/components/table/types";
 import {
   Chip,
   Box,
@@ -7,6 +6,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+
 import {
   MdAccessTime,
   MdCheckCircle,
@@ -16,7 +16,9 @@ import {
   MdTrendingUp,
   MdContentCopy,
 } from "react-icons/md";
+
 import { enqueueSnackbar } from "notistack";
+import type { Column } from "@/components/table/types";
 
 export const columnsCash: Column[] = [
   {
@@ -101,7 +103,13 @@ export const columnsCash: Column[] = [
 
       if (row.contractId) {
         return (
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 0.5,
+            }}>
             <Typography
               sx={{
                 fontSize: "0.75rem",
@@ -129,7 +137,7 @@ export const columnsCash: Column[] = [
       }
       return (
         <Typography variant="body2" color="text.secondary">
-          —
+          ———
         </Typography>
       );
     },
@@ -166,7 +174,7 @@ export const columnsCash: Column[] = [
           </Typography>
         );
       }
-      return "—";
+      return "———";
     },
   },
   {
@@ -182,7 +190,7 @@ export const columnsCash: Column[] = [
       const managerName =
         `${row.managerId.firstName || ""} ${row.managerId.lastName || ""}`.trim();
 
-      if (!managerName) return "—";
+      if (!managerName) return "———";
 
       return (
         <Typography
@@ -234,7 +242,7 @@ export const columnsCash: Column[] = [
       }
       return (
         <Typography variant="body2" color="text.secondary">
-          —
+          ———
         </Typography>
       );
     },
@@ -250,7 +258,7 @@ export const columnsCash: Column[] = [
       if (row.isReminderNotification) {
         return (
           <Typography variant="body2" color="text.secondary">
-            —
+            ———
           </Typography>
         );
       }
@@ -277,8 +285,14 @@ export const columnsCash: Column[] = [
         : null;
 
       return (
-        <Stack direction="column" spacing={0.3}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Stack direction="column" spacing={0.3} alignItems="center">
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+            }}>
             <Typography
               sx={{
                 fontWeight: 700,
@@ -331,7 +345,7 @@ export const columnsCash: Column[] = [
       if (row.isReminderNotification) {
         return (
           <Typography variant="body2" color="text.secondary">
-            —
+            ———
           </Typography>
         );
       }
@@ -398,11 +412,12 @@ export const columnsCash: Column[] = [
         const isPast = paymentDate < today;
 
         return (
-          <Stack spacing={0.5}>
+          <Stack spacing={0.5} alignItems="center">
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
+                justifyContent: "center",
                 gap: 0.75,
               }}>
               <MdAccessTime
@@ -439,7 +454,7 @@ export const columnsCash: Column[] = [
           </Stack>
         );
       }
-      return "—";
+      return "———";
     },
   },
   {
@@ -514,7 +529,7 @@ export const columnsCash: Column[] = [
       };
 
       const config = statusConfig[row.status] || {
-        label: row.status || "—",
+        label: row.status || "———",
         color: "default",
         icon: null,
       };
@@ -579,8 +594,8 @@ export const columnsCash: Column[] = [
       }
 
       if (row.notes && typeof row.notes === "object" && "text" in row.notes) {
-        const text = row.notes.text || "—";
-        const hasNotes = text && text !== "—";
+        const text = row.notes.text || "———";
+        const hasNotes = text && text !== "———";
 
         return (
           <Tooltip title={hasNotes ? "Izohni ko'rish" : "Izoh yo'q"} arrow>
@@ -649,6 +664,7 @@ export const columnsCash: Column[] = [
               sx={{
                 display: "flex",
                 alignItems: "center",
+                justifyContent: "center",
                 gap: 1,
                 whiteSpace: "nowrap",
               }}>
@@ -673,7 +689,7 @@ export const columnsCash: Column[] = [
         );
       }
 
-      return <Box sx={{ color: "text.disabled", fontSize: "0.7rem" }}>—</Box>;
+      return <Box sx={{ color: "text.disabled", fontSize: "0.7rem" }}>———</Box>;
     },
   },
 ];

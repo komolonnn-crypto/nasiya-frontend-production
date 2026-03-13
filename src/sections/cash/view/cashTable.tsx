@@ -1,8 +1,8 @@
-import type { IPayment } from "@/types/cash"
-import type { Column } from "@/components/table/types"
+import type { IPayment } from "@/types/cash";
+import type { Column } from "@/components/table/types";
 
-import { useTableLogic } from "@/hooks/useTableLogic"
-import { GenericTable } from "@/components/table/GnericTable"
+import { useTableLogic } from "@/hooks/useTableLogic";
+import { GenericTable } from "@/components/table/GnericTable";
 
 interface ChashTableProps {
   data: IPayment[];
@@ -21,7 +21,7 @@ const ChashTable = ({
   columns,
   onRowClick,
   onCustomerClick,
-  onNotesClick, 
+  onNotesClick,
   selectable,
   setSelectedRows,
   component,

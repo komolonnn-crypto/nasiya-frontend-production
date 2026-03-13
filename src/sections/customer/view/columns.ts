@@ -43,11 +43,13 @@ export const columnsPageCustomers: Column[] = [
           .filter((d: any) => d !== null && d !== undefined);
 
         if (days.length > 0) {
-          // Takrorlanmagan kunlarni olish
           const uniqueDays = [...new Set<number>(days as number[])].sort(
             (a, b) => a - b,
           );
-          return uniqueDays.join(", ");
+          if (uniqueDays.length <= 3) {
+            return uniqueDays.join(", ");
+          }
+          return `${uniqueDays.slice(0, 3).join(", ")} +${uniqueDays.length - 3}`;
         }
       }
       return "—";
@@ -128,11 +130,13 @@ export const columnsNewPageCustomers: Column[] = [
           .filter((d: any) => d !== null && d !== undefined);
 
         if (days.length > 0) {
-          // Takrorlanmagan kunlarni olish
           const uniqueDays = [...new Set<number>(days as number[])].sort(
             (a, b) => a - b,
           );
-          return uniqueDays.join(", ");
+          if (uniqueDays.length <= 3) {
+            return uniqueDays.join(", ");
+          }
+          return `${uniqueDays.slice(0, 3).join(", ")} +${uniqueDays.length - 3}`;
         }
       }
       return "—";

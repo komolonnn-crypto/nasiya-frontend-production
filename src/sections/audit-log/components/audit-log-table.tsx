@@ -490,7 +490,20 @@ export default function AuditLogTable({
 
       <CardContent sx={{ p: 0 }}>
         {/* TableContainer render start */}
-        <TableContainer sx={{ maxHeight, border: "none" }}>
+        <TableContainer sx={{
+          maxHeight,
+          border: "none",
+          scrollbarWidth: "thin",
+          scrollbarColor: "rgba(128,128,128,0.35) transparent",
+          "&::-webkit-scrollbar": { width: "5px", height: "5px" },
+          "&::-webkit-scrollbar-track": { background: "transparent" },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "rgba(128,128,128,0.35)",
+            borderRadius: "10px",
+            "&:hover": { backgroundColor: "rgba(128,128,128,0.6)" },
+          },
+          "&::-webkit-scrollbar-corner": { background: "transparent" },
+        }}>
           <Table
             stickyHeader
             size="small"

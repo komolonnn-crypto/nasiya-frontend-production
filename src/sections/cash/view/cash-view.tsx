@@ -1,7 +1,7 @@
-import type { RootState } from "@/store"
-
-import { useSelector } from "react-redux";
 import { useRef, useState, useEffect, useCallback } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
+
 import {
   MdCheckCircle,
   MdPerson,
@@ -33,17 +33,17 @@ import {
   DialogContentText,
 } from "@mui/material";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import { setModal } from "@/store/slices/modalSlice"
-import { DashboardContent } from "@/layouts/dashboard"
-import { getManagers } from "@/store/actions/employeeActions"
+import { setModal } from "@/store/slices/modalSlice";
+import { DashboardContent } from "@/layouts/dashboard";
+import { getManagers } from "@/store/actions/employeeActions";
 import {
   getPendingPayments,
   confirmPayments,
 } from "@/store/actions/cashActions";
 
-import Loader from "@/components/loader/Loader"
+import Loader from "@/components/loader/Loader";
 
 import ChashTable from "./cashTable";
 import { columnsCash } from "./column";
@@ -57,7 +57,7 @@ export function CashView() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   const { isLoading, payments, error } = useSelector(
-    (state: RootState) => state.cash
+    (state: RootState) => state.cash,
   );
 
   const [manager, setManager] = useState<{
@@ -107,14 +107,14 @@ export function CashView() {
   }, []);
 
   const selectedPaymentsData = payments.filter((p: any) =>
-    selectedRows.includes(p._id)
+    selectedRows.includes(p._id),
   );
 
   const totalAmount = selectedPaymentsData.reduce((sum: number, p: any) => {
     const actual =
-      p.actualAmount !== undefined && p.actualAmount !== null
-        ? p.actualAmount
-        : p.amount;
+      p.actualAmount !== undefined && p.actualAmount !== null ?
+        p.actualAmount
+      : p.amount;
     return sum + (actual || 0);
   }, 0);
 
@@ -132,16 +132,16 @@ export function CashView() {
     });
   };
 
-  const managerFullName = manager
-    ? `${manager.firstName} ${manager.lastName}`
-    : null;
+  const managerFullName =
+    manager ? `${manager.firstName} ${manager.lastName}` : null;
 
   const pendingPayments = payments.filter(
-    (payment: any) => payment.status === "PENDING" && !payment.isPaid
+    (payment: any) => payment.status === "PENDING" && !payment.isPaid,
   );
 
-  const filteredCash = managerFullName
-    ? pendingPayments.filter((payment: any) => {
+  const filteredCash =
+    managerFullName ?
+      pendingPayments.filter((payment: any) => {
         // ✅ Faqat managerId'dan filter qilish
         if (payment.managerId && typeof payment.managerId === "object") {
           const paymentManagerName =
@@ -178,9 +178,9 @@ export function CashView() {
             ...params.InputProps,
             endAdornment: (
               <>
-                {dataEmployee.isLoading ? (
+                {dataEmployee.isLoading ?
                   <CircularProgress color="inherit" size={20} />
-                ) : null}
+                : null}
                 {params.InputProps.endAdornment}
               </>
             ),
@@ -206,7 +206,7 @@ export function CashView() {
   return (
     <DashboardContent maxWidth="xl">
       <Stack spacing={2.5}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Typography variant="h4" flexGrow={1} sx={{ fontWeight: 600 }}>
             Kassa
           </Typography>
@@ -222,29 +222,35 @@ export function CashView() {
 
         {/* Bo'sh holat - pending to'lovlar yo'q */}
         {!isLoading && pendingPayments.length === 0 && (
-          <Card sx={{
-            p: 6,
-            textAlign: "center",
-            bgcolor: "rgba(var(--palette-success-mainChannel) / 0.08)",
-            border: "2px dashed rgba(var(--palette-success-mainChannel) / 0.4)",
-          }}>
-            <Box sx={{ 
-              mb: 3,
-              display: 'flex',
-              justifyContent: 'center',
+          <Card
+            sx={{
+              p: 6,
+              textAlign: "center",
+              bgcolor: "rgba(var(--palette-success-mainChannel) / 0.08)",
+              border:
+                "2px dashed rgba(var(--palette-success-mainChannel) / 0.4)",
             }}>
-              <Box 
-                sx={{ 
-                  bgcolor: 'success.main', 
-                  borderRadius: '50%', 
+            <Box
+              sx={{
+                mb: 3,
+                display: "flex",
+                justifyContent: "center",
+              }}>
+              <Box
+                sx={{
+                  bgcolor: "success.main",
+                  borderRadius: "50%",
                   p: 2,
-                  display: 'inline-flex',
-                }}
-              >
+                  display: "inline-flex",
+                }}>
                 <MdCheckCircle size={64} color="white" />
               </Box>
             </Box>
-            <Typography variant="h5" gutterBottom fontWeight={600} color="success.main">
+            <Typography
+              variant="h5"
+              gutterBottom
+              fontWeight={600}
+              color="success.main">
               Tasdiqlash uchun to&lsquo;lovlar yo&lsquo;q
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
@@ -258,8 +264,7 @@ export function CashView() {
         {error && (
           <Alert
             severity="error"
-            onClose={() => dispatch({ type: "cash/setError", payload: null })}
-          >
+            onClose={() => dispatch({ type: "cash/setError", payload: null })}>
             {error}
           </Alert>
         )}
@@ -276,34 +281,38 @@ export function CashView() {
               p: 2.5,
               mb: 1,
               bgcolor: "rgba(var(--palette-success-mainChannel) / 0.12)",
-              border: "2px solid rgba(var(--palette-success-mainChannel) / 0.5)",
+              border:
+                "2px solid rgba(var(--palette-success-mainChannel) / 0.5)",
               boxShadow: 2,
-            }}
-          >
+            }}>
             <Stack
-              direction={{ xs: 'column', sm: 'row' }}
+              direction={{ xs: "column", sm: "row" }}
               spacing={2}
-              alignItems={{ xs: 'stretch', sm: 'center' }}
-              justifyContent="space-between"
-            >
+              alignItems={{ xs: "stretch", sm: "center" }}
+              justifyContent="space-between">
               <Stack direction="row" spacing={2} alignItems="center">
-                <Box 
-                  sx={{ 
-                    bgcolor: 'success.main', 
-                    borderRadius: '50%', 
+                <Box
+                  sx={{
+                    bgcolor: "success.main",
+                    borderRadius: "50%",
                     p: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}>
                   <MdCheckCircle size={28} color="white" />
                 </Box>
                 <Box>
-                  <Typography variant="h6" fontWeight="bold" color="success.dark">
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    color="success.dark">
                     {selectedRows.length} ta to&lsquo;lov tanlandi
                   </Typography>
-                  <Typography variant="body1" fontWeight={600} color="success.main">
+                  <Typography
+                    variant="body1"
+                    fontWeight={600}
+                    color="success.main">
                     Jami: ${totalAmount.toLocaleString()}
                   </Typography>
                 </Box>
@@ -314,12 +323,11 @@ export function CashView() {
                 size="large"
                 startIcon={<MdCheckCircle />}
                 onClick={() => setConfirmDialog(true)}
-                sx={{ 
+                sx={{
                   fontWeight: 600,
                   px: 3,
                   boxShadow: 3,
-                }}
-              >
+                }}>
                 Tasdiqlash
               </Button>
             </Stack>
@@ -341,7 +349,7 @@ export function CashView() {
               setModal({
                 modal: "cashInfoModal",
                 data: { type: "info", data: row },
-              })
+              }),
             );
           }}
           onNotesClick={handleNotesClick}
@@ -356,8 +364,7 @@ export function CashView() {
         open={customerInfoDialog.open}
         onClose={handleCloseCustomerDialog}
         maxWidth="sm"
-        fullWidth
-      >
+        fullWidth>
         <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <MdPerson size={24} color="var(--palette-primary-main)" />
           Mijoz ma'lumotlari
@@ -390,8 +397,7 @@ export function CashView() {
                       alignItems: "center",
                       gap: 1,
                       mr: 2,
-                    }}
-                  >
+                    }}>
                     <MdPhone size={20} color="var(--palette-text-secondary)" />
                   </Box>
                   <ListItemText
@@ -407,9 +413,11 @@ export function CashView() {
                       alignItems: "center",
                       gap: 1,
                       mr: 2,
-                    }}
-                  >
-                    <MdLocationOn size={20} color="var(--palette-text-secondary)" />
+                    }}>
+                    <MdLocationOn
+                      size={20}
+                      color="var(--palette-text-secondary)"
+                    />
                   </Box>
                   <ListItemText
                     primary="Manzil"
@@ -424,9 +432,11 @@ export function CashView() {
                       alignItems: "center",
                       gap: 1,
                       mr: 2,
-                    }}
-                  >
-                    <MdCreditCard size={20} color="var(--palette-text-secondary)" />
+                    }}>
+                    <MdCreditCard
+                      size={20}
+                      color="var(--palette-text-secondary)"
+                    />
                   </Box>
                   <ListItemText
                     primary="Passport seriyasi"
@@ -440,11 +450,11 @@ export function CashView() {
                   <ListItemText
                     primary="Tug'ilgan sana"
                     secondary={
-                      customerInfoDialog.customer.birthDate
-                        ? new Date(
-                            customerInfoDialog.customer.birthDate
-                          ).toLocaleDateString("uz-UZ")
-                        : "—"
+                      customerInfoDialog.customer.birthDate ?
+                        new Date(
+                          customerInfoDialog.customer.birthDate,
+                        ).toLocaleDateString("uz-UZ")
+                      : "—"
                     }
                   />
                 </ListItem>
@@ -455,10 +465,12 @@ export function CashView() {
                       <ListItemText
                         primary="Mas'ul menejer"
                         secondary={
-                          typeof customerInfoDialog.customer.manager ===
-                          "object"
-                            ? `${customerInfoDialog.customer.manager.firstName || ""} ${customerInfoDialog.customer.manager.lastName || ""}`
-                            : "—"
+                          (
+                            typeof customerInfoDialog.customer.manager ===
+                            "object"
+                          ) ?
+                            `${customerInfoDialog.customer.manager.firstName || ""} ${customerInfoDialog.customer.manager.lastName || ""}`
+                          : "—"
                         }
                       />
                     </ListItem>
@@ -484,9 +496,9 @@ export function CashView() {
           "Izoh yo'q"
         }
         customerName={
-          notesModal.payment?.customerId
-            ? notesModal.payment.customerId.fullName || ""
-            : undefined
+          notesModal.payment?.customerId ?
+            notesModal.payment.customerId.fullName || ""
+          : undefined
         }
         amount={notesModal.payment?.actualAmount || notesModal.payment?.amount}
       />
@@ -495,8 +507,7 @@ export function CashView() {
         open={confirmDialog}
         onClose={() => setConfirmDialog(false)}
         maxWidth="sm"
-        fullWidth
-      >
+        fullWidth>
         <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <MdCheckCircle color="var(--palette-success-main)" size={24} />
           To&lsquo;lovlarni tasdiqlash
@@ -522,8 +533,7 @@ export function CashView() {
                 <Typography
                   variant="h6"
                   fontWeight="medium"
-                  color="success.main"
-                >
+                  color="success.main">
                   ${totalAmount.toLocaleString()}
                 </Typography>
               </Box>
@@ -532,8 +542,7 @@ export function CashView() {
           <Typography
             variant="caption"
             color="text.secondary"
-            sx={{ mt: 2, display: "block" }}
-          >
+            sx={{ mt: 2, display: "block" }}>
             Tasdiqlangandan so&lsquo;ng to&lsquo;lovlar kassaga qabul qilinadi
             va shartnoma balansi yangilanadi.
           </Typography>
@@ -542,16 +551,14 @@ export function CashView() {
           <Button
             onClick={() => setConfirmDialog(false)}
             color="inherit"
-            variant="outlined"
-          >
+            variant="outlined">
             Bekor qilish
           </Button>
           <Button
             onClick={handleConfirmPayments}
             color="success"
             variant="contained"
-            startIcon={<MdCheckCircle />}
-          >
+            startIcon={<MdCheckCircle />}>
             Tasdiqlash
           </Button>
         </DialogActions>

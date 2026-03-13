@@ -28,6 +28,7 @@ import {
 interface Column<T = any> {
   id: string;
   label: string;
+  width?: number;
   minWidth?: number;
   align?: "right" | "left" | "center";
   format?: (value: T) => string | React.ReactNode;
@@ -179,22 +180,19 @@ export function TableComponent<T extends Record<string, any>>({
                   .map((column) => (
                     <TableCell
                       key={column.id}
-                      align={column.align || "left"}
+                      align={column.align || "center"}
                       sx={{
-                        ...excelHeaderCellStyle,
-                        minWidth: {
-                          xs: "auto",
-                          sm: column.minWidth || column.width || 100,
-                        },
+                        ...(excelHeaderCellStyle as object),
+                        minWidth: column.minWidth || column.width || 100,
                         width: column.width ? `${column.width}px` : "auto",
-                        ...(column.sticky && {
+                        ...(column.sticky ? {
                           ...(column.sticky === "left" ?
-                            excelStickyLeftStyle(column.stickyOffset || 0)
-                          : excelStickyRightStyle(column.stickyOffset || 0)),
+                            excelStickyLeftStyle(column.stickyOffset || 0) as object
+                          : excelStickyRightStyle(column.stickyOffset || 0) as object),
                           zIndex: 4,
                           backgroundColor: `${EXCEL_COLORS.headerBg} !important`,
-                        }),
-                      }}>
+                        } : {}),
+                      } as any}>
                       {column.label}
                     </TableCell>
                   ))}
@@ -202,16 +200,16 @@ export function TableComponent<T extends Record<string, any>>({
                   <TableCell
                     align="center"
                     sx={{
-                      ...excelHeaderCellStyle,
+                      ...(excelHeaderCellStyle as object),
                       width: selectable ? "40px" : "60px",
                       minWidth: selectable ? "40px" : "60px",
                       px: "4px",
-                      ...(selectable && {
-                        ...excelStickyRightStyle(32),
+                      ...(selectable ? {
+                        ...(excelStickyRightStyle(32) as object),
                         zIndex: 4,
                         backgroundColor: `${EXCEL_COLORS.headerBg} !important`,
-                      }),
-                    }}>
+                      } : {}),
+                    } as any}>
                     Actions
                   </TableCell>
                 )}
@@ -219,12 +217,12 @@ export function TableComponent<T extends Record<string, any>>({
                   <TableCell
                     padding="checkbox"
                     sx={{
-                      ...excelHeaderCellStyle,
-                      ...excelStickyRightStyle(0),
+                      ...(excelHeaderCellStyle as object),
+                      ...(excelStickyRightStyle(0) as object),
                       zIndex: 4,
                       width: "32px",
                       minWidth: "32px",
-                    }}>
+                    } as any}>
                     <Checkbox
                       sx={{
                         ...excelCheckboxStyle,
@@ -302,36 +300,25 @@ export function TableComponent<T extends Record<string, any>>({
                         .map((column) => (
                           <TableCell
                             key={`${rowId}-${column.id}`}
-                            align={column.align || "left"}
+                            align={column.align || "center"}
                             onClick={() => onRowClick?.(row)}
                             sx={{
-                              ...excelBodyCellStyle,
-                              minWidth: {
-                                xs: "auto",
-                                sm: column.minWidth || column["width"] || 100,
-                              },
-                              width:
-                                column["width"] ?
-                                  `${column["width"]}px`
-                                : "auto",
-                              ...(column.sticky && {
+                              ...(excelBodyCellStyle as object),
+                              minWidth: column.minWidth || column.width || 100,
+                              width: column.width ? `${column.width}px` : "auto",
+                              ...(column.sticky ? {
                                 ...(column.sticky === "left" ?
-                                  excelStickyLeftStyle(column.stickyOffset || 0)
-                                : excelStickyRightStyle(
-                                    column.stickyOffset || 0,
-                                  )),
+                                  excelStickyLeftStyle(column.stickyOffset || 0) as object
+                                : excelStickyRightStyle(column.stickyOffset || 0) as object),
                                 zIndex: 1,
-                                ...(isExpiredReminder && {
-                                  backgroundColor:
-                                    "rgba(var(--palette-error-mainChannel) / 0.08)",
-                                }),
-                                ...(row["isReminderNotification"] &&
-                                  !isExpiredReminder && {
-                                    backgroundColor:
-                                      "rgba(var(--palette-warning-mainChannel) / 0.08)",
-                                  }),
-                              }),
-                            }}>
+                                ...(isExpiredReminder ? {
+                                  backgroundColor: "rgba(var(--palette-error-mainChannel) / 0.08)",
+                                } : {}),
+                                ...(row["isReminderNotification"] && !isExpiredReminder ? {
+                                  backgroundColor: "rgba(var(--palette-warning-mainChannel) / 0.08)",
+                                } : {}),
+                              } : {}),
+                            } as any}>
                             {renderCellValue(row, column)}
                           </TableCell>
                         ))}
@@ -339,15 +326,15 @@ export function TableComponent<T extends Record<string, any>>({
                         <TableCell
                           align="center"
                           sx={{
-                            ...excelBodyCellStyle,
+                            ...(excelBodyCellStyle as object),
                             width: selectable ? "40px" : "60px",
                             minWidth: selectable ? "40px" : "60px",
                             px: "4px",
-                            ...(selectable && {
-                              ...excelStickyRightStyle(32),
+                            ...(selectable ? {
+                              ...(excelStickyRightStyle(32) as object),
                               zIndex: 1,
-                            }),
-                          }}>
+                            } : {}),
+                          } as any}>
                           {renderActions(row)}
                         </TableCell>
                       )}
@@ -355,16 +342,15 @@ export function TableComponent<T extends Record<string, any>>({
                         <TableCell
                           padding="checkbox"
                           sx={{
-                            ...excelBodyCellStyle,
-                            ...excelStickyRightStyle(0),
+                            ...(excelBodyCellStyle as object),
+                            ...(excelStickyRightStyle(0) as object),
                             zIndex: 1,
                             width: "32px",
                             minWidth: "32px",
-                            ...(isSelected && {
-                              backgroundColor:
-                                "rgba(var(--palette-primary-mainChannel) / 0.16)",
-                            }),
-                          }}>
+                            ...(isSelected ? {
+                              backgroundColor: "rgba(var(--palette-primary-mainChannel) / 0.16)",
+                            } : {}),
+                          } as any}>
                           <Checkbox
                             sx={excelCheckboxStyle}
                             checked={isSelected}

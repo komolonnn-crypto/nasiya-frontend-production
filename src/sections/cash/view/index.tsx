@@ -4,7 +4,6 @@ import ModalCashInfo from "@/sections/cash/modal/modal-cash-info";
 import ModalCashReject from "@/sections/cash/modal/modal-cash-reject";
 
 export function CashesView() {
-
   return (
     <>
       <CashView />

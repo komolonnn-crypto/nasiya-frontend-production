@@ -30,7 +30,7 @@ export const columnsPageContract: Column[] = [
         const day = dayjs(row.startDate).date();
         return String(day).padStart(2, "0");
       }
-      return "—";
+      return "———";
     },
   },
 
@@ -53,7 +53,7 @@ export const columnsPageContract: Column[] = [
       };
 
       if (!row.customId) {
-        return "—";
+        return "———";
       }
 
       return (
@@ -99,7 +99,7 @@ export const columnsPageContract: Column[] = [
         }
         return row.customerName;
       }
-      return row.customerName || "—";
+      return row.customerName || "———";
     },
   },
   {
@@ -117,7 +117,7 @@ export const columnsPageContract: Column[] = [
         // ✅ FIXED: Local date'ni to'g'ri format qilish (timezone fix)
         return dayjs(row.startDate).format("YYYY-MM-DD");
       }
-      return "—";
+      return "————";
     },
     sortable: true,
     filterable: false,

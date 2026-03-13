@@ -34,9 +34,11 @@ export const columnsDebtor: Column[] = [
         const uniqueDays = Array.from(new Set(days)).sort((a: any, b: any) => a - b);
         
         if (uniqueDays.length > 0) {
-          // Agar bir xil bo'lsa: "24"
-          // Agar turli xil bo'lsa: "24, 25"
-          return uniqueDays.map((d: any) => d.toString().padStart(2, "0")).join(", ");
+          if (uniqueDays.length <= 3) {
+            return uniqueDays.map((d: any) => d.toString().padStart(2, "0")).join(", ");
+          }
+          const shown = uniqueDays.slice(0, 3).map((d: any) => d.toString().padStart(2, "0")).join(", ");
+          return `${shown} +${uniqueDays.length - 3}`;
         }
       }
       
