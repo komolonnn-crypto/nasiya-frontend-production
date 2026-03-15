@@ -24,11 +24,12 @@ const snackbarSlice = createSlice({
       action: PayloadAction<{
         message: SnackbarMessage;
         options?: WritableDraft<OptionsObject>;
-      }>
+      }>,
     ) => {
-      const newMessage: { message: SnackbarMessage; options?: OptionsObject } = {
-        message: action.payload.message,
-      };
+      const newMessage: { message: SnackbarMessage; options?: OptionsObject } =
+        {
+          message: action.payload.message,
+        };
       if (action.payload.options) {
         newMessage.options = action.payload.options as OptionsObject;
       }

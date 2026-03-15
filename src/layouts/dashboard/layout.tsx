@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useState } from "react";
 
 import type { Theme, SxProps, Breakpoint } from "@mui/material/styles";
@@ -14,8 +14,6 @@ import { LayoutSection } from "@/layouts/core/layout-section";
 import { HeaderSection } from "@/layouts/core/header-section";
 import { AccountPopover } from "@/layouts/components/account-popover";
 import { ThemeToggle } from "@/layouts/components/theme-toggle";
-
-// ----------------------------------------------------------------------
 
 export type DashboardLayoutProps = {
   sx?: SxProps<Theme>;
@@ -63,11 +61,7 @@ export function DashboardLayout({
                     display: { md: "none" },
                   }}
                 />
-                <NavMobile
-                  // data={navData}
-                  open={navOpen}
-                  onClose={() => setNavOpen(false)}
-                />
+                <NavMobile open={navOpen} onClose={() => setNavOpen(false)} />
               </>
             ),
             rightArea: (
@@ -81,7 +75,6 @@ export function DashboardLayout({
       }
       footerSection={null}
       cssVars={{
-        // "--layout-nav-vertical-width": "300px",
         "--layout-dashboard-content-pt": theme.spacing(1),
         "--layout-dashboard-content-pb": theme.spacing(8),
         "--layout-dashboard-content-px": theme.spacing(5),

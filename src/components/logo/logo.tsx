@@ -9,8 +9,6 @@ import { RouterLink } from '@/routes/components'
 
 import { logoClasses } from './classes';
 
-// ----------------------------------------------------------------------
-
 export type LogoProps = BoxProps & {
   href?: string;
   isSingle?: boolean;
@@ -31,30 +29,7 @@ export const Logo = forwardRef<HTMLDivElement, LogoProps>(
     const PRIMARY_MAIN = theme.vars.palette.primary.main;
     const PRIMARY_DARKER = theme.vars.palette.primary.dark;
 
-    /*
-    * OR using local (public folder)
-    *
-    const singleLogo = (
-      <Box
-        alt="Single logo"
-        component="img"
-        src={`/logo/logo-single.svg`}
-        width="100%"
-        height="100%"
-      />
-    );
-
-    const fullLogo = (
-      <Box
-        alt="Full logo"
-        component="img"
-        src={`/logo/logo-full.svg`}
-        width="100%"
-        height="100%"
-      />
-    );
-    *
-    */
+    
 
     const singleLogo = (
       <svg

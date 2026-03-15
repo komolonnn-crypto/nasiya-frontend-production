@@ -54,7 +54,7 @@ export function PrepaidHistory({
 
       try {
         const baseUrl =
-          import.meta.env['VITE_API_BASE_URL'] || "http://localhost:3000";
+          import.meta.env["VITE_API_BASE_URL"] || "http://localhost:3000";
         const token = localStorage.getItem("accessToken");
 
         let url = `${baseUrl}/api/dashboard/prepaid/history/${customerId}`;
@@ -115,7 +115,7 @@ export function PrepaidHistory({
   return (
     <Card>
       <Stack spacing={2} sx={{ p: 3 }}>
-        {/* Sarlavha */}
+        {}
         <Stack direction="row" alignItems="center" spacing={1.5}>
           <MdHistory size={24} />
           <Typography variant="h6" fontWeight={700}>
@@ -124,8 +124,13 @@ export function PrepaidHistory({
           <Chip label={records.length} size="small" color="primary" />
         </Stack>
 
-        {/* Jami zapas */}
-        <Paper sx={{ p: 2, bgcolor: "rgba(var(--palette-info-mainChannel) / 0.1)", borderRadius: 1 }}>
+        {}
+        <Paper
+          sx={{
+            p: 2,
+            bgcolor: "rgba(var(--palette-info-mainChannel) / 0.1)",
+            borderRadius: 1,
+          }}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Jami Zapas
           </Typography>
@@ -134,7 +139,7 @@ export function PrepaidHistory({
           </Typography>
         </Paper>
 
-        {/* Jadval */}
+        {}
         <TableContainer>
           <Table>
             <TableHead>

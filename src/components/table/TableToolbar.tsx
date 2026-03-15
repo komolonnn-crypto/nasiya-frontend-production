@@ -40,7 +40,7 @@ export function TableToolbar({
         backgroundColor: "background.paper",
         border: `1px solid ${isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)"}`,
         p: "8px",
-        borderRadius: "18px", // Matches Dashboard Card standards
+        borderRadius: "18px",
         marginBottom: "12px",
         boxShadow: isDark 
           ? "0 8px 24px rgba(0,0,0,0.5)" 
@@ -48,7 +48,7 @@ export function TableToolbar({
       }}
     >
       <Grid container spacing={1.5} width={1} alignItems="center">
-        {/* QIDIRISH (SEARCH) SECTION */}
+        {}
         <Grid xs={12} sm={6} md={component ? 3 : 6}>
           <TextField
             placeholder="Qidirish..."
@@ -58,7 +58,7 @@ export function TableToolbar({
             sx={{
               width: 1,
               "& .MuiOutlinedInput-root": {
-                borderRadius: "14px", // Premium rounded look
+                borderRadius: "14px",
                 background: "var(--layout-nav-item-hover-bg)",
                 border: `1px solid ${isDark ? "rgba(255,255,255,0.05)" : "transparent"}`,
                 fontWeight: 600,
@@ -84,12 +84,11 @@ export function TableToolbar({
           />
         </Grid>
 
-        {/* COMPONENT SLOT (e.g., Manager Filter Dropdown) */}
+        {}
         {component && (
           <Grid xs={12} sm={6} md={4} display="flex" justifyContent="center">
             <Box sx={{ 
               width: 1,
-              // Applies border radius to whatever dropdown/input is inside the slot
               "& .MuiOutlinedInput-root": { borderRadius: "14px" },
               "& .MuiSelect-select": { py: '10px' }
             }}>
@@ -98,7 +97,7 @@ export function TableToolbar({
           </Grid>
         )}
 
-        {/* BUTTONS & CALENDAR SECTION */}
+        {}
         <Grid xs={12} md={component ? 5 : 6}>
           <Stack
             width={1}
@@ -107,14 +106,14 @@ export function TableToolbar({
             spacing={1.5}
             alignItems="center"
           >
-            {/* PILL-STYLE BUTTON GROUP */}
+            {}
             <Box
               sx={{
                 display: "inline-flex",
                 gap: "4px",
                 background: "var(--layout-nav-item-hover-bg)",
                 p: "4px",
-                borderRadius: "14px", // Rounded container
+                borderRadius: "14px",
                 border: `1px solid ${isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)"}`,
               }}
             >

@@ -10,8 +10,6 @@ import {
   customShadows,
 } from "./core";
 
-// ----------------------------------------------------------------------
-
 export function createTheme(): Theme {
   const initialTheme = {
     colorSchemes,
@@ -29,11 +27,7 @@ export function createTheme(): Theme {
   return theme;
 }
 
-// ----------------------------------------------------------------------
-
-function shouldSkipGeneratingVar(
-  keys: string[]
-): boolean {
+function shouldSkipGeneratingVar(keys: string[]): boolean {
   const skipGlobalKeys = [
     "mixins",
     "overlays",
@@ -57,7 +51,9 @@ function shouldSkipGeneratingVar(
 
   if (isPaletteKey) {
     const paletteType = keys[1];
-    const skipKeys = (paletteType && skipPaletteKeys[paletteType]) || skipPaletteKeys['global'];
+    const skipKeys =
+      (paletteType && skipPaletteKeys[paletteType]) ||
+      skipPaletteKeys["global"];
 
     return keys.some((key) => skipKeys?.includes(key));
   }

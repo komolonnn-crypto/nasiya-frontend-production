@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { MdCancel, MdDelete, MdCheckCircle } from "react-icons/md";
 import { FaChevronDown } from "react-icons/fa";
@@ -57,7 +56,7 @@ interface IPayment {
 
 interface IForm {
   customer?: string;
-  customId?: string; // ✅ YANGI: Shartnoma ID (26T00001 formatida)
+  customId?: string;
   productName: string;
   originalPrice: number;
   price: number;
@@ -103,7 +102,7 @@ const ModalContract = () => {
   }, [now]);
 
   const defaultFormValues: IForm = {
-    customId: "", // ✅ YANGI: Shartnoma ID (ixtiyoriy)
+    customId: "",
     productName: "",
     originalPrice: 0,
     price: 0,
@@ -242,7 +241,7 @@ const ModalContract = () => {
       const customerId = contract.data?.customer?._id;
       setFormValues({
         ...(customerId && { customer: customerId }),
-        customId: contract.data?.customId || "", // ✅ YANGI: customId yuklanadi
+        customId: contract.data?.customId || "",
         productName: contract.data?.productName || "",
         originalPrice: contract.data?.originalPrice || 0,
         price: contract.data?.price || 0,
@@ -635,7 +634,6 @@ const ModalContract = () => {
                       fullWidth
                       InputLabelProps={{ shrink: true }}
                       required
-                      // onKeyDown={(e) => e.preventDefault()}
                     />
                   </Grid>
 
@@ -652,7 +650,6 @@ const ModalContract = () => {
                               handleMonthlyCalculate();
                               setIsTouched(false);
                             }}
-                            // disabled={!isButtonValid}
                             fullWidth
                             size="large">
                             Oylik to&apos;lov
@@ -901,7 +898,7 @@ const ModalContract = () => {
                         color="error"
                         onClick={() => {
                           const payments = [...(formValues.payments || [])];
-                          payments.splice(idx, 1); // indexdagi elementni olib tashlash
+                          payments.splice(idx, 1);
                           setFormValues((prev) => ({ ...prev, payments }));
                         }}>
                         <MdDelete />

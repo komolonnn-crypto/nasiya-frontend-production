@@ -4,7 +4,6 @@ import SvgIcon from '@mui/material/SvgIcon';
 
 import { varAlpha } from '@/theme/styles';
 
-
 const MuiBackdrop: Components<Theme>['MuiBackdrop'] = {
   styleOverrides: {
     root: ({ theme }) => ({
@@ -162,7 +161,6 @@ const MuiCheckbox: Components<Theme>['MuiCheckbox'] = {
   },
 };
 
-// Excel-like TableRow styling
 const MuiTableRow: Components<Theme>['MuiTableRow'] = {
   styleOverrides: {
     root: ({ theme }) => ({
@@ -187,7 +185,6 @@ const MuiTableRow: Components<Theme>['MuiTableRow'] = {
   },
 };
 
-// Excel-like TableContainer styling
 const MuiTableContainer: Components<Theme>['MuiTableContainer'] = {
   styleOverrides: {
     root: ({ theme }) => ({
@@ -226,8 +223,6 @@ const MuiRadio: Components<Theme>['MuiRadio'] = {
   },
 };
 
-
-// Chip component - Excel style
 const MuiChip: Components<Theme>['MuiChip'] = {
   styleOverrides: {
     root: {

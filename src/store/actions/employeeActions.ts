@@ -1,7 +1,7 @@
-import type { CurrencyDetails } from "@/types/cash"
-import type { IAddEmployee, IEditEmployee } from "@/types/employee"
+import type { CurrencyDetails } from "@/types/cash";
+import type { IAddEmployee, IEditEmployee } from "@/types/employee";
 
-import authApi from "@/server/auth"
+import authApi from "@/server/auth";
 
 import { enqueueSnackbar } from "@/store/slices/snackbar";
 import {
@@ -65,7 +65,7 @@ export const addEmployee =
         enqueueSnackbar({
           message: res.data.message,
           options: { variant: "success" },
-        })
+        }),
       );
     } catch (error: any) {
       dispatch(failure());
@@ -77,7 +77,7 @@ export const addEmployee =
         enqueueSnackbar({
           message: errorMessage,
           options: { variant: "error" },
-        })
+        }),
       );
 
       if (Array.isArray(errorMessages)) {
@@ -86,7 +86,7 @@ export const addEmployee =
             enqueueSnackbar({
               message: err,
               options: { variant: "error" },
-            })
+            }),
           );
         });
       }
@@ -105,7 +105,7 @@ export const updateEmployee =
         enqueueSnackbar({
           message: res.data.message,
           options: { variant: "success" },
-        })
+        }),
       );
     } catch (error: any) {
       dispatch(failure());
@@ -117,7 +117,7 @@ export const updateEmployee =
         enqueueSnackbar({
           message: errorMessage,
           options: { variant: "error" },
-        })
+        }),
       );
 
       if (Array.isArray(errorMessages)) {
@@ -126,7 +126,7 @@ export const updateEmployee =
             enqueueSnackbar({
               message: err,
               options: { variant: "error" },
-            })
+            }),
           );
         });
       }
@@ -145,7 +145,7 @@ export const deleteEmployes =
         enqueueSnackbar({
           message: res.data.message,
           options: { variant: "success" },
-        })
+        }),
       );
     } catch (error: any) {
       dispatch(failure());
@@ -157,7 +157,7 @@ export const deleteEmployes =
         enqueueSnackbar({
           message: errorMessage,
           options: { variant: "error" },
-        })
+        }),
       );
 
       if (Array.isArray(errorMessages)) {
@@ -166,7 +166,7 @@ export const deleteEmployes =
             enqueueSnackbar({
               message: err,
               options: { variant: "error" },
-            })
+            }),
           );
         });
       }
@@ -185,7 +185,7 @@ export const restorationEmployes =
         enqueueSnackbar({
           message: res.data.message,
           options: { variant: "success" },
-        })
+        }),
       );
     } catch (error: any) {
       dispatch(failure());
@@ -197,7 +197,7 @@ export const restorationEmployes =
         enqueueSnackbar({
           message: errorMessage,
           options: { variant: "error" },
-        })
+        }),
       );
 
       if (Array.isArray(errorMessages)) {
@@ -206,7 +206,7 @@ export const restorationEmployes =
             enqueueSnackbar({
               message: err,
               options: { variant: "error" },
-            })
+            }),
           );
         });
       }
@@ -219,7 +219,7 @@ export const getExpenses =
     dispatch(startExpenses());
     try {
       const res = await authApi.get(
-        `/expense/${employeeId}?page=${page}&limit=${limit}`
+        `/expense/${employeeId}?page=${page}&limit=${limit}`,
       );
       dispatch(setExpenses(res.data));
     } catch (error: any) {
@@ -244,7 +244,7 @@ export const withdrawFromBalance =
   (
     employeeId: string,
     currencyDetails: CurrencyDetails,
-    notes?: string
+    notes?: string,
   ): AppThunk =>
   async (dispatch) => {
     try {
@@ -258,10 +258,9 @@ export const withdrawFromBalance =
         enqueueSnackbar({
           message: "Pul muvaffaqiyatli yechib olindi",
           options: { variant: "success" },
-        })
+        }),
       );
 
-      // Yangilangan ma'lumotlarni yuklash
       dispatch(getEmployee(employeeId));
       dispatch(getExpenses(employeeId, 1, 10));
     } catch (error: any) {
@@ -271,7 +270,7 @@ export const withdrawFromBalance =
           message:
             error.response?.data?.message || "Pul yechishda xatolik yuz berdi",
           options: { variant: "error" },
-        })
+        }),
       );
     }
   };

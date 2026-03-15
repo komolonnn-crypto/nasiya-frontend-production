@@ -35,24 +35,23 @@ export interface IAuditMetadata {
   paymentStatus?: string;
   paymentMethod?: string;
   amount?: number;
+  originalAmount?: number;
   expectedAmount?: number;
   targetMonth?: number;
   remainingAmount?: number;
   excessAmount?: number;
+  prepaidRecordId?: string;
+  contractId?: string;
   paymentCreatorId?: string;
   paymentCreatorName?: string;
-
   contractStatus?: string;
   monthlyPayment?: number;
   totalPrice?: number;
-
   dollar?: number;
   sum?: number;
   expensesNotes?: string;
   managerName?: string;
-
   customerName?: string;
-
   affectedEntities?: {
     entityType: string;
     entityId: string;
@@ -72,7 +71,6 @@ export interface IAuditLog {
     role: string;
   };
   userType: "employee" | "customer";
-
   changes?: {
     field: string;
     oldValue: any;
@@ -91,7 +89,7 @@ export interface AuditLogDailyResponse {
   status: string;
   message: string;
   data: {
-    date: string | null; // null = filter yo'q (barcha yozuvlar)
+    date: string | null;
     activities: IAuditLog[];
     total: number;
     limit: number;
@@ -174,10 +172,10 @@ export interface AuditLogFilters {
   entity?: AuditEntity;
   action?: AuditAction;
   userId?: string;
-  employeeId?: string; // ✅ Xodim bo'yicha filter
-  search?: string; // ✅ Qidiruv (customerName, productName)
-  minAmount?: number; // ✅ Minimum summa (keyinchalik qo'shiladi)
-  maxAmount?: number; // ✅ Maximum summa (keyinchalik qo'shiladi)
+  employeeId?: string;
+  search?: string;
+  minAmount?: number;
+  maxAmount?: number;
   limit?: number;
   page?: number;
 }

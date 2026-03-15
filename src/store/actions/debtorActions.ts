@@ -1,4 +1,4 @@
-import authApi from "@/server/auth"
+import authApi from "@/server/auth";
 
 import { enqueueSnackbar } from "@/store/slices/snackbar";
 import {
@@ -66,19 +66,18 @@ export const updateDebCustomerManager =
         dispatch(getDebtors());
         dispatch(getDebtContract());
 
-        // dispatch(updateCustomersManager({ customerId, managerId }));
         dispatch(
           enqueueSnackbar({
             message: res.data.message,
             options: { variant: "success" },
-          })
+          }),
         );
       } else {
         dispatch(
           enqueueSnackbar({
             message: res.data.message,
             options: { variant: "success" },
-          })
+          }),
         );
       }
     } catch (error: any) {
@@ -91,7 +90,7 @@ export const updateDebCustomerManager =
         enqueueSnackbar({
           message: errorMessage,
           options: { variant: "error" },
-        })
+        }),
       );
 
       if (Array.isArray(errorMessages)) {
@@ -100,7 +99,7 @@ export const updateDebCustomerManager =
             enqueueSnackbar({
               message: err,
               options: { variant: "error" },
-            })
+            }),
           );
         });
       }

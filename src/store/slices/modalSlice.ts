@@ -1,9 +1,9 @@
-import type { IPayment } from "@/types/cash"
-import type { IDebt } from "@/types/debtor"
-import type { IMeneger } from "@/types/meneger"
-import type { IEmployee } from "@/types/employee"
-import type { ICustomer } from "@/types/customer"
-import type { IContract } from "@/types/contract"
+import type { IPayment } from "@/types/cash";
+import type { IDebt } from "@/types/debtor";
+import type { IMeneger } from "@/types/meneger";
+import type { IEmployee } from "@/types/employee";
+import type { ICustomer } from "@/types/customer";
+import type { IContract } from "@/types/contract";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { createSlice } from "@reduxjs/toolkit";
@@ -23,7 +23,7 @@ export interface ModalState {
 
   debtorModal: ModalData<IDebt>;
 
-  cashModal: ModalData<IPayment>; 
+  cashModal: ModalData<IPayment>;
   cashInfoModal: ModalData<IPayment>;
   cashRejectModal: ModalData<IPayment>;
   menegerModal: ModalData<IMeneger>;
@@ -49,7 +49,7 @@ const modalSlice = createSlice({
   reducers: {
     setModal<T>(
       state: ModalState,
-      action: PayloadAction<{ modal: keyof ModalState; data: ModalData<T> }>
+      action: PayloadAction<{ modal: keyof ModalState; data: ModalData<T> }>,
     ) {
       const { modal, data } = action.payload;
       (state[modal] as ModalData<T>) = data;

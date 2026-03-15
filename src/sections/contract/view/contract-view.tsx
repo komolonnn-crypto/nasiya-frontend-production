@@ -118,10 +118,6 @@ export function ContractsView() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // const handleImportClick = () => {
-  //   fileInputRef.current?.click();
-  // };
-
   const handleOpenConfirmDialog = (contract: any) => {
     setConfirmDialog({
       open: true,
@@ -309,7 +305,11 @@ export function ContractsView() {
               border: "1px solid rgba(var(--palette-error-mainChannel) / 0.24)",
               borderRadius: 1,
             }}>
-            <Typography variant="body2" color="error.main" fontWeight={700} sx={{ flex: '1 1 auto' }}>
+            <Typography
+              variant="body2"
+              color="error.main"
+              fontWeight={700}
+              sx={{ flex: "1 1 auto" }}>
               {selectedRows.length} ta shartnoma tanlandi
             </Typography>
             <Box display="flex" gap={1} flexShrink={0}>
@@ -389,14 +389,12 @@ export function ContractsView() {
                 dispatch(setContractId(row._id));
               }}
               onCustomerClick={handleCustomerClick}
-              // selectable={isAdmin}
-              // setSelectedRows={setSelectedRows}
             />
           }
         </CustomTabPanel>
       </Stack>
 
-      {/* Bulk delete tasdiqlash dialogi */}
+      {}
       <Dialog
         open={bulkDeleteDialog}
         onClose={() => setBulkDeleteDialog(false)}
@@ -424,7 +422,7 @@ export function ContractsView() {
         </DialogActions>
       </Dialog>
 
-      {/* Mijoz ma'lumotlari Dialog */}
+      {}
       <Dialog
         open={customerInfoDialog.open}
         onClose={handleCloseCustomerDialog}
@@ -437,7 +435,7 @@ export function ContractsView() {
         <DialogContent>
           {customerInfoDialog.customer && (
             <Stack spacing={2} sx={{ mt: 1 }}>
-              {/* Avatar va ism */}
+              {}
               <Stack direction="row" spacing={2} alignItems="center">
                 <Avatar sx={{ width: 60, height: 60, bgcolor: "primary.main" }}>
                   {customerInfoDialog.customer.fullName?.charAt(0) || "M"}
@@ -454,7 +452,7 @@ export function ContractsView() {
 
               <Divider />
 
-              {/* Ma'lumotlar ro'yxati */}
+              {}
               <List dense>
                 <ListItem>
                   <Box
@@ -480,7 +478,10 @@ export function ContractsView() {
                       gap: 1,
                       mr: 2,
                     }}>
-                    <MdLocationOn size={20} color="var(--palette-text-secondary)" />
+                    <MdLocationOn
+                      size={20}
+                      color="var(--palette-text-secondary)"
+                    />
                   </Box>
                   <ListItemText
                     primary="Manzil"
@@ -496,7 +497,10 @@ export function ContractsView() {
                       gap: 1,
                       mr: 2,
                     }}>
-                    <MdCreditCard size={20} color="var(--palette-text-secondary)" />
+                    <MdCreditCard
+                      size={20}
+                      color="var(--palette-text-secondary)"
+                    />
                   </Box>
                   <ListItemText
                     primary="Passport seriyasi"
@@ -547,7 +551,7 @@ export function ContractsView() {
         </DialogActions>
       </Dialog>
 
-      {/* Shartnomani tasdiqlash Dialog */}
+      {}
       <Dialog
         open={confirmDialog.open}
         onClose={handleCloseConfirmDialog}

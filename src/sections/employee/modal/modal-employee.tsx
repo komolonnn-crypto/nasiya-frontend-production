@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import type { RootState } from "@/store"
+import type { RootState } from "@/store";
 import type { SelectChangeEvent } from "@mui/material";
-import type { IAddEmployee, IEditEmployee } from "@/types/employee"
+import type { IAddEmployee, IEditEmployee } from "@/types/employee";
 
 import { useSelector } from "react-redux";
 import { useState, useEffect, useCallback } from "react";
@@ -23,11 +22,11 @@ import {
   InputAdornment,
 } from "@mui/material";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import { closeModal } from "@/store/slices/modalSlice"
-import { enqueueSnackbar } from "@/store/slices/snackbar"
-import { addEmployee, updateEmployee } from "@/store/actions/employeeActions"
+import { closeModal } from "@/store/slices/modalSlice";
+import { enqueueSnackbar } from "@/store/slices/snackbar";
+import { addEmployee, updateEmployee } from "@/store/actions/employeeActions";
 
 interface IForm {
   firstName: string;
@@ -79,7 +78,7 @@ const ModalEmployee = () => {
 
     if (!input.startsWith("+998")) return;
 
-    const formatted = input.replace(/[^\d+]/g, ""); // Raqamdan boshqa belgilarni olib tashlash
+    const formatted = input.replace(/[^\d+]/g, "");
 
     if (formatted.length > 13) return;
 
@@ -115,7 +114,7 @@ const ModalEmployee = () => {
           enqueueSnackbar({
             message: "Iltimos, barcha maydonlarni to'ldiring!",
             options: { variant: "error" },
-          })
+          }),
         );
         return;
       }
@@ -125,7 +124,7 @@ const ModalEmployee = () => {
           enqueueSnackbar({
             message: "Telefon raqam noto'g'ri formatda!",
             options: { variant: "error" },
-          })
+          }),
         );
         return;
       }
@@ -158,7 +157,7 @@ const ModalEmployee = () => {
 
       handleClose();
     },
-    [formValues, employee, employeeModal, dispatch, handleClose]
+    [formValues, employee, employeeModal, dispatch, handleClose],
   );
 
   useEffect(() => {
@@ -193,12 +192,11 @@ const ModalEmployee = () => {
         onSubmit: handleSubmit,
       }}
       maxWidth="sm"
-      fullWidth
-    >
+      fullWidth>
       <DialogTitle>
-        {employeeModal?.type === "edit"
-          ? "Xodimni Tahrirlash"
-          : "Yangi Xodim Qo'shish"}
+        {employeeModal?.type === "edit" ?
+          "Xodimni Tahrirlash"
+        : "Yangi Xodim Qo'shish"}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
@@ -255,8 +253,7 @@ const ModalEmployee = () => {
                 onChange={handleSelectChange}
                 name="role"
                 label="Lavozimi"
-                fullWidth
-              >
+                fullWidth>
                 <MenuItem value="manager">Manager</MenuItem>
                 <MenuItem value="seller">Sotuvchi</MenuItem>
                 <MenuItem value="moderator">Moderator</MenuItem>
@@ -264,7 +261,7 @@ const ModalEmployee = () => {
             </FormControl>
           </Grid>
 
-          {/* Parol maydonlari */}
+          {}
           {employeeModal?.type !== "edit" && (
             <>
               <Grid xs={12}>
@@ -283,13 +280,10 @@ const ModalEmployee = () => {
                       <InputAdornment position="end">
                         <IconButton
                           onClick={() => setShowPassword(!showPassword)}
-                          edge="end"
-                        >
-                          {showPassword ? (
+                          edge="end">
+                          {showPassword ?
                             <MdVisibilityOff />
-                          ) : (
-                            <MdVisibility />
-                          )}
+                          : <MdVisibility />}
                         </IconButton>
                       </InputAdornment>
                     ),
@@ -314,13 +308,10 @@ const ModalEmployee = () => {
                           onClick={() =>
                             setShowConfirmPassword(!showConfirmPassword)
                           }
-                          edge="end"
-                        >
-                          {showConfirmPassword ? (
+                          edge="end">
+                          {showConfirmPassword ?
                             <MdVisibilityOff />
-                          ) : (
-                            <MdVisibility />
-                          )}
+                          : <MdVisibility />}
                         </IconButton>
                       </InputAdornment>
                     ),
@@ -347,13 +338,10 @@ const ModalEmployee = () => {
                       <InputAdornment position="end">
                         <IconButton
                           onClick={() => setShowPassword(!showPassword)}
-                          edge="end"
-                        >
-                          {showPassword ? (
+                          edge="end">
+                          {showPassword ?
                             <MdVisibilityOff />
-                          ) : (
-                            <MdVisibility />
-                          )}
+                          : <MdVisibility />}
                         </IconButton>
                       </InputAdornment>
                     ),
@@ -378,13 +366,10 @@ const ModalEmployee = () => {
                             onClick={() =>
                               setShowConfirmPassword(!showConfirmPassword)
                             }
-                            edge="end"
-                          >
-                            {showConfirmPassword ? (
+                            edge="end">
+                            {showConfirmPassword ?
                               <MdVisibilityOff />
-                            ) : (
-                              <MdVisibility />
-                            )}
+                            : <MdVisibility />}
                           </IconButton>
                         </InputAdornment>
                       ),

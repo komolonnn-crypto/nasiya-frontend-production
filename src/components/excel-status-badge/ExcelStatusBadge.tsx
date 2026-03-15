@@ -1,4 +1,3 @@
-// Excel-style status badge component
 import { Box } from '@mui/material';
 
 interface ExcelStatusBadgeProps {

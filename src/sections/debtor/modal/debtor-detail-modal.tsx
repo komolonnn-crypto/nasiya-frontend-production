@@ -1,4 +1,4 @@
-import type { IDebt } from "@/types/debtor"
+import type { IDebt } from "@/types/debtor";
 
 import {
   Box,
@@ -33,10 +33,19 @@ interface ContractInfo {
   delayDays: number;
 }
 
-// Oy nomlari
 const monthNames = [
-  "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
-  "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"
+  "Yanvar",
+  "Fevral",
+  "Mart",
+  "Aprel",
+  "May",
+  "Iyun",
+  "Iyul",
+  "Avgust",
+  "Sentabr",
+  "Oktabr",
+  "Noyabr",
+  "Dekabr",
 ];
 
 interface DebtorDetailModalProps {
@@ -53,20 +62,21 @@ export function DebtorDetailModal({
   if (!debtor) return null;
 
   const contracts: ContractInfo[] = (debtor as any).contracts || [];
-  // const totalDelayDays = Math.max(...contracts.map(c => c.delayDays || 0));
 
-  // Qaysi oy to'lovi kechikkanini hisoblash
   const getOverdueMonthInfo = (contract: ContractInfo) => {
     if (contract.delayDays <= 0) return null;
-    
-    const nextPaymentDate = contract.nextPaymentDate 
-      ? new Date(contract.nextPaymentDate) 
-      : null;
-    
+
+    const nextPaymentDate =
+      contract.nextPaymentDate ? new Date(contract.nextPaymentDate) : null;
+
     if (!nextPaymentDate) return null;
 
-    const paidMonths = contract.period && contract.monthlyPayment
-      ? Math.floor((contract.totalPaid - contract.initialPayment) / contract.monthlyPayment)
+    const paidMonths =
+      contract.period && contract.monthlyPayment ?
+        Math.floor(
+          (contract.totalPaid - contract.initialPayment) /
+            contract.monthlyPayment,
+        )
       : 0;
 
     const monthName = monthNames[nextPaymentDate.getMonth()];
@@ -82,14 +92,12 @@ export function DebtorDetailModal({
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="lg"
-      fullWidth
-    >
+    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
       <DialogTitle>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center">
           <Box>
             <Typography variant="h6" fontWeight={600}>
               {debtor.fullName || "Noma'lum mijoz"}
@@ -112,66 +120,103 @@ export function DebtorDetailModal({
       <Divider />
 
       <DialogContent>
-        {/* Umumiy ma'lumot */}
+        {}
         <Table size="small" sx={{ mb: 3 }}>
           <TableBody>
             <TableRow>
-              <TableCell><strong>Umumiy narx:</strong></TableCell>
-              <TableCell align="right">${debtor.totalPrice?.toLocaleString() || 0}</TableCell>
+              <TableCell>
+                <strong>Umumiy narx:</strong>
+              </TableCell>
+              <TableCell align="right">
+                ${debtor.totalPrice?.toLocaleString() || 0}
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell><strong>To'langan:</strong></TableCell>
-              <TableCell align="right" sx={{ color: "success.main", fontWeight: 600 }}>
+              <TableCell>
+                <strong>To'langan:</strong>
+              </TableCell>
+              <TableCell
+                align="right"
+                sx={{ color: "success.main", fontWeight: 600 }}>
                 ${debtor.totalPaid?.toLocaleString() || 0}
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell><strong>Qoldiq qarz:</strong></TableCell>
-              <TableCell align="right" sx={{ color: "error.main", fontWeight: 600 }}>
+              <TableCell>
+                <strong>Qoldiq qarz:</strong>
+              </TableCell>
+              <TableCell
+                align="right"
+                sx={{ color: "error.main", fontWeight: 600 }}>
                 ${debtor.remainingDebt?.toLocaleString() || 0}
               </TableCell>
             </TableRow>
             {debtor.manager && (
               <TableRow>
-                <TableCell><strong>Menejer:</strong></TableCell>
+                <TableCell>
+                  <strong>Menejer:</strong>
+                </TableCell>
                 <TableCell align="right">{debtor.manager}</TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
 
-        {/* Shartnomalar jadvali */}
+        {}
         <Typography variant="subtitle1" fontWeight={600} gutterBottom mt={2}>
           Shartnomalar ({contracts.length})
         </Typography>
 
-        {contracts.length > 0 ? (
+        {contracts.length > 0 ?
           <Table size="small" sx={{ mt: 1 }}>
             <TableBody>
               <TableRow sx={{ bgcolor: "background.neutral" }}>
                 <TableCell sx={{ fontWeight: 600 }}>Mahsulot</TableCell>
-                <TableCell align="right" sx={{ fontWeight: 600 }}>Umumiy</TableCell>
-                <TableCell align="right" sx={{ fontWeight: 600 }}>To'langan</TableCell>
-                <TableCell align="right" sx={{ fontWeight: 600 }}>Qoldiq</TableCell>
-                <TableCell align="right" sx={{ fontWeight: 600 }}>Oylik</TableCell>
-                <TableCell align="right" sx={{ fontWeight: 600 }}>Muddat</TableCell>
-                <TableCell align="center" sx={{ fontWeight: 600 }}>Holat</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 600 }}>
+                  Umumiy
+                </TableCell>
+                <TableCell align="right" sx={{ fontWeight: 600 }}>
+                  To'langan
+                </TableCell>
+                <TableCell align="right" sx={{ fontWeight: 600 }}>
+                  Qoldiq
+                </TableCell>
+                <TableCell align="right" sx={{ fontWeight: 600 }}>
+                  Oylik
+                </TableCell>
+                <TableCell align="right" sx={{ fontWeight: 600 }}>
+                  Muddat
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 600 }}>
+                  Holat
+                </TableCell>
               </TableRow>
               {contracts.map((contract, index) => {
-                const paidMonths = contract.period && contract.monthlyPayment
-                  ? Math.floor((contract.totalPaid - contract.initialPayment) / contract.monthlyPayment)
+                const paidMonths =
+                  contract.period && contract.monthlyPayment ?
+                    Math.floor(
+                      (contract.totalPaid - contract.initialPayment) /
+                        contract.monthlyPayment,
+                    )
                   : 0;
                 const overdueInfo = getOverdueMonthInfo(contract);
                 const hasDelay = contract.delayDays > 0;
 
                 return (
-                  <TableRow 
+                  <TableRow
                     key={contract._id || index}
-                    sx={{ 
-                      bgcolor: hasDelay ? "rgba(var(--palette-error-mainChannel) / 0.1)" : "background.paper",
-                      '&:hover': { bgcolor: hasDelay ? "rgba(var(--palette-error-mainChannel) / 0.18)" : "action.hover" }
-                    }}
-                  >
+                    sx={{
+                      bgcolor:
+                        hasDelay ?
+                          "rgba(var(--palette-error-mainChannel) / 0.1)"
+                        : "background.paper",
+                      "&:hover": {
+                        bgcolor:
+                          hasDelay ?
+                            "rgba(var(--palette-error-mainChannel) / 0.18)"
+                          : "action.hover",
+                      },
+                    }}>
                     <TableCell>
                       <Typography variant="body2" fontWeight={600}>
                         {contract.productName || "Noma'lum"}
@@ -185,10 +230,14 @@ export function DebtorDetailModal({
                     <TableCell align="right">
                       ${contract.totalPrice?.toLocaleString() || 0}
                     </TableCell>
-                    <TableCell align="right" sx={{ color: "success.main", fontWeight: 600 }}>
+                    <TableCell
+                      align="right"
+                      sx={{ color: "success.main", fontWeight: 600 }}>
                       ${contract.totalPaid?.toLocaleString() || 0}
                     </TableCell>
-                    <TableCell align="right" sx={{ color: "error.main", fontWeight: 600 }}>
+                    <TableCell
+                      align="right"
+                      sx={{ color: "error.main", fontWeight: 600 }}>
                       ${contract.remainingDebt?.toLocaleString() || 0}
                     </TableCell>
                     <TableCell align="right">
@@ -198,30 +247,27 @@ export function DebtorDetailModal({
                       {paidMonths} / {contract.period || 0}
                     </TableCell>
                     <TableCell align="center">
-                      {hasDelay ? (
-                        <Chip 
-                          label={`${contract.delayDays} kun`} 
-                          color="error" 
+                      {hasDelay ?
+                        <Chip
+                          label={`${contract.delayDays} kun`}
+                          color="error"
                           size="small"
                         />
-                      ) : (
-                        <Chip 
-                          label="Vaqtida" 
-                          color="success" 
-                          size="small"
-                        />
-                      )}
+                      : <Chip label="Vaqtida" color="success" size="small" />}
                     </TableCell>
                   </TableRow>
                 );
               })}
             </TableBody>
           </Table>
-        ) : (
-          <Typography variant="body2" color="text.secondary" textAlign="center" py={3}>
+        : <Typography
+            variant="body2"
+            color="text.secondary"
+            textAlign="center"
+            py={3}>
             Shartnomalar topilmadi
           </Typography>
-        )}
+        }
       </DialogContent>
 
       <Divider />

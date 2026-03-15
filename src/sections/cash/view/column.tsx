@@ -29,8 +29,6 @@ export const columnsCash: Column[] = [
     minWidth: 50,
     width: 70,
     renderCell: (row) => {
-      // ✅ TUZATISH: Birinchi navbatda shartnomadagi "to'lov kuni"ni ko'rsatish
-      // Agar bu oylik to'lov bo'lsa
       if (row.paymentType === "monthly") {
         if (row.initialPaymentDueDate) {
           return new Date(row.initialPaymentDueDate)
@@ -43,7 +41,6 @@ export const columnsCash: Column[] = [
         }
       }
 
-      // Agar bu boshlang'ich to'lov bo'lsa yoki shartnoma boshlangan kun kerak bo'lsa
       if (row.paymentType === "initial" && row.contractStartDate) {
         return new Date(row.contractStartDate)
           .getDate()
@@ -51,11 +48,9 @@ export const columnsCash: Column[] = [
           .padStart(2, "0");
       }
 
-      // Fallback: row.date dan kunni olish
       if (row.date) {
         const day = new Date(row.date).getDate();
 
-        // ✅ Eslatma uchun icon qo'shish
         if (row.isReminderNotification) {
           const paymentDate = new Date(row.date);
           const today = new Date();
@@ -184,7 +179,6 @@ export const columnsCash: Column[] = [
     minWidth: 110,
     width: 130,
     renderCell: (row) => {
-      // ✅ Faqat managerId'dan menejer ma'lumotlarini olish
       if (!row.managerId) return "—";
 
       const managerName =
@@ -207,14 +201,12 @@ export const columnsCash: Column[] = [
   },
   {
     id: "postponedDays",
-    label: "Muddat", // ✅ O'zgartirildi: "Kechikkan kun" -> "Muddat"
+    label: "Muddat",
     sortable: true,
     minWidth: 70,
     width: 90,
     renderCell: (row) => {
       if (row.isReminderNotification) {
-        // Haqiqiy kechiktirilgan kunlarni hisoblash
-        // To'lov sanasi - Bugun = Necha kun
         const paymentDate = new Date(row.date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -223,7 +215,6 @@ export const columnsCash: Column[] = [
         const diffTime = paymentDate.getTime() - today.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        // ✅ Muddati o'tgan eslatma - qizil rang
         const isExpired = diffDays < 0;
 
         return (
@@ -254,7 +245,6 @@ export const columnsCash: Column[] = [
     minWidth: 110,
     width: 130,
     renderCell: (row) => {
-      // ✅ YANGI: Agar bu eslatma notification bo'lsa, "-" ko'rsatish
       if (row.isReminderNotification) {
         return (
           <Typography variant="body2" color="text.secondary">
@@ -270,7 +260,6 @@ export const columnsCash: Column[] = [
           row.actualAmount || 0
         : row.actualAmount || row.amount || 0;
 
-      // ✅ To'lov turi label va rangi
       const paymentTypeConfig: Record<string, { label: string; color: any }> = {
         initial: { label: "Boshlang'ich", color: "info" },
         monthly: { label: "Oylik", color: "default" },
@@ -302,7 +291,7 @@ export const columnsCash: Column[] = [
               ${displayAmount?.toLocaleString() || 0}
             </Typography>
           </Box>
-          {/* ✅ To'lov turi chip — har doim ko'rsatiladi */}
+
           {ptConfig && (
             <Chip
               label={ptConfig.label}
@@ -465,9 +454,7 @@ export const columnsCash: Column[] = [
     minWidth: 110,
     width: 130,
     renderCell: (row) => {
-      // ✅ YANGI: Eslatma bo'lsa, maxsus status
       if (row.isReminderNotification) {
-        // ✅ Muddati o'tgan eslatmani tekshirish
         const paymentDate = new Date(row.date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -558,9 +545,7 @@ export const columnsCash: Column[] = [
     minWidth: 50,
     width: 60,
     renderCell: (row, _onCustomerClick, onNotesClick) => {
-      // ✅ Eslatma uchun ham oddiy ikonka
       if (row.isReminderNotification && row.reminderComment) {
-        // ✅ Muddati o'tgan eslatmani tekshirish
         const paymentDate = new Date(row.date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -642,7 +627,7 @@ export const columnsCash: Column[] = [
     width: 130,
     renderCell: (row) => {
       if (row.remainingAmount && row.remainingAmount > 0) {
-        const date = new Date(row.createdAt); // <-- use createdAt now
+        const date = new Date(row.createdAt);
         const formattedDate = date.toLocaleDateString("uz-UZ", {
           day: "2-digit",
           month: "2-digit",

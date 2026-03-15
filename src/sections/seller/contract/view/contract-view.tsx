@@ -1,16 +1,16 @@
-import type { RootState } from "@/store"
-import type { Column } from "@/components/table/types"
+import type { RootState } from "@/store";
+import type { Column } from "@/components/table/types";
 
 import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { Box, Button, Tooltip, Typography, Tab, Tabs } from "@mui/material";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import { setModal } from "@/store/slices/modalSlice"
-import { DashboardContent } from "@/layouts/dashboard"
-import { setContractId } from "@/store/slices/contractSlice"
+import { setModal } from "@/store/slices/modalSlice";
+import { DashboardContent } from "@/layouts/dashboard";
+import { setContractId } from "@/store/slices/contractSlice";
 import {
   getSellerActiveContracts,
   getSellerNewContracts,
@@ -19,9 +19,9 @@ import {
 
 import { enqueueSnackbar } from "notistack";
 
-import { Iconify } from "@/components/iconify"
-import Loader from "@/components/loader/Loader"
-import { exportContractsToCSV } from "@/utils/export-csv"
+import { Iconify } from "@/components/iconify";
+import Loader from "@/components/loader/Loader";
+import { exportContractsToCSV } from "@/utils/export-csv";
 
 import ContractTable from "./contactTable";
 
@@ -87,8 +87,7 @@ const ContractsView = () => {
         alignItems="center"
         justifyContent="end"
         gap={3}
-        mb={3}
-      >
+        mb={3}>
         <Typography variant="h4" flexGrow={1}>
           Shartnomalar
         </Typography>
@@ -102,8 +101,7 @@ const ContractsView = () => {
               enqueueSnackbar("Shartnomalar CSV formatda yuklandi", {
                 variant: "success",
               });
-            }}
-          >
+            }}>
             Export CSV
           </Button>
         </Tooltip>
@@ -117,10 +115,9 @@ const ContractsView = () => {
                 setModal({
                   modal: "contractModal",
                   data: { type: "add", data: undefined },
-                })
+                }),
               );
-            }}
-          >
+            }}>
             Qo&apos;shish
           </Button>
         </Tooltip>
@@ -129,8 +126,7 @@ const ContractsView = () => {
       <Tabs
         value={currentTab}
         onChange={handleTabChange}
-        sx={{ mb: 3, borderBottom: 1, borderColor: "divider" }}
-      >
+        sx={{ mb: 3, borderBottom: 1, borderColor: "divider" }}>
         <Tab
           label={`Yangi shartnomalar (${newContracts.length})`}
           value="new"

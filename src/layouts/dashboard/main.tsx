@@ -7,8 +7,6 @@ import { useTheme } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import { layoutClasses } from "@/layouts/classes";
 
-// ----------------------------------------------------------------------
-
 export function Main({ children, sx, ...other }: BoxProps) {
   return (
     <Box
@@ -25,8 +23,6 @@ export function Main({ children, sx, ...other }: BoxProps) {
     </Box>
   );
 }
-
-// ----------------------------------------------------------------------
 
 type DashboardContentProps = ContainerProps & {
   disablePadding?: boolean;
@@ -55,12 +51,9 @@ export function DashboardContent({
         width: "100%",
         maxWidth: "100vw",
         overflowX: "hidden",
-        // pt: "var(--layout-dashboard-content-pt)",
         pb: "var(--layout-dashboard-content-pb)",
         px: { xs: 1, sm: 2, md: 3 },
-        [theme.breakpoints.up(layoutQuery)]: {
-          // px: "var(--layout-dashboard-content-px)",
-        },
+        [theme.breakpoints.up(layoutQuery)]: {},
         ...(disablePadding && {
           p: {
             xs: 0,

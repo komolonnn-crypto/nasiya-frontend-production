@@ -41,7 +41,7 @@ const ModalCash = () => {
   const dispatch = useAppDispatch();
   const { cashModal } = useSelector((state: RootState) => state.modal);
   const { currency } = useSelector((state: RootState) => state.dashboard);
-  const cash = cashModal.data as any; // Type cast to any since this modal is deprecated
+  const cash = cashModal.data as any;
 
   const [formValues, setFormValues] = useState<IForm>(defaultFormValues);
   const [currencyCourse, setCurrencyCourse] = useState(0);

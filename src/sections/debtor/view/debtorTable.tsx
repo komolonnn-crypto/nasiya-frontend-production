@@ -1,10 +1,10 @@
-import type { IDebt } from "@/types/debtor"
-import type { Column } from "@/components/table/types"
+import type { IDebt } from "@/types/debtor";
+import type { Column } from "@/components/table/types";
 
-import { useTableLogic } from "@/hooks/useTableLogic"
-import { useAppDispatch } from "@/hooks/useAppDispatch"
-import { updateDebCustomerManager } from "@/store/actions/debtorActions"
-import { GenericTable } from "@/components/table/GnericTable"
+import { useTableLogic } from "@/hooks/useTableLogic";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { updateDebCustomerManager } from "@/store/actions/debtorActions";
+import { GenericTable } from "@/components/table/GnericTable";
 import { ManagerSelectCellDebtor } from "./ManagerSelectCell";
 
 interface DEbtorTableProps {
@@ -33,11 +33,10 @@ const DebtorTable = ({
 
   const handleManagerChange = (rowId: string, newManager: string) => {
     const row = data.find((d) => d._id === rowId);
-    
+
     if (row?.customerId) {
       dispatch(updateDebCustomerManager(row.customerId, newManager));
-    } 
-    else if (row?._id) {
+    } else if (row?._id) {
       dispatch(updateDebCustomerManager(row._id, newManager));
     } else {
       console.error("Customer ID topilmadi:", rowId);

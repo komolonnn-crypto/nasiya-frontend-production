@@ -4,7 +4,7 @@ export interface IEmployee {
   _id: string;
   firstName: string;
   lastName: string;
-  fullName?: string; // Backend'dan keladi
+  fullName?: string;
   phoneNumber: string;
   telegramId: string;
   isDeleted: boolean;

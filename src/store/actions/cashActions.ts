@@ -1,11 +1,16 @@
-import authApi from "@/server/auth"
-import logger from "@/utils/logger"
+import authApi from "@/server/auth";
+import logger from "@/utils/logger";
 
-import { start, success, setPayments, setError } from "@/store/slices/cashSlice";
+import {
+  start,
+  success,
+  setPayments,
+  setError,
+} from "@/store/slices/cashSlice";
 import { enqueueSnackbar } from "@/store/slices/snackbar";
 
 import type { AppThunk } from "@/store";
-import type { IPayment } from "@/types/cash"
+import type { IPayment } from "@/types/cash";
 
 export const getPendingPayments = (): AppThunk => async (dispatch) => {
   dispatch(start());
@@ -37,7 +42,7 @@ export const getPendingPayments = (): AppThunk => async (dispatch) => {
       enqueueSnackbar({
         message: `To'lovlarni yuklashda xatolik: ${errorMessage}`,
         options: { variant: "error" },
-      })
+      }),
     );
   }
 };
@@ -54,7 +59,7 @@ export const confirmPayments =
         enqueueSnackbar({
           message: "To'lovlar muvaffaqiyatli tasdiqlandi",
           options: { variant: "success" },
-        })
+        }),
       );
 
       dispatch(getPendingPayments());
@@ -67,7 +72,7 @@ export const confirmPayments =
         enqueueSnackbar({
           message: `To'lovlarni tasdiqlashda xatolik: ${errorMessage}`,
           options: { variant: "error" },
-        })
+        }),
       );
     }
   };
@@ -87,7 +92,7 @@ export const rejectPayment =
         enqueueSnackbar({
           message: "To'lov muvaffaqiyatli rad etildi",
           options: { variant: "success" },
-        })
+        }),
       );
 
       dispatch(getPendingPayments());
@@ -100,7 +105,7 @@ export const rejectPayment =
         enqueueSnackbar({
           message: `To'lovni rad etishda xatolik: ${errorMessage}`,
           options: { variant: "error" },
-        })
+        }),
       );
     }
   };

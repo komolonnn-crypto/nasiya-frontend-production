@@ -1,8 +1,3 @@
-// import type { ILoginFormValues } from "@/types/login";
-
-// import authApi from "@/server/auth";
-// import axiosInstance from "@/server/api";
-
 import { enqueueSnackbar } from "@/store/slices/snackbar";
 import {
   loginStart,
@@ -32,19 +27,15 @@ export const refreshProfile = (): AppThunk => async (dispatch) => {
         const profile = JSON.parse(savedProfile);
         dispatch(refreshSuccess({ profile, accessToken: token }));
         return;
-      } catch (parseError) {
-        // Parse error - continue to API call
-      }
+      } catch (parseError) {}
     }
 
-    // Faqat localStorage'da ma'lumot yo'q bo'lsa API'ga murojaat qilish
     const response = await authApi.get("/auth/refresh");
 
     dispatch(refreshSuccess(response.data));
   } catch (error: any) {
     const errorMessage = error.response?.data?.message || error.message;
 
-    // ✅ localStorage'dan ma'lumotlarni yuklash (fallback)
     const token = localStorage.getItem("accessToken");
     const savedProfile = localStorage.getItem("userProfile");
 
@@ -53,9 +44,7 @@ export const refreshProfile = (): AppThunk => async (dispatch) => {
         const profile = JSON.parse(savedProfile);
         dispatch(refreshSuccess({ profile, accessToken: token }));
         return;
-      } catch (parseError) {
-        // Parse error - continue to failure
-      }
+      } catch (parseError) {}
     }
 
     dispatch(refreshFailure(errorMessage));

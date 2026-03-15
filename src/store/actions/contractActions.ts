@@ -1,6 +1,6 @@
-import type { IAddContract, IEditContract } from "@/types/contract"
+import type { IAddContract, IEditContract } from "@/types/contract";
 
-import authApi from "@/server/auth"
+import authApi from "@/server/auth";
 
 import { enqueueSnackbar } from "@/store/slices/snackbar";
 import { setCustomer } from "@/store/slices/customerSlice";
@@ -51,100 +51,99 @@ export const getNewContracts = (): AppThunk => async (dispatch) => {
 
 export const getContract =
   (id: string): AppThunk =>
-    async (dispatch) => {
-      dispatch(start());
-      try {
-        const res = await authApi.get(`/contract/get-contract-by-id/${id}`);
+  async (dispatch) => {
+    dispatch(start());
+    try {
+      const res = await authApi.get(`/contract/get-contract-by-id/${id}`);
 
-        const { data } = res;
-        dispatch(setContract(data));
-        dispatch(setCustomer(data.customer));
-      } catch (error: any) {
-        dispatch(failure());
-      }
-    };
+      const { data } = res;
+      dispatch(setContract(data));
+      dispatch(setCustomer(data.customer));
+    } catch (error: any) {
+      dispatch(failure());
+    }
+  };
 
 export const addContract =
   (data: IAddContract): AppThunk =>
-    async (dispatch) => {
-      dispatch(start());
-      try {
-        const res = await authApi.post("/contract", data);
-        dispatch(getContracts());
-        dispatch(getNewContracts());
-        dispatch(success());
-        dispatch(
-          enqueueSnackbar({
-            message: res.data.message,
-            options: { variant: "success" },
-          })
-        );
-      } catch (error: any) {
-        dispatch(failure());
-        const errorMessage = error.response?.data?.message;
-        const errorMessages: string[] = error.response?.data?.errors;
-        dispatch(
-          enqueueSnackbar({
-            message: errorMessage,
-            options: { variant: "error" },
-          })
-        );
+  async (dispatch) => {
+    dispatch(start());
+    try {
+      const res = await authApi.post("/contract", data);
+      dispatch(getContracts());
+      dispatch(getNewContracts());
+      dispatch(success());
+      dispatch(
+        enqueueSnackbar({
+          message: res.data.message,
+          options: { variant: "success" },
+        }),
+      );
+    } catch (error: any) {
+      dispatch(failure());
+      const errorMessage = error.response?.data?.message;
+      const errorMessages: string[] = error.response?.data?.errors;
+      dispatch(
+        enqueueSnackbar({
+          message: errorMessage,
+          options: { variant: "error" },
+        }),
+      );
 
-        if (Array.isArray(errorMessages)) {
-          errorMessages.forEach((err) => {
-            dispatch(
-              enqueueSnackbar({
-                message: err,
-                options: { variant: "error" },
-              })
-            );
-          });
-        }
+      if (Array.isArray(errorMessages)) {
+        errorMessages.forEach((err) => {
+          dispatch(
+            enqueueSnackbar({
+              message: err,
+              options: { variant: "error" },
+            }),
+          );
+        });
       }
-    };
+    }
+  };
 
 export const updateContract =
   (data: IEditContract): AppThunk =>
-    async (dispatch) => {
-      dispatch(start());
-      try {
-        const res = await authApi.put("/contract", data);
-        dispatch(getContract(data.id));
-        dispatch(getContracts());
-        dispatch(getNewContracts());
-        dispatch(success());
-        dispatch(
-          enqueueSnackbar({
-            message: res.data.message,
-            options: { variant: "success" },
-          })
-        );
-      } catch (error: any) {
-        dispatch(failure());
-        const errorMessage = error.response?.data?.message;
-        const errorMessages: string[] = error.response?.data?.errors;
+  async (dispatch) => {
+    dispatch(start());
+    try {
+      const res = await authApi.put("/contract", data);
+      dispatch(getContract(data.id));
+      dispatch(getContracts());
+      dispatch(getNewContracts());
+      dispatch(success());
+      dispatch(
+        enqueueSnackbar({
+          message: res.data.message,
+          options: { variant: "success" },
+        }),
+      );
+    } catch (error: any) {
+      dispatch(failure());
+      const errorMessage = error.response?.data?.message;
+      const errorMessages: string[] = error.response?.data?.errors;
 
-        dispatch(
-          enqueueSnackbar({
-            message: errorMessage,
-            options: { variant: "error" },
-          })
-        );
+      dispatch(
+        enqueueSnackbar({
+          message: errorMessage,
+          options: { variant: "error" },
+        }),
+      );
 
-        if (Array.isArray(errorMessages)) {
-          errorMessages.forEach((err) => {
-            dispatch(
-              enqueueSnackbar({
-                message: err,
-                options: { variant: "error" },
-              })
-            );
-          });
-        }
+      if (Array.isArray(errorMessages)) {
+        errorMessages.forEach((err) => {
+          dispatch(
+            enqueueSnackbar({
+              message: err,
+              options: { variant: "error" },
+            }),
+          );
+        });
       }
-    };
+    }
+  };
 
-// seller
 export const getSellerActiveContracts = (): AppThunk => async (dispatch) => {
   dispatch(start());
   try {
@@ -180,181 +179,178 @@ export const getSellerCompletedContracts = (): AppThunk => async (dispatch) => {
 
 export const getSellerContract =
   (id: string): AppThunk =>
-    async (dispatch) => {
-      dispatch(start());
-      try {
-        const res = await authApi.get(`/seller/contract/${id}`);
-        const { data } = res;
-        dispatch(setContract(data));
-        dispatch(setCustomer(data.customer));
-      } catch (error: any) {
-        dispatch(failure());
-      }
-    };
+  async (dispatch) => {
+    dispatch(start());
+    try {
+      const res = await authApi.get(`/seller/contract/${id}`);
+      const { data } = res;
+      dispatch(setContract(data));
+      dispatch(setCustomer(data.customer));
+    } catch (error: any) {
+      dispatch(failure());
+    }
+  };
 
 export const updateSellerContract =
   (data: IEditContract): AppThunk =>
-    async (dispatch) => {
-      dispatch(start());
-      try {
-        const res = await authApi.put(`/seller/contract/${data.id}`, data);
-        dispatch(getSellerContract(data.id));
-        dispatch(getSellerActiveContracts());
-        dispatch(getSellerNewContracts());
-        dispatch(success());
-        dispatch(
-          enqueueSnackbar({
-            message: res.data.message,
-            options: { variant: "success" },
-          })
-        );
-      } catch (error: any) {
-        dispatch(failure());
-        const errorMessage = error.response?.data?.message;
-        const errorMessages: string[] = error.response?.data?.errors;
+  async (dispatch) => {
+    dispatch(start());
+    try {
+      const res = await authApi.put(`/seller/contract/${data.id}`, data);
+      dispatch(getSellerContract(data.id));
+      dispatch(getSellerActiveContracts());
+      dispatch(getSellerNewContracts());
+      dispatch(success());
+      dispatch(
+        enqueueSnackbar({
+          message: res.data.message,
+          options: { variant: "success" },
+        }),
+      );
+    } catch (error: any) {
+      dispatch(failure());
+      const errorMessage = error.response?.data?.message;
+      const errorMessages: string[] = error.response?.data?.errors;
 
-        dispatch(
-          enqueueSnackbar({
-            message: errorMessage,
-            options: { variant: "error" },
-          })
-        );
+      dispatch(
+        enqueueSnackbar({
+          message: errorMessage,
+          options: { variant: "error" },
+        }),
+      );
 
-        if (Array.isArray(errorMessages)) {
-          errorMessages.forEach((err) => {
-            dispatch(
-              enqueueSnackbar({
-                message: err,
-                options: { variant: "error" },
-              })
-            );
-          });
-        }
+      if (Array.isArray(errorMessages)) {
+        errorMessages.forEach((err) => {
+          dispatch(
+            enqueueSnackbar({
+              message: err,
+              options: { variant: "error" },
+            }),
+          );
+        });
       }
-    };
+    }
+  };
 
 export const addContractSeller =
   (data: IAddContract): AppThunk =>
-    async (dispatch) => {
-      dispatch(start());
-      try {
-        const res = await authApi.post("/seller/contract", data);
-        dispatch(getSellerNewContracts());
-        dispatch(success());
-        dispatch(
-          enqueueSnackbar({
-            message: res.data.message,
-            options: { variant: "success" },
-          })
-        );
-      } catch (error: any) {
-        dispatch(failure());
-        const errorMessage = error.response?.data?.message;
-        const errorMessages: string[] = error.response?.data?.errors;
+  async (dispatch) => {
+    dispatch(start());
+    try {
+      const res = await authApi.post("/seller/contract", data);
+      dispatch(getSellerNewContracts());
+      dispatch(success());
+      dispatch(
+        enqueueSnackbar({
+          message: res.data.message,
+          options: { variant: "success" },
+        }),
+      );
+    } catch (error: any) {
+      dispatch(failure());
+      const errorMessage = error.response?.data?.message;
+      const errorMessages: string[] = error.response?.data?.errors;
 
-        dispatch(
-          enqueueSnackbar({
-            message: errorMessage,
-            options: { variant: "error" },
-          })
-        );
+      dispatch(
+        enqueueSnackbar({
+          message: errorMessage,
+          options: { variant: "error" },
+        }),
+      );
 
-        if (Array.isArray(errorMessages)) {
-          errorMessages.forEach((err) => {
-            dispatch(
-              enqueueSnackbar({
-                message: err,
-                options: { variant: "error" },
-              })
-            );
-          });
-        }
+      if (Array.isArray(errorMessages)) {
+        errorMessages.forEach((err) => {
+          dispatch(
+            enqueueSnackbar({
+              message: err,
+              options: { variant: "error" },
+            }),
+          );
+        });
       }
-    };
+    }
+  };
 
-// Shartnomani tasdiqlash (Admin/Moderator/Manager)
 export const approveContract =
   (contractId: string): AppThunk =>
-    async (dispatch) => {
-      dispatch(start());
-      try {
-        const res = await authApi.post(`/contract/approve/${contractId}`);
-        dispatch(getNewContracts());
-        dispatch(getContracts());
-        dispatch(success());
-        dispatch(
-          enqueueSnackbar({
-            message: res.data.message || "Shartnoma tasdiqlandi",
-            options: { variant: "success" },
-          })
-        );
-      } catch (error: any) {
-        dispatch(failure());
-        const errorMessage = error.response?.data?.message;
-        dispatch(
-          enqueueSnackbar({
-            message: errorMessage || "Shartnomani tasdiqlashda xatolik",
-            options: { variant: "error" },
-          })
-        );
-      }
-    };
+  async (dispatch) => {
+    dispatch(start());
+    try {
+      const res = await authApi.post(`/contract/approve/${contractId}`);
+      dispatch(getNewContracts());
+      dispatch(getContracts());
+      dispatch(success());
+      dispatch(
+        enqueueSnackbar({
+          message: res.data.message || "Shartnoma tasdiqlandi",
+          options: { variant: "success" },
+        }),
+      );
+    } catch (error: any) {
+      dispatch(failure());
+      const errorMessage = error.response?.data?.message;
+      dispatch(
+        enqueueSnackbar({
+          message: errorMessage || "Shartnomani tasdiqlashda xatolik",
+          options: { variant: "error" },
+        }),
+      );
+    }
+  };
 
-// Shartnomani o'chirish (Hard Delete - database'dan to'liq o'chirish)
 export const deleteContract =
   (contractId: string): AppThunk =>
-    async (dispatch) => {
-      dispatch(start());
-      try {
-        const res = await authApi.delete(`/contract/hard-delete/${contractId}`);
-        dispatch(getContracts());
-        dispatch(getCompletedContracts());
-        dispatch(success());
-        dispatch(
-          enqueueSnackbar({
-            message: res.data.message || "Shartnoma o'chirildi",
-            options: { variant: "success" },
-          })
-        );
-      } catch (error: any) {
-        dispatch(failure());
-        const errorMessage = error.response?.data?.message;
-        dispatch(
-          enqueueSnackbar({
-            message: errorMessage || "Shartnomani o'chirishda xatolik",
-            options: { variant: "error" },
-          })
-        );
-      }
-    };
+  async (dispatch) => {
+    dispatch(start());
+    try {
+      const res = await authApi.delete(`/contract/hard-delete/${contractId}`);
+      dispatch(getContracts());
+      dispatch(getCompletedContracts());
+      dispatch(success());
+      dispatch(
+        enqueueSnackbar({
+          message: res.data.message || "Shartnoma o'chirildi",
+          options: { variant: "success" },
+        }),
+      );
+    } catch (error: any) {
+      dispatch(failure());
+      const errorMessage = error.response?.data?.message;
+      dispatch(
+        enqueueSnackbar({
+          message: errorMessage || "Shartnomani o'chirishda xatolik",
+          options: { variant: "error" },
+        }),
+      );
+    }
+  };
 
-// Ko'plab shartnomalarni o'chirish (Bulk Hard Delete)
 export const bulkDeleteContracts =
   (contractIds: string[]): AppThunk =>
-    async (dispatch) => {
-      dispatch(start());
-      try {
-        const res = await authApi.delete(`/contract/bulk-hard-delete`, {
-          data: { contractIds },
-        });
-        dispatch(getContracts());
-        dispatch(getCompletedContracts());
-        dispatch(success());
-        dispatch(
-          enqueueSnackbar({
-            message: res.data.message || `${contractIds.length} ta shartnoma o'chirildi`,
-            options: { variant: "success" },
-          })
-        );
-      } catch (error: any) {
-        dispatch(failure());
-        const errorMessage = error.response?.data?.message;
-        dispatch(
-          enqueueSnackbar({
-            message: errorMessage || "Shartnomalarni o'chirishda xatolik",
-            options: { variant: "error" },
-          })
-        );
-      }
-    };
-
+  async (dispatch) => {
+    dispatch(start());
+    try {
+      const res = await authApi.delete(`/contract/bulk-hard-delete`, {
+        data: { contractIds },
+      });
+      dispatch(getContracts());
+      dispatch(getCompletedContracts());
+      dispatch(success());
+      dispatch(
+        enqueueSnackbar({
+          message:
+            res.data.message || `${contractIds.length} ta shartnoma o'chirildi`,
+          options: { variant: "success" },
+        }),
+      );
+    } catch (error: any) {
+      dispatch(failure());
+      const errorMessage = error.response?.data?.message;
+      dispatch(
+        enqueueSnackbar({
+          message: errorMessage || "Shartnomalarni o'chirishda xatolik",
+          options: { variant: "error" },
+        }),
+      );
+    }
+  };

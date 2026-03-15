@@ -11,17 +11,14 @@ export interface IDebt {
   nextPaymentDate: string;
   previousPaymentDate?: string;
   postponedAt?: string;
-
   activeContractsCount: number;
   productName: string;
   startDate: string;
   delayDays: number;
   initialPayment: number;
-
-  // ✅ YANGI: To'lov progressi uchun
   monthlyPayment?: number;
-  period?: number; // Shartnoma muddati (oylar)
-  paidMonthsCount?: number; // To'langan oylar soni
+  period?: number;
+  paidMonthsCount?: number;
   contracts?: Array<{
     _id: string;
     productName: string;
@@ -29,7 +26,7 @@ export interface IDebt {
     period?: number;
     paidMonthsCount?: number;
     [key: string]: any;
-  }>; // Mijoz bo'yicha guruhlangan holat uchun
+  }>;
 
   [key: string]: any;
 }

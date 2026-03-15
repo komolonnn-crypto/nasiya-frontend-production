@@ -1,4 +1,4 @@
-import type { RootState } from "@/store"
+import type { RootState } from "@/store";
 
 import { useSelector } from "react-redux";
 import { useState, useCallback } from "react";
@@ -15,10 +15,10 @@ import {
   DialogContent,
 } from "@mui/material";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import { closeModal } from "@/store/slices/modalSlice"
-import { changeCurrency } from "@/store/actions/dashboardActions"
+import { closeModal } from "@/store/slices/modalSlice";
+import { changeCurrency } from "@/store/actions/dashboardActions";
 
 const ModalCurrency = () => {
   const dispatch = useAppDispatch();
@@ -34,7 +34,7 @@ const ModalCurrency = () => {
 
       setCurrency(numValue);
     },
-    []
+    [],
   );
 
   const handleClose = useCallback(() => {
@@ -50,7 +50,7 @@ const ModalCurrency = () => {
         handleClose();
       }
     },
-    [dispatch, handleClose, newCurrency]
+    [dispatch, handleClose, newCurrency],
   );
 
   return (
@@ -59,8 +59,7 @@ const ModalCurrency = () => {
       PaperProps={{
         component: "form",
         onSubmit: handleSubmit,
-      }}
-    >
+      }}>
       <DialogTitle sx={{ display: "flex", gap: 3, alignItems: "center" }}>
         Joriy kurs{" "}
         <Typography variant="h5" fontWeight={700} color={green[400]}>
@@ -74,15 +73,13 @@ const ModalCurrency = () => {
             xs={12}
             display="flex"
             alignItems="center"
-            justifyContent="center"
-          >
+            justifyContent="center">
             <a
               href="https://bank.uz/currency/cb.html"
               title="Bank.uz - O'zbekiston banklari to'g'risida barcha ma'lumotlar"
               target="_blank"
               rel="noreferrer"
-              style={{ height: "100px" }}
-            >
+              style={{ height: "100px" }}>
               <img
                 src="https://bank.uz/scripts/informer"
                 alt="Dollar kursi"

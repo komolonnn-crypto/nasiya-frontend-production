@@ -107,7 +107,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     month: "",
   });
 
-  // 3-nuqta menu state
   const [actionsMenu, setActionsMenu] = useState<{
     anchorEl: HTMLElement | null;
     paymentId: string;
@@ -120,7 +119,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     month: "",
   });
 
-  // Edit dialog state
   const [editDialog, setEditDialog] = useState<{
     open: boolean;
     paymentId: string;
@@ -198,7 +196,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     }
   };
 
-  // ✅ Boshlang'ich to'lov recordlari — component darajasida hisoblash
   const paidInitialRecord = payments.find(
     (p) => p.paymentType === "initial" && p.isPaid,
   );
@@ -211,15 +208,10 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     const schedule: PaymentScheduleItem[] = [];
     const start = new Date(startDate);
 
-    // ✅ TUZATILDI: period nol yoki undefined bo'lsa, xato
     if (!period || period <= 0) {
       return schedule;
     }
 
-    // ✅ Initial row HAR DOIM ko'rsatiladi:
-    // - PENDING yoki PAID bo'lsa → haqiqiy summa
-    // - Admin belgilagan bo'lsa → o'sha summa
-    // - Hech narsa yo'q → 0 (UI'da "Mavjud emas" ko'rsatiladi)
     const isInitialPaid = !!paidInitialRecord;
     const initialDate = start;
     const rowAmount =
@@ -251,15 +243,12 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
         return dateA.getTime() - dateB.getTime();
       });
 
-    // ✅ TUZATILDI: Oylik to'lovlar uchun initialPaymentDueDate ishlatish
-    // Bu har oy to'lanadigan kun (masalan: 10)
     const monthlyPaymentStartDate =
       initialPaymentDueDate ?
         new Date(initialPaymentDueDate)
-      : addMonths(start, 1); // Fallback: startDate + 1 oy
+      : addMonths(start, 1);
 
     for (let i = 1; i <= period; i++) {
-      // i=1 uchun monthlyPaymentStartDate, i=2 uchun +1 oy, va hokazo
       const paymentDate = addMonths(monthlyPaymentStartDate, i - 1);
 
       const isPaid = i <= monthlyPayments.length;
@@ -569,13 +558,10 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                     actualPayment = paidMonthlyPayments[item.month - 1];
                   }
 
-                  // Ortiqcha va kam to'langan summalarni tekshirish
-
                   let remainingAmountToShow = 0;
                   let hasShortage = false;
 
                   if (actualPayment && item.isPaid) {
-                    // PRIORITY 1: remainingAmount (backend'dan to'g'ridan-to'g'ri)
                     if (
                       actualPayment.remainingAmount != null &&
                       actualPayment.remainingAmount > 0.01
@@ -583,7 +569,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                       remainingAmountToShow = actualPayment.remainingAmount;
                       hasShortage = true;
                     }
-                    // PRIORITY 2: actualAmount mavjud va expectedAmount'dan kam
                     else if (
                       actualPayment.actualAmount != null &&
                       actualPayment.actualAmount !== undefined
@@ -600,7 +585,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                         hasShortage = true;
                       }
                     }
-                    // PRIORITY 3: Status UNDERPAID
                     else if (actualPayment.status === "UNDERPAID") {
                       const expected =
                         actualPayment.expectedAmount ||
@@ -617,8 +601,8 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                       actualPayment.actualAmount === undefined ||
                       actualPayment.actualAmount === null
                     ) {
-                      const expected = item.amount; // Oylik to'lov
-                      const actual = actualPayment.amount; // Haqiqatda to'langan (eski to'lovlarda)
+                      const expected = item.amount;
+                      const actual = actualPayment.amount;
                       const diff = expected - actual;
 
                       if (diff > 0.01) {
@@ -634,17 +618,12 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                       actualPayment.actualAmount || actualPayment.amount || 0;
                   }
 
-                  // const expectedAmount =
-                  //   actualPayment?.expectedAmount || item.amount;
-
-                  // ✅ TUZATILDI: Kechikish kunlarini to'g'ri hisoblash
                   let delayDays = 0;
                   const scheduledDate = new Date(item.date);
                   const todayNormalized = new Date();
-                  todayNormalized.setHours(0, 0, 0, 0); // Faqat sana, vaqtsiz
+                  todayNormalized.setHours(0, 0, 0, 0);
 
                   if (actualPayment && item.isPaid) {
-                    // To'lov qilingan: to'lov sanasi bilan scheduled sana o'rtasidagi farq
                     const paidDate = new Date(actualPayment.date);
                     paidDate.setHours(0, 0, 0, 0);
                     delayDays = Math.floor(
@@ -652,27 +631,23 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                         (1000 * 60 * 60 * 24),
                     );
                   } else if (!item.isPaid && scheduledDate < todayNormalized) {
-                    // To'lov qilinmagan va muddat o'tgan: bugun bilan scheduled sana o'rtasidagi farq
                     delayDays = Math.floor(
                       (todayNormalized.getTime() - scheduledDate.getTime()) /
                         (1000 * 60 * 60 * 24),
                     );
                   }
 
-                  // KASKAD LOGIKA - Serverdan kelgan ma'lumotlarni ishlatish
-                  const fromPreviousMonth = previousExcess; // Oldingi oydan kelgan
-                  const monthlyPaymentAmount = item.amount; // Oylik to'lov
+                  const fromPreviousMonth = previousExcess;
+                  const monthlyPaymentAmount = item.amount;
 
-                  // Agar actualPayment mavjud bo'lsa, serverdan kelgan expectedAmount ni ishlatamiz
                   const needToPay =
                     actualPayment?.expectedAmount ?
                       actualPayment.expectedAmount
-                    : Math.max(0, monthlyPaymentAmount - fromPreviousMonth); // To'lash kerak
+                    : Math.max(0, monthlyPaymentAmount - fromPreviousMonth);
 
                   const actuallyPaid = actualPaidAmount;
 
                   let toNextMonth = 0;
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   let shortage = 0;
 
                   if (item.isPaid && actualPayment) {
@@ -682,7 +657,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                     ) {
                       shortage = actualPayment.remainingAmount;
                     } else {
-                      // Agar server ma'lumoti bo'lmasa, o'zimiz hisoblash
                       const diff = actuallyPaid - needToPay;
                       if (diff > 0.01) {
                         toNextMonth = diff;
@@ -692,11 +666,10 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                     }
                   }
 
-                  // Keyingi oy uchun previousExcess ni yangilash
                   if (item.isPaid) {
                     previousExcess = toNextMonth;
                   } else {
-                    previousExcess = 0; // Agar to'lanmagan bo'lsa, kaskad to'xtaydi
+                    previousExcess = 0;
                   }
 
                   return (
@@ -728,7 +701,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               "1px solid rgba(var(--palette-grey-500Channel) / 0.2)",
                           },
                         }}>
-                        {/* # */}
+                        {}
                         <TableCell
                           sx={{
                             py: 0.25,
@@ -761,7 +734,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           </Box>
                         </TableCell>
 
-                        {/* Belgilangan sana */}
+                        {}
                         <TableCell
                           align="center"
                           sx={{
@@ -777,7 +750,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           </Typography>
                         </TableCell>
 
-                        {/* To'langan sana */}
+                        {}
                         <TableCell
                           align="center"
                           sx={{
@@ -791,7 +764,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                             pendingInitialRecord &&
                             !item.isPaid
                           ) ?
-                            // PENDING initial: yuborilgan sanani ko'rsatish
                             <Typography
                               variant="body2"
                               fontSize="0.75rem"
@@ -811,7 +783,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                 delayDays > 0 ? "error.main" : "success.main"
                               }>
                               {item.isInitial ?
-                                // PAID initial: tasdiqlangan sana + soat
                                 paidInitialRecord?.confirmedAt ?
                                   format(
                                     new Date(paidInitialRecord.confirmedAt),
@@ -847,7 +818,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           }
                         </TableCell>
 
-                        {/* Summa */}
+                        {}
                         <TableCell
                           align="center"
                           sx={{
@@ -879,7 +850,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           </Typography>
                         </TableCell>
 
-                        {/* To'langan */}
+                        {}
                         <TableCell
                           align="center"
                           sx={{
@@ -893,7 +864,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                             !item.isPaid &&
                             pendingInitialRecord
                           ) ?
-                            // PENDING initial — yuborilgan summa
                             <Box
                               display="flex"
                               flexDirection="column"
@@ -955,7 +925,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           }
                         </TableCell>
 
-                        {/* Holat */}
+                        {}
                         <TableCell
                           align="center"
                           sx={{
@@ -965,7 +935,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               "1px solid rgba(var(--palette-grey-500Channel) / 0.2)",
                           }}>
                           {item.isInitial ?
-                            // ✅ Initial to'lov uchun aniq holat
                             item.isPaid ?
                               <Typography
                                 variant="body2"
@@ -1026,7 +995,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           }
                         </TableCell>
 
-                        {/* Amal */}
+                        {}
                         {contractId && (
                           <TableCell
                             align="center"
@@ -1036,17 +1005,15 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               borderBottom:
                                 "1px solid rgba(var(--palette-grey-500Channel) / 0.2)",
                             }}>
-                            {/* ✅ Initial to'lov uchun alohida amal logikasi */}
+
                             {item.isInitial && !item.isPaid ?
                               pendingInitialRecord ?
-                                // PENDING: kassada kutilmoqda, hech qanday tugma yo'q
                                 <Typography
                                   variant="caption"
                                   color="warning.dark"
                                   sx={{ fontSize: "0.65rem", fontWeight: 600 }}>
                                   Kassa kutmoqda
                                 </Typography>
-                                // Mavjud emas yoki to'lanmagan: tugma yo'q
                               : <Typography
                                   variant="caption"
                                   color="text.disabled"
@@ -1130,7 +1097,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           </TableCell>
                         )}
 
-                        {/* ✅ Izoh icon */}
                         <TableCell
                           align="center"
                           sx={{
@@ -1140,7 +1106,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               "1px solid rgba(var(--palette-grey-500Channel) / 0.2)",
                           }}>
                           {(() => {
-                            // PENDING initial uchun ham notes ko'rsat
                             const noteSource =
                               (
                                 item.isInitial &&
@@ -1197,7 +1162,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           })()}
                         </TableCell>
 
-                        {/* Amallar - 3 nuqta menu (Izohdan keyin) */}
+                        {}
                         {contractId && (
                           <TableCell
                             align="center"
@@ -1255,7 +1220,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
           </Table>
         </TableContainer>
 
-        {/* Xulosa - Ixcham */}
+        {}
         <Box
           sx={{
             mt: 1.5,
@@ -1274,7 +1239,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                 Umumiy
               </Typography>
               <Typography variant="body2" fontWeight="600">
-                {/* ✅ FIXED: totalPrice backend'dan kelsa uni ishlatamiz, aks holda hisoblash. NaN oldini olish uchun 0 bilan almashtiramiz */}
+
                 {(
                   totalPrice ||
                   (monthlyPayment || 0) * (period || 0) + (initialPayment || 0)
@@ -1304,7 +1269,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
         </Box>
       </Paper>
 
-      {/* To'lov modal render start */}
+      {}
       {contractId && (
         <PaymentModal
           open={paymentModal.open}
@@ -1323,9 +1288,9 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
           onSuccess={handlePaymentSuccess}
         />
       )}
-      {/* To'lov modal render end */}
+      {}
 
-      {/* 3-nuqta actions menu render start */}
+      {}
       <Menu
         anchorEl={actionsMenu.anchorEl}
         open={Boolean(actionsMenu.anchorEl)}
@@ -1339,9 +1304,9 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
           <ListItemText>Summani tahrirlash</ListItemText>
         </MenuItem>
       </Menu>
-      {/* 3-nuqta actions menu render end */}
+      {}
 
-      {/* Edit amount dialog */}
+      {}
       <Dialog
         open={editDialog.open}
         onClose={() =>
@@ -1412,7 +1377,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
         </DialogActions>
       </Dialog>
 
-      {/* ✅ YANGI: Izoh dialog */}
       <Dialog
         open={noteDialog.open}
         onClose={() => setNoteDialog({ open: false, note: "", month: "" })}

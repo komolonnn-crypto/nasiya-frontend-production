@@ -44,45 +44,41 @@ export function AnalyticsWidgetSummary({
         p: 2,
         position: "relative",
         borderRadius: "18px",
-        bgcolor: "background.paper", // Automatically dark/light
+        bgcolor: "background.paper",
         backgroundImage: "none",
-        
-        // Consistent shadow with other dashboard components
-        boxShadow: isDark 
-          ? "0 4px 20px 0 rgba(0,0,0,0.4)" 
+
+        boxShadow:
+          isDark ?
+            "0 4px 20px 0 rgba(0,0,0,0.4)"
           : "0 1px 2px rgba(0, 0, 0, 0.02), 0 4px 14px rgba(0, 0, 0, 0.03), 0 15px 35px rgba(0, 0, 0, 0.05)",
-        
+
         border: `0.5px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0, 0, 0, 0.08)"}`,
         transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
         ...sx,
       }}
-      {...other}
-    >
-      {node ? (
-        <Box sx={{ overflow: 'hidden', borderRadius: '12px' }}>
+      {...other}>
+      {node ?
+        <Box sx={{ overflow: "hidden", borderRadius: "12px" }}>
           <a
             href="https://bank.uz/currency/cb.html"
             target="_blank"
-            rel="noreferrer"
-          >
+            rel="noreferrer">
             <img
               src="https://bank.uz/scripts/informer"
               alt="Dollar kursi"
               style={{
                 maxWidth: "100%",
                 height: "85px",
-                filter: isDark ? 'invert(0.9) hue-rotate(180deg)' : 'none', // Subtle dark mode adjustment for the external image
+                filter: isDark ? "invert(0.9) hue-rotate(180deg)" : "none",
               }}
             />
           </a>
         </Box>
-      ) : (
-        <>
+      : <>
           <Stack
             direction="row"
             justifyContent="space-between"
-            alignItems="start"
-          >
+            alignItems="start">
             <Box
               sx={{
                 width: "38px",
@@ -91,14 +87,12 @@ export function AnalyticsWidgetSummary({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                
-                // Color mapping: uses widget color with low opacity
+
                 bgcolor: varAlpha(theme.palette[color].mainChannel, 0.12),
                 color: theme.palette[color].main,
                 border: `1px solid ${varAlpha(theme.palette[color].mainChannel, 0.1)}`,
                 boxShadow: `0 4px 8px ${varAlpha(theme.palette[color].mainChannel, 0.08)}`,
-              }}
-            >
+              }}>
               {icon}
             </Box>
 
@@ -113,11 +107,11 @@ export function AnalyticsWidgetSummary({
                     }),
                   );
                 }}
-                sx={{ 
-                  bgcolor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)',
-                  '&:hover': { bgcolor: 'var(--layout-nav-item-active-bg)' } 
-                }}
-              >
+                sx={{
+                  bgcolor:
+                    isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.02)",
+                  "&:hover": { bgcolor: "var(--layout-nav-item-active-bg)" },
+                }}>
                 <Iconify icon="solar:pen-bold" width={16} />
               </IconButton>
             )}
@@ -129,33 +123,30 @@ export function AnalyticsWidgetSummary({
               display: "flex",
               flexDirection: "column",
               alignItems: "flex-end",
-            }}
-          >
+            }}>
             <Typography
               sx={{
                 color: "var(--layout-nav-item-color)",
                 fontWeight: "900",
                 fontSize: "10px",
                 textTransform: "uppercase",
-                letterSpacing: "0.5px"
-              }}
-            >
+                letterSpacing: "0.5px",
+              }}>
               {title}
             </Typography>
-            
+
             <Typography
               sx={{
                 fontSize: "1.5rem",
                 lineHeight: "1.2",
-                color: "text.primary", // Auto white in dark mode
+                color: "text.primary",
                 fontWeight: "900",
-              }}
-            >
+              }}>
               {formatNumber(total)}
             </Typography>
           </Box>
 
-          {/* Background Decorative Icon */}
+          {}
           <SvgColor
             src=""
             sx={{
@@ -167,11 +158,11 @@ export function AnalyticsWidgetSummary({
               position: "absolute",
               color: theme.palette[color].main,
               zIndex: 0,
-              pointerEvents: 'none'
+              pointerEvents: "none",
             }}
           />
         </>
-      )}
+      }
     </Card>
   );
 }

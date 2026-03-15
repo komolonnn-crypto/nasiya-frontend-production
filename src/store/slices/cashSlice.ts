@@ -1,4 +1,4 @@
-import type { IPayment } from "@/types/cash"
+import type { IPayment } from "@/types/cash";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { createSlice } from "@reduxjs/toolkit";

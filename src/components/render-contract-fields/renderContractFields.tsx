@@ -22,7 +22,6 @@ import { Iconify } from "@/components/iconify";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 
-// Global radius variable for consistency
 const CUSTOM_RADIUS = "12px";
 
 interface IReadOnlyTextFieldProps {
@@ -39,12 +38,12 @@ const ReadOnlyTextField = ({ value, label }: IReadOnlyTextFieldProps) => (
     disabled
     InputProps={{
       sx: {
-        borderRadius: CUSTOM_RADIUS, // Added border radius
+        borderRadius: CUSTOM_RADIUS,
         color: "text.primary",
         "& .MuiInputBase-input.Mui-disabled": {
           WebkitTextFillColor: "var(--palette-text-primary)",
         },
-        "& fieldset": { borderRadius: CUSTOM_RADIUS }, // For the outline
+        "& fieldset": { borderRadius: CUSTOM_RADIUS },
       },
     }}
     InputLabelProps={{
@@ -118,7 +117,7 @@ const RenderContractFields: React.FC<IProps> = ({
                   fontWeight: 700,
                   fontSize: "0.75rem",
                   px: 1.5,
-                  borderRadius: "10px", // Rounded Button
+                  borderRadius: "10px",
                   boxShadow: "none",
                   "&:hover": {
                     bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2),
@@ -130,7 +129,7 @@ const RenderContractFields: React.FC<IProps> = ({
             )}
 
             <IconButton
-              sx={{ borderRadius: "10px" }} // Rounded IconButton background
+              sx={{ borderRadius: "10px" }}
               onClick={() => {
                 dispatch(setModal({ modal: "contractModal", data: { type: "edit", data: contract } }));
               }}>
@@ -146,7 +145,7 @@ const RenderContractFields: React.FC<IProps> = ({
             <ReadOnlyTextField value={contract.productName} label="Mahsulot nomi" />
           </Grid>
         )}
-        {/* ... (Other fields use ReadOnlyTextField which now has radius) ... */}
+        {}
         <Grid xs={6} md={4}><ReadOnlyTextField value={contract.originalPrice ? formatNumber(contract.originalPrice) : "—"} label="Asl narxi" /></Grid>
         <Grid xs={6} md={4}><ReadOnlyTextField value={contract.price ? formatNumber(contract.price) : "—"} label="Sotuv narxi" /></Grid>
         <Grid xs={6} md={4}><ReadOnlyTextField value={contract.initialPayment ? formatNumber(contract.initialPayment) : "—"} label="Oldindan to'lov" /></Grid>
@@ -171,30 +170,26 @@ const RenderContractFields: React.FC<IProps> = ({
     disabled
     InputProps={{
       sx: {
-        borderRadius: "12px", // Matches small component radius
+        borderRadius: "12px",
         color: "text.primary",
         "& fieldset": { borderRadius: "12px" },
         "& .MuiInputBase-input.Mui-disabled": {
           WebkitTextFillColor: "var(--palette-text-primary)",
         },
         
-        // Customizing the scrollbar to match the UI
         "& textarea": {
-          overflowY: "auto !important", // Ensure scroll is allowed
-          paddingRight: "8px", // Space for the scrollbar
+          overflowY: "auto !important",
+          paddingRight: "8px",
           
-          // 1. Scrollbar width
           "&::-webkit-scrollbar": {
             width: "5px",
           },
-          // 2. Scrollbar Track (Background)
           "&::-webkit-scrollbar-track": {
             backgroundColor: "transparent",
           },
-          // 3. Scrollbar Thumb (The moving part)
           "&::-webkit-scrollbar-thumb": {
             backgroundColor: (theme) => alpha(theme.palette.text.disabled, 0.3),
-            borderRadius: "10px", // Rounded to match UI
+            borderRadius: "10px",
             "&:hover": {
               backgroundColor: (theme) => alpha(theme.palette.text.disabled, 0.5),
             },
@@ -210,8 +205,8 @@ const RenderContractFields: React.FC<IProps> = ({
             sx={{
               mt: 2,
               bgcolor: "background.neutral",
-              borderRadius: `${CUSTOM_RADIUS} !important`, // Rounded Accordion
-              "&:before": { display: "none" }, // Remove default MUI line
+              borderRadius: `${CUSTOM_RADIUS} !important`,
+              "&:before": { display: "none" },
               overflow: "hidden",
             }}>
             <AccordionSummary expandIcon={<FaChevronDown />}>

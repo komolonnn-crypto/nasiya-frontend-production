@@ -7,8 +7,6 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 import { baseVars } from "@/layouts/config-vars";
 import { layoutClasses } from "@/layouts/classes";
 
-// ----------------------------------------------------------------------
-
 export type LayoutSectionProps = {
   sx?: SxProps<Theme>;
   cssVars?: CSSObject;
@@ -35,7 +33,6 @@ export function LayoutSection({
         body: {
           ...baseVars(theme),
           ...cssVars,
-          // Ensures the scrollbar and body background match the theme
           backgroundColor: isDark ? "#121212" : "#e5e7eb",
         },
       }}
@@ -46,48 +43,41 @@ export function LayoutSection({
     <>
       {inputGlobalStyles}
 
-      <Box 
-        id="root__layout" 
-        className={layoutClasses.root} 
-        sx={{ 
-          display: 'flex', 
-          minHeight: '100vh', 
-          ...sx 
-        }}
-      >
+      <Box
+        id="root__layout"
+        className={layoutClasses.root}
+        sx={{
+          display: "flex",
+          minHeight: "100vh",
+          ...sx,
+        }}>
         {sidebarSection}
-        
+
         <Box
           display="flex"
           flex="1 1 auto"
           flexDirection="column"
-          className={layoutClasses.hasSidebar}
-        >
+          className={layoutClasses.hasSidebar}>
           {headerSection}
 
-          {/* MAIN CONTENT AREA */}
           <Box
             component="main"
             sx={{
-              p: { xs: 2, sm: 3 }, // Responsive padding
+              p: { xs: 2, sm: 3 },
               flexGrow: 1,
               minHeight: "100%",
-              display: 'flex',
-              flexDirection: 'column',
-              
-              // DARK MODE LOGIC:
-              // Light: Your previous #e5e7eb
-              // Dark: A deep neutral dark (#0F1114) that makes your cards "pop"
+              display: "flex",
+              flexDirection: "column",
+
               bgcolor: isDark ? "#0F1114" : "#e5e7eb",
-              
+
               transition: theme.transitions.create(["background-color"], {
                 duration: theme.transitions.duration.standard,
               }),
-            }}
-          >
+            }}>
             {children}
           </Box>
-          
+
           {footerSection}
         </Box>
       </Box>

@@ -2,7 +2,7 @@ import type { AxiosInstance } from "axios";
 
 import axios from "axios";
 
-export const API_URL = import.meta.env['VITE_API_URL'] as string;
+export const API_URL = import.meta.env["VITE_API_URL"] as string;
 const axiosInstance: AxiosInstance = axios.create({
   withCredentials: true,
   baseURL: API_URL,

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-shadow */
+
 import type { RootState, AppDispatch } from "@/store"
 
 import { useState, useEffect } from "react";
@@ -30,9 +30,8 @@ export const EmployeeExpensesTable = () => {
     (state: RootState) => state.employee
   );
   
-  // ✅ Currency course olish (sum hisoblash uchun)
   const { currency } = useSelector((state: RootState) => state.dashboard);
-  const exchangeRate = currency || 12500; // Default: 12,500
+  const exchangeRate = currency || 12500;
 
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
@@ -77,11 +76,11 @@ export const EmployeeExpensesTable = () => {
                 <TableRow key={exp._id}>
                   <TableCell>
                     <Stack spacing={0.5}>
-                      {/* ✅ Dollar ko'rsatish */}
+
                       <Typography variant="body2">
                         DOLLAR: {exp.currencyDetails.dollar?.toLocaleString() || 0}
                       </Typography>
-                      {/* ✅ Sum avtomatik hisoblash */}
+
                       <Typography variant="body2">
                         SUM: {((exp.currencyDetails.dollar || 0) * exchangeRate).toLocaleString()}
                       </Typography>

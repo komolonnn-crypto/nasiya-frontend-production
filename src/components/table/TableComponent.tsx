@@ -61,11 +61,9 @@ export function TableComponent<T extends TableData>({
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
   const renderCellValue = (row: T, column: Column) => {
-    // Check if custom renderCell function exists
     if (column.renderCell) {
       return column.renderCell(row);
     }
-    // Default: use format or raw value
     const value = row[column.id];
     return column.format ? column.format(value) : value;
   };
@@ -125,11 +123,6 @@ export function TableComponent<T extends TableData>({
                       ))}
                   </TableRow>
                 ))}
-
-
-
-
-
 
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>

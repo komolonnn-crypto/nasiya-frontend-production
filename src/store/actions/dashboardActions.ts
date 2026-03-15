@@ -1,4 +1,4 @@
-import authApi from "@/server/auth"
+import authApi from "@/server/auth";
 
 import { enqueueSnackbar } from "@/store/slices/snackbar";
 import {
@@ -31,7 +31,7 @@ export const getStatistic =
     dispatch(start());
     try {
       const res = await authApi.get(
-        `/dashboard/statistic?range=${granularity}`
+        `/dashboard/statistic?range=${granularity}`,
       );
       const { data }: { data: IStatistic } = res;
       dispatch(setStatistic({ granularity, data }));
@@ -65,7 +65,7 @@ export const changeCurrency =
         enqueueSnackbar({
           message: res.data.message || "ok",
           options: { variant: "success" },
-        })
+        }),
       );
     } catch (error: any) {
       dispatch(failure());
@@ -77,7 +77,7 @@ export const changeCurrency =
         enqueueSnackbar({
           message: errorMessage,
           options: { variant: "error" },
-        })
+        }),
       );
 
       if (Array.isArray(errorMessages)) {
@@ -86,7 +86,7 @@ export const changeCurrency =
             enqueueSnackbar({
               message: err,
               options: { variant: "error" },
-            })
+            }),
           );
         });
       }

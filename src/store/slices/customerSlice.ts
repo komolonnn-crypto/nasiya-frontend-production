@@ -1,4 +1,4 @@
-import type { ICustomer } from "@/types/customer"
+import type { ICustomer } from "@/types/customer";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { createSlice } from "@reduxjs/toolkit";
@@ -54,7 +54,7 @@ const customerSlice = createSlice({
 
     updateCustomersManager(
       state,
-      action: PayloadAction<{ customerId: string; managerId: string }>
+      action: PayloadAction<{ customerId: string; managerId: string }>,
     ) {
       const { customerId, managerId } = action.payload;
 

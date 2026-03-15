@@ -17,27 +17,29 @@ import {
   menuItemClasses,
 } from "@mui/material";
 import Button from "@mui/material/Button";
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useSelector } from "react-redux";
-import { setModal } from "@/store/slices/modalSlice"
+import { setModal } from "@/store/slices/modalSlice";
 
-import type { IContract } from "@/types/contract"
-import type { RootState } from "@/store"
+import type { IContract } from "@/types/contract";
+import type { RootState } from "@/store";
 
-import { Iconify } from "@/components/iconify"
-import { getContract, deleteContract } from "@/store/actions/contractActions"
+import { Iconify } from "@/components/iconify";
+import { getContract, deleteContract } from "@/store/actions/contractActions";
 
 export default function ActionContract({ contract }: { contract: IContract }) {
   const dispatch = useAppDispatch();
   const { profile } = useSelector((state: RootState) => state.auth);
-  const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
+  const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(
+    null,
+  );
   const [deleteDialog, setDeleteDialog] = useState(false);
 
   const handleOpenPopover = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       setOpenPopover(event.currentTarget);
     },
-    []
+    [],
   );
 
   const handleClosePopover = useCallback(() => {
@@ -50,7 +52,7 @@ export default function ActionContract({ contract }: { contract: IContract }) {
       setModal({
         modal: "contractModal",
         data: { type: "edit", data: contract },
-      })
+      }),
     );
     handleClosePopover();
   }, [dispatch, contract, handleClosePopover]);
@@ -64,7 +66,7 @@ export default function ActionContract({ contract }: { contract: IContract }) {
   contract.status === "active";
   const isAdmin = profile?.role === "admin";
   const isModerator = profile?.role === "moderator";
-  const canDelete = isAdmin || isModerator; // Admin va Moderator o'chira oladi
+  const canDelete = isAdmin || isModerator;
 
   return (
     <>
@@ -77,8 +79,7 @@ export default function ActionContract({ contract }: { contract: IContract }) {
         anchorEl={openPopover}
         onClose={handleClosePopover}
         anchorOrigin={{ vertical: "top", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-      >
+        transformOrigin={{ vertical: "top", horizontal: "right" }}>
         <MenuList
           disablePadding
           sx={{
@@ -93,8 +94,7 @@ export default function ActionContract({ contract }: { contract: IContract }) {
               borderRadius: 0,
               [`&.${menuItemClasses.selected}`]: { bgcolor: "action.selected" },
             },
-          }}
-        >
+          }}>
           <MenuItem onClick={handleSelect}>
             <Iconify icon="solar:pen-bold" />
             Tahrirlash
@@ -106,8 +106,7 @@ export default function ActionContract({ contract }: { contract: IContract }) {
                 setDeleteDialog(true);
                 handleClosePopover();
               }}
-              sx={{ color: "error.main" }}
-            >
+              sx={{ color: "error.main" }}>
               <Iconify icon="solar:trash-bin-trash-bold" />
               O`chirish
             </MenuItem>
@@ -115,13 +114,12 @@ export default function ActionContract({ contract }: { contract: IContract }) {
         </MenuList>
       </Popover>
 
-      {/* Delete Dialog - Hard Delete */}
+      {}
       <Dialog
         open={deleteDialog}
         onClose={() => setDeleteDialog(false)}
         maxWidth="sm"
-        fullWidth
-      >
+        fullWidth>
         <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <MdDelete color="var(--palette-error-main)" size={24} />
           Shartnomani o&lsquo;chirish
@@ -138,8 +136,7 @@ export default function ActionContract({ contract }: { contract: IContract }) {
               borderRadius: 1,
               border: "2px solid",
               borderColor: "rgba(var(--palette-error-mainChannel) / 0.4)",
-            }}
-          >
+            }}>
             <Stack spacing={1.5}>
               <Box>
                 <Typography variant="caption" color="text.secondary">
@@ -165,12 +162,17 @@ export default function ActionContract({ contract }: { contract: IContract }) {
                   ${contract.totalPrice}
                 </Typography>
               </Box>
-              
-              <Box sx={{ mt: 2, p: 1.5, bgcolor: "error.dark", borderRadius: 1 }}>
+
+              <Box
+                sx={{ mt: 2, p: 1.5, bgcolor: "error.dark", borderRadius: 1 }}>
                 <Typography variant="body2" color="white" fontWeight="bold">
                   ❌ O&lsquo;chiriladi:
                 </Typography>
-                <Typography variant="caption" color="white" component="div" sx={{ mt: 0.5 }}>
+                <Typography
+                  variant="caption"
+                  color="white"
+                  component="div"
+                  sx={{ mt: 0.5 }}>
                   • Shartnoma (tiklab bo&lsquo;lmaydi)
                 </Typography>
                 <Typography variant="caption" color="white" component="div">
@@ -185,8 +187,9 @@ export default function ActionContract({ contract }: { contract: IContract }) {
               </Box>
             </Stack>
           </Box>
-          
-          <DialogContentText sx={{ mt: 2, color: "error.main", fontWeight: "bold" }}>
+
+          <DialogContentText
+            sx={{ mt: 2, color: "error.main", fontWeight: "bold" }}>
             Tasdiqlaysizmi?
           </DialogContentText>
         </DialogContent>
@@ -194,16 +197,14 @@ export default function ActionContract({ contract }: { contract: IContract }) {
           <Button
             onClick={() => setDeleteDialog(false)}
             color="inherit"
-            variant="outlined"
-          >
+            variant="outlined">
             Bekor qilish
           </Button>
           <Button
             onClick={handleDelete}
             color="error"
             variant="contained"
-            startIcon={<MdDelete />}
-          >
+            startIcon={<MdDelete />}>
             O&lsquo;chirish
           </Button>
         </DialogActions>

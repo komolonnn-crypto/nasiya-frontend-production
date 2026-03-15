@@ -1,10 +1,8 @@
 import { Helmet } from "react-helmet-async";
 
-import { CONFIG } from "@/config-global"
+import { CONFIG } from "@/config-global";
 
-import { UsersView } from "@/sections/debtor/view"
-
-// ----------------------------------------------------------------------
+import { UsersView } from "@/sections/debtor/view";
 
 export default function Page() {
   return (

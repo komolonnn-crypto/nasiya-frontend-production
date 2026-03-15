@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+
 import type { TypedUseSelectorHook } from "react-redux";
 import type { Theme, SxProps } from "@mui/material/styles";
 
@@ -16,8 +16,6 @@ import { usePathname } from "@/routes/hooks";
 import { Logo } from "@/components/logo";
 import { Scrollbar } from "@/components/scrollbar";
 import { RouterLink } from "@/routes/components";
-
-// ----------------------------------------------------------------------
 
 export type NavContentProps = {
   slots?: {
@@ -59,8 +57,6 @@ export function NavMobile({
     </Drawer>
   );
 }
-
-// ----------------------------------------------------------------------
 
 const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
@@ -114,8 +110,7 @@ export function NavContent({ slots, sx }: NavContentProps) {
                           color: "var(--layout-nav-item-active-color)",
                         },
                       }),
-                    }}
-                  >
+                    }}>
                     <Box component="span" sx={{ width: 24, height: 24 }}>
                       {item.icon}
                     </Box>

@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-import type { IProfile } from "@/types/admin"
+import type { IProfile } from "@/types/admin";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { createSlice } from "@reduxjs/toolkit";
@@ -40,21 +39,23 @@ const authSlice = createSlice({
         profile: IProfile;
         accessToken?: string;
         token?: string;
-      }>
+      }>,
     ) {
       state.isLoadingRefresh = false;
       state.loggedIn = true;
       state.profile = action.payload.profile;
       state.error = null;
-      console.log("refreshSuccess - profile.role:", action.payload.profile.role);
-
+      console.log(
+        "refreshSuccess - profile.role:",
+        action.payload.profile.role,
+      );
 
       const token = action.payload.accessToken || action.payload.token;
       if (token) {
         localStorage.setItem("accessToken", token);
         localStorage.setItem(
           "userProfile",
-          JSON.stringify(action.payload.profile)
+          JSON.stringify(action.payload.profile),
         );
       }
     },
@@ -90,7 +91,7 @@ const authSlice = createSlice({
         profile: IProfile;
         accessToken?: string;
         token?: string;
-      }>
+      }>,
     ) {
       state.isLoading = false;
       state.loggedIn = true;
@@ -98,13 +99,12 @@ const authSlice = createSlice({
       state.error = null;
       console.log("loginSuccess - profile.role:", action.payload.profile.role);
 
-
       const token = action.payload.accessToken || action.payload.token;
       if (token) {
         localStorage.setItem("accessToken", token);
         localStorage.setItem(
           "userProfile",
-          JSON.stringify(action.payload.profile)
+          JSON.stringify(action.payload.profile),
         );
       }
     },

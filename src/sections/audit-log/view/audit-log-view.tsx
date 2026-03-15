@@ -25,8 +25,6 @@ import {
 import AuditLogTable from "@/sections/audit-log/components/audit-log-table";
 import AuditLogFilters from "@/sections/audit-log/components/audit-log-filters";
 
-// ----------------------------------------------------------------------
-
 const STORAGE_KEY = "audit_log_filters";
 
 export default function AuditLogView() {
@@ -41,36 +39,29 @@ export default function AuditLogView() {
   const [filters, setFilters] = useState<FilterType>({ limit: 100, page: 1 });
   const [_limit, setLimit] = useState<number>(100);
 
-  // Dastlabki yuklash — hech qanday filter yo'q, barcha amallar ko'rinadi
   useEffect(() => {
     dispatch(fetchDailyActivity({ limit: 100, page: 1 }));
 
-    // Oxirgi 30 kun statistikasi
     const endDate = dayjs().format("YYYY-MM-DD");
     const startDate = dayjs().subtract(30, "day").format("YYYY-MM-DD");
     dispatch(fetchActivityStats({ start: startDate, end: endDate }));
-  }, [dispatch]); // filters'ni qo'shmaslik kerak - infinite loop
+  }, [dispatch]);
 
-  // Filterlarni qo'llash
   const handleFiltersChange = (newFilters: Partial<FilterType>) => {
     const updatedFilters = { ...filters, ...newFilters };
     setFilters(updatedFilters);
     dispatch(fetchDailyActivity(updatedFilters));
   };
 
-  // Filterlarni tozalash
   const handleClearFilters = () => {
     const clearedFilters: FilterType = { limit: 100, page: 1 };
     setFilters(clearedFilters);
     try {
       localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // ignore
-    }
+    } catch {}
     dispatch(fetchDailyActivity(clearedFilters));
   };
 
-  // Sana o'zgarganida
   useCallback(
     (newDate: Dayjs | null) => {
       if (newDate && newDate.isValid()) {
@@ -92,9 +83,8 @@ export default function AuditLogView() {
     [dispatch],
   );
 
-  // Pagination handler
   const handlePageChange = (_event: unknown, newPage: number) => {
-    handleFiltersChange({ page: newPage + 1 }); // MUI uses 0-based indexing
+    handleFiltersChange({ page: newPage + 1 });
   };
 
   const handleLimitChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,9 +93,7 @@ export default function AuditLogView() {
     handleFiltersChange({ limit: newLimit, page: 1 });
   };
 
-  // Export handler
   const handleExport = () => {
-    // CSV export qilish
     const csvData = dailyActivity?.activities || [];
     if (csvData.length === 0) {
       alert("Ma'lumot yo'q");
@@ -152,7 +140,7 @@ export default function AuditLogView() {
 
   return (
     <Container maxWidth={false}>
-      {/* Header */}
+      {}
       <Stack
         direction="row"
         alignItems="center"
@@ -171,14 +159,14 @@ export default function AuditLogView() {
         </Button>
       </Stack>
 
-      {/* Error Alert */}
+      {}
       {Object.values(error).some(Boolean) && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {Object.values(error).find(Boolean)}
         </Alert>
       )}
 
-      {/* Filterlar */}
+      {}
       <Box mb={2} px={2}>
         <AuditLogFilters
           filters={filters}
@@ -188,14 +176,13 @@ export default function AuditLogView() {
         />
       </Box>
 
-      {/* Content */}
+      {}
       <Box>
         <AuditLogTable
           data={dailyActivity?.activities || []}
           loading={loading.dailyActivity}
           title={`Barcha faoliyat`}
           subtitle={`Jami: ${dailyActivity?.total || 0} ta yozuv`}
-          // Pagination props
           page={filters.page || 1}
           limit={filters.limit || 100}
           total={dailyActivity?.total || 0}

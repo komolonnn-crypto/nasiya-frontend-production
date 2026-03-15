@@ -22,8 +22,6 @@ import { bgBlur, varAlpha } from "@/theme/styles";
 import { layoutClasses } from "@/layouts/classes";
 import { navData } from "@/layouts/config-nav-dashboard";
 
-// ----------------------------------------------------------------------
-
 export type HeaderSectionProps = AppBarProps & {
   layoutQuery?: Breakpoint;
   slots?: {
@@ -59,7 +57,7 @@ export function HeaderSection({
   const pathname = usePathname();
   const { profile } = useTypedSelector((state) => state.auth);
   const roleNavItems = profile?.role ? navData[profile?.role] : [];
-  
+
   const toolbarStyles = {
     default: {
       ...bgBlur({
@@ -83,15 +81,13 @@ export function HeaderSection({
       color="transparent"
       className={layoutClasses.header}
       sx={{ boxShadow: "none", zIndex: "var(--layout-header-zIndex)", ...sx }}
-      {...other}
-    >
+      {...other}>
       {slots?.topArea}
 
       <Toolbar
         disableGutters
         {...slotProps?.toolbar}
-        sx={{ ...toolbarStyles.default, ...slotProps?.toolbar?.sx }}
-      >
+        sx={{ ...toolbarStyles.default, ...slotProps?.toolbar?.sx }}>
         <Container
           {...slotProps?.container}
           sx={{
@@ -103,11 +99,9 @@ export function HeaderSection({
             backdropFilter: "saturate(200%) blur(30px)",
             borderBottom: "0.5px solid rgba(255, 255, 255, 0.08)",
             ...slotProps?.container?.sx,
-          }}
-        >
+          }}>
           {slots?.leftArea}
 
-          {/* NAV PILL CONTAINER (TRACK) */}
           <Box
             sx={{
               display: "flex",
@@ -115,14 +109,17 @@ export function HeaderSection({
               gap: "4px",
               p: "4px",
               borderRadius: "12px",
-              bgcolor: "var(--layout-nav-item-hover-bg)", // Container background
-            }}
-          >
+              bgcolor: "var(--layout-nav-item-hover-bg)",
+            }}>
             {roleNavItems.map((item: DataType) => {
               const isActived = item.path === pathname;
 
               return (
-                <ListItem disableGutters disablePadding key={item.title} sx={{ width: 'auto' }}>
+                <ListItem
+                  disableGutters
+                  disablePadding
+                  key={item.title}
+                  sx={{ width: "auto" }}>
                   <ListItemButton
                     component={RouterLink}
                     href={item.path}
@@ -133,11 +130,12 @@ export function HeaderSection({
                       borderRadius: "10px",
                       fontWeight: "700",
                       fontSize: "12px",
-                      whiteSpace: 'nowrap',
+                      whiteSpace: "nowrap",
                       color: "var(--layout-nav-item-color)",
-                      bgcolor: "transparent", // Set to transparent so it matches the track
-                      transition: (theme) => theme.transitions.create(['all'], { duration: '0.2s' }),
-                      
+                      bgcolor: "transparent",
+                      transition: (theme) =>
+                        theme.transitions.create(["all"], { duration: "0.2s" }),
+
                       "&:hover": {
                         color: "var(--layout-nav-item-hover-color)",
                         bgcolor: "rgba(255, 255, 255, 0.04)",
@@ -146,23 +144,32 @@ export function HeaderSection({
                       ...(isActived && {
                         bgcolor: "var(--layout-nav-item-active-bg)",
                         color: "var(--layout-nav-item-active-color)",
-                        boxShadow: (theme) => theme.palette.mode === 'dark' 
-                            ? "0 4px 12px rgba(0,0,0,0.4)" 
-                            : "0 3px 8px rgba(0, 0, 0, 0.1)",
+                        boxShadow: (theme) =>
+                          theme.palette.mode === "dark" ?
+                            "0 4px 12px rgba(0,0,0,0.4)"
+                          : "0 3px 8px rgba(0, 0, 0, 0.1)",
                         "&:hover": {
                           bgcolor: "var(--layout-nav-item-active-bg)",
                         },
                       }),
-                    }}
-                  >
-                    <Box component="span" sx={{ width: 20, height: 20, display: 'flex', alignItems: 'center' }}>
+                    }}>
+                    <Box
+                      component="span"
+                      sx={{
+                        width: 20,
+                        height: 20,
+                        display: "flex",
+                        alignItems: "center",
+                      }}>
                       {item.icon}
                     </Box>
 
                     <Box component="span">{item.title}</Box>
 
                     {item.info && (
-                        <Box component="span" sx={{ ml: 0.5 }}>{item.info}</Box>
+                      <Box component="span" sx={{ ml: 0.5 }}>
+                        {item.info}
+                      </Box>
                     )}
                   </ListItemButton>
                 </ListItem>

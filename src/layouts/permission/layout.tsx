@@ -28,7 +28,6 @@ export function ProtectedRoute({
     const savedProfile = localStorage.getItem("userProfile");
 
     if (token && savedProfile && !loggedIn) {
-      // Bu holatda redirect qilmaslik kerak!
       return;
     }
 
@@ -51,7 +50,7 @@ export function ProtectedRoute({
   ]);
 
   if (isLoadingRefresh) {
-    return null; // yoki <Loader />
+    return null;
   }
 
   return <>{children}</>;

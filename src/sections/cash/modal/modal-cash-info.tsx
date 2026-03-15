@@ -36,8 +36,6 @@ import authApi from "@/server/auth";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { closeModal } from "@/store/slices/modalSlice";
 
-// ─── CONFIG ─────────────────────────────────────────────────────────────────
-
 const paymentTypeConfig: Record<
   string,
   { label: string; color: "info" | "primary" | "secondary" }
@@ -53,8 +51,6 @@ const paymentMethodLabel: Record<string, string> = {
   dollar_cash: "Dollar — naqd",
   dollar_card_visa: "Dollar — Visa karta",
 };
-
-// ─── SUB-COMPONENTS ──────────────────────────────────────────────────────────
 
 const SectionLabel = ({ children }: { children: string }) => (
   <Typography
@@ -99,8 +95,6 @@ const DetailRow = ({
   </Stack>
 );
 
-// ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
-
 const ModalCashInfo = () => {
   const dispatch = useAppDispatch();
   const theme = useTheme();
@@ -130,7 +124,6 @@ const ModalCashInfo = () => {
         );
         setContract(res.data);
       } catch {
-        //
       } finally {
         setContractLoading(false);
       }
@@ -139,8 +132,6 @@ const ModalCashInfo = () => {
   }, [contractId, cashInfoModal]);
 
   if (!payment) return null;
-
-  // ─── DERIVED VALUES ──────────────────────────────────────────────────────
 
   const customerName =
     payment?.customerId?.fullName ||
@@ -179,8 +170,6 @@ const ModalCashInfo = () => {
       })
     : null;
 
-  // ─── THEME-AWARE COLORS ──────────────────────────────────────────────────
-
   const statusPalette =
     isPaid ? theme.palette.success
     : isPending ? theme.palette.warning
@@ -199,8 +188,6 @@ const ModalCashInfo = () => {
     : isPending ? "Kutilmoqda"
     : "Noma'lum";
 
-  // ─── RENDER ──────────────────────────────────────────────────────────────
-
   return (
     <Dialog
       open={!!cashInfoModal?.type}
@@ -215,7 +202,7 @@ const ModalCashInfo = () => {
           overflow: "hidden",
         },
       }}>
-      {/* ═══ HEADER ════════════════════════════════════════════════════════ */}
+      {}
       <DialogTitle
         sx={{
           p: 0,
@@ -229,7 +216,7 @@ const ModalCashInfo = () => {
           justifyContent="space-between"
           px={2.5}
           py={2}>
-          {/* Left: icon + title */}
+          {}
           <Stack direction="row" alignItems="center" spacing={1.5}>
             <Box
               sx={{
@@ -263,7 +250,7 @@ const ModalCashInfo = () => {
             </Box>
           </Stack>
 
-          {/* Right: status chip */}
+          {}
           <Chip
             label={statusLabel}
             size="small"
@@ -302,7 +289,7 @@ const ModalCashInfo = () => {
             "&:hover": { backgroundColor: "rgba(128,128,128,0.55)" },
           },
         }}>
-        {/* ═══ CUSTOMER + AMOUNT HERO ════════════════════════════════════ */}
+        {}
         <Stack
           direction={{ xs: "column", sm: "row" }}
           alignItems={{ xs: "stretch", sm: "center" }}
@@ -314,7 +301,7 @@ const ModalCashInfo = () => {
             borderBottom: "1px solid",
             borderColor: "divider",
           }}>
-          {/* Customer */}
+          {}
           <Stack direction="row" alignItems="center" spacing={1.5}>
             <Avatar
               sx={{
@@ -359,7 +346,7 @@ const ModalCashInfo = () => {
             </Box>
           </Stack>
 
-          {/* Amount */}
+          {}
           <Box
             sx={{
               px: 2.5,
@@ -394,7 +381,7 @@ const ModalCashInfo = () => {
           </Box>
         </Stack>
 
-        {/* ═══ TO'LOV MA'LUMOTLARI ════════════════════════════════════════ */}
+        {}
         <Box
           sx={{
             px: 2.5,
@@ -456,7 +443,7 @@ const ModalCashInfo = () => {
           )}
         </Box>
 
-        {/* ═══ YUBORUVCHI ════════════════════════════════════════════════ */}
+        {}
         <Box
           sx={{
             px: 2.5,
@@ -506,7 +493,7 @@ const ModalCashInfo = () => {
           </Stack>
         </Box>
 
-        {/* ═══ IZOH ══════════════════════════════════════════════════════ */}
+        {}
         {showNotes && (
           <Box
             sx={{
@@ -544,7 +531,7 @@ const ModalCashInfo = () => {
           </Box>
         )}
 
-        {/* ═══ SHARTNOMA MA'LUMOTLARI ════════════════════════════════════ */}
+        {}
         {contractId && (
           <Box sx={{ px: 2.5, py: 2 }}>
             <Stack direction="row" alignItems="center" spacing={0.75} mb={1.5}>
@@ -628,7 +615,7 @@ const ModalCashInfo = () => {
           </Box>
         )}
 
-        {/* ─── PENDING uchun maxsus banner ─── */}
+        {}
         {isPending && (
           <Box
             sx={{
@@ -660,7 +647,7 @@ const ModalCashInfo = () => {
           </Box>
         )}
 
-        {/* ─── PAID uchun maxsus banner ─── */}
+        {}
         {isPaid && (
           <Box
             sx={{
@@ -692,7 +679,7 @@ const ModalCashInfo = () => {
         )}
       </DialogContent>
 
-      {/* ═══ ACTIONS ═══════════════════════════════════════════════════════ */}
+      {}
       <DialogActions
         sx={{
           px: 2.5,

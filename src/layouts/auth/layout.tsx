@@ -10,8 +10,6 @@ import { stylesMode } from "@/theme/styles";
 import type { RootState } from "@/store";
 import { Main } from "./main";
 
-// ----------------------------------------------------------------------
-
 export type AuthLayoutProps = {
   sx?: SxProps<Theme>;
   children: React.ReactNode;

@@ -1,10 +1,10 @@
-import type { ICustomer } from "@/types/customer"
-import type { Column } from "@/components/table/types"
+import type { ICustomer } from "@/types/customer";
+import type { Column } from "@/components/table/types";
 
-import { useTableLogic } from "@/hooks/useTableLogic"
-import { useAppDispatch } from "@/hooks/useAppDispatch"
-import { updateCustomerManager } from "@/store/actions/customerActions"
-import { GenericTable } from "@/components/table/GnericTable"
+import { useTableLogic } from "@/hooks/useTableLogic";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { updateCustomerManager } from "@/store/actions/customerActions";
+import { GenericTable } from "@/components/table/GnericTable";
 import ActionCustomer from "@/sections/customer/action/action-curtomer";
 import { ManagerSelectCell } from "./ManagerSelectCell";
 

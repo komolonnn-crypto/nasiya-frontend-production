@@ -8,7 +8,7 @@ import {
   fetchUserActivity,
   exportAuditLog,
 } from "@/store/actions/auditLogActions";
-import type { IAuditLog, AuditLogFilters } from "@/types/audit-log";
+import type { IAuditLog, AuditLogFilters } from "@/types/auditlog-page-types";
 
 interface AuditLogState {
   todaySummary: {

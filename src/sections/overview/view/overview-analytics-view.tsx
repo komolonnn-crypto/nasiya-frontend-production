@@ -46,11 +46,8 @@ export function OverviewAnalyticsView() {
   }
   return (
     <DashboardContent maxWidth="xl">
-      {/* <Typography variant="h4" sx={{ mb: { xs: 3, md: 5 } }}>
-        Dashbord
-      </Typography> */}
+      
 
-      {/* <Grid container spacing={{ xs: 2, sm: 2.5, md: 3, }}> */}
       <Grid container rowSpacing={2} columnSpacing={2}>
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary

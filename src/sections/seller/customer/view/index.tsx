@@ -1,11 +1,11 @@
 import { memo, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import type { RootState } from "@/store"
+import type { RootState } from "@/store";
 import type { TypedUseSelectorHook } from "react-redux";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
-import { setCustomer, setCustomerId } from "@/store/slices/customerSlice"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { setCustomer, setCustomerId } from "@/store/slices/customerSlice";
 
 import CustomerView from "./customer-view";
 import ModalCustomer from "@/sections/seller/customer/modal/modal-customer";
@@ -29,7 +29,9 @@ const CustomersView = () => {
 
   return (
     <>
-      {customerId ? <CustomerDetails /> : <CustomerView />}
+      {customerId ?
+        <CustomerDetails />
+      : <CustomerView />}
       <ModalCustomer />
     </>
   );

@@ -9,7 +9,7 @@ interface ChashTableProps {
   columns: Column[];
   onRowClick?: (row: IPayment) => void;
   onCustomerClick?: (customer: any) => void;
-  onNotesClick?: (row: IPayment) => void; // ✅ YANGI
+  onNotesClick?: (row: IPayment) => void;
   selectable?: boolean;
   setSelectedRows?: (selected: string[]) => void;
   component?: React.ReactNode;

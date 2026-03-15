@@ -1,10 +1,8 @@
 import { Helmet } from "react-helmet-async";
 
-import { CONFIG } from "@/config-global"
+import { CONFIG } from "@/config-global";
 
-import { CashesView } from "@/sections/cash/view"
-
-// ----------------------------------------------------------------------
+import { CashesView } from "@/sections/cash/view";
 
 export default function Page() {
   return (

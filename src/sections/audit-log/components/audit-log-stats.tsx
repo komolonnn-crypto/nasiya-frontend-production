@@ -107,7 +107,7 @@ export default function AuditLogStats({
 
   return (
     <Stack spacing={3}>
-      {/* Date Range Selector */}
+      {}
       <Card>
         <CardContent>
           <Stack spacing={3}>
@@ -162,7 +162,7 @@ export default function AuditLogStats({
         </CardContent>
       </Card>
 
-      {/* Summary Cards */}
+      {}
       {stats && (
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
@@ -284,7 +284,7 @@ export default function AuditLogStats({
         </Grid>
       )}
 
-      {/* Entity Statistics */}
+      {}
       {stats && stats.stats.length > 0 ?
         <Grid container spacing={3}>
           {stats.stats.map((entityStat) => (

@@ -1,4 +1,4 @@
-import type { RootState } from "@/store"
+import type { RootState } from "@/store";
 
 import { TbPhoto } from "react-icons/tb";
 import { useSelector } from "react-redux";
@@ -22,11 +22,11 @@ import {
 } from "@mui/material";
 import { MdDownload } from "react-icons/md";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import authApi from "@/server/auth"
-import { setModal } from "@/store/slices/modalSlice"
-import { DashboardContent } from "@/layouts/dashboard"
+import authApi from "@/server/auth";
+import { setModal } from "@/store/slices/modalSlice";
+import { DashboardContent } from "@/layouts/dashboard";
 import {
   start,
   failure,
@@ -35,14 +35,14 @@ import {
   setCustomer,
 } from "@/store/slices/customerSlice";
 
-import { Iconify } from "@/components/iconify"
-import Loader from "@/components/loader/Loader"
-import CustomerInfo from "@/components/customer-infos/customerInfo"
+import { Iconify } from "@/components/iconify";
+import Loader from "@/components/loader/Loader";
+import CustomerInfo from "@/components/customer-infos/customerInfo";
 
 export function CustomerDetails() {
   const dispatch = useAppDispatch();
   const { customer, isLoading, customerId } = useSelector(
-    (state: RootState) => state.customer
+    (state: RootState) => state.customer,
   );
 
   const handleDownloadFile = async (filePath: string, type: string) => {
@@ -51,7 +51,7 @@ export function CustomerDetails() {
       if (!filename) return;
 
       const baseUrl =
-        import.meta.env['VITE_API_BASE_URL'] || "http://localhost:3000";
+        import.meta.env["VITE_API_BASE_URL"] || "http://localhost:3000";
       const token = localStorage.getItem("accessToken");
 
       const response = await fetch(
@@ -60,7 +60,7 @@ export function CustomerDetails() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Download failed");
@@ -85,7 +85,7 @@ export function CustomerDetails() {
         try {
           dispatch(start());
           const res = await authApi.get(
-            `/seller/customer/get-one/${customerId}`
+            `/seller/customer/get-one/${customerId}`,
           );
           dispatch(setCustomer(res.data));
           dispatch(success());
@@ -111,13 +111,11 @@ export function CustomerDetails() {
           display="flex"
           alignItems="center"
           mb={5}
-          justifyContent="space-between"
-        >
+          justifyContent="space-between">
           <Button
             color="inherit"
             startIcon={<Iconify icon="weui:back-filled" />}
-            onClick={() => dispatch(setCustomerId(null))}
-          >
+            onClick={() => dispatch(setCustomerId(null))}>
             Ortga
           </Button>
         </Box>
@@ -128,7 +126,7 @@ export function CustomerDetails() {
 
   const allActiveContracts =
     customer?.contracts?.filter(
-      (c: any) => c.isActive && c.status === "active"
+      (c: any) => c.isActive && c.status === "active",
     ) || [];
 
   return (
@@ -137,13 +135,11 @@ export function CustomerDetails() {
         display="flex"
         alignItems="center"
         mb={5}
-        justifyContent="space-between"
-      >
+        justifyContent="space-between">
         <Button
           color="inherit"
           startIcon={<Iconify icon="weui:back-filled" />}
-          onClick={() => dispatch(setCustomerId(null))}
-        >
+          onClick={() => dispatch(setCustomerId(null))}>
           Ortga
         </Button>
         <Button
@@ -155,10 +151,9 @@ export function CustomerDetails() {
               setModal({
                 modal: "customerModal",
                 data: { type: "edit", data: customer },
-              })
+              }),
             );
-          }}
-        >
+          }}>
           Tahrirlash
         </Button>
       </Box>
@@ -175,7 +170,7 @@ export function CustomerDetails() {
               Yuklangan hujjatlar
             </Typography>
             <Stack direction="column" spacing={2}>
-              {customer?.files?.passport ? (
+              {customer?.files?.passport ?
                 <Box
                   sx={{
                     display: "flex",
@@ -189,15 +184,14 @@ export function CustomerDetails() {
                       borderColor: "primary.main",
                       bgcolor: "action.hover",
                     },
-                  }}
-                >
+                  }}>
                   <FaPassport size={20} />
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">
                       Passport
-                      {customer.files.passport.split(".").pop()
-                        ? `.${customer.files.passport.split(".").pop()}`
-                        : ""}
+                      {customer.files.passport.split(".").pop() ?
+                        `.${customer.files.passport.split(".").pop()}`
+                      : ""}
                     </Typography>
                   </Box>
                   <IconButton
@@ -205,13 +199,11 @@ export function CustomerDetails() {
                     color="primary"
                     onClick={() =>
                       handleDownloadFile(customer.files!.passport!, "passport")
-                    }
-                  >
+                    }>
                     <MdDownload />
                   </IconButton>
                 </Box>
-              ) : (
-                <Box
+              : <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -220,16 +212,15 @@ export function CustomerDetails() {
                     border: "1px solid",
                     borderColor: "divider",
                     borderRadius: 0,
-                  }}
-                >
+                  }}>
                   <FaPassport size={20} style={{ opacity: 0.3 }} />
                   <Typography color="text.secondary" sx={{ flex: 1 }}>
                     ---
                   </Typography>
                 </Box>
-              )}
+              }
 
-              {customer?.files?.shartnoma ? (
+              {customer?.files?.shartnoma ?
                 <Box
                   sx={{
                     display: "flex",
@@ -243,15 +234,14 @@ export function CustomerDetails() {
                       borderColor: "primary.main",
                       bgcolor: "action.hover",
                     },
-                  }}
-                >
+                  }}>
                   <FaRegFileLines size={20} />
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">
                       Shartnoma
-                      {customer.files.shartnoma.split(".").pop()
-                        ? `.${customer.files.shartnoma.split(".").pop()}`
-                        : ""}
+                      {customer.files.shartnoma.split(".").pop() ?
+                        `.${customer.files.shartnoma.split(".").pop()}`
+                      : ""}
                     </Typography>
                   </Box>
                   <IconButton
@@ -260,15 +250,13 @@ export function CustomerDetails() {
                     onClick={() =>
                       handleDownloadFile(
                         customer.files!.shartnoma!,
-                        "shartnoma"
+                        "shartnoma",
                       )
-                    }
-                  >
+                    }>
                     <MdDownload />
                   </IconButton>
                 </Box>
-              ) : (
-                <Box
+              : <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -277,16 +265,15 @@ export function CustomerDetails() {
                     border: "1px solid",
                     borderColor: "divider",
                     borderRadius: 0,
-                  }}
-                >
+                  }}>
                   <FaRegFileLines size={20} style={{ opacity: 0.3 }} />
                   <Typography color="text.secondary" sx={{ flex: 1 }}>
                     ---
                   </Typography>
                 </Box>
-              )}
+              }
 
-              {customer?.files?.photo ? (
+              {customer?.files?.photo ?
                 <Box
                   sx={{
                     display: "flex",
@@ -300,15 +287,14 @@ export function CustomerDetails() {
                       borderColor: "primary.main",
                       bgcolor: "action.hover",
                     },
-                  }}
-                >
+                  }}>
                   <TbPhoto size={20} />
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">
                       Foto
-                      {customer.files.photo.split(".").pop()
-                        ? `.${customer.files.photo.split(".").pop()}`
-                        : ""}
+                      {customer.files.photo.split(".").pop() ?
+                        `.${customer.files.photo.split(".").pop()}`
+                      : ""}
                     </Typography>
                   </Box>
                   <IconButton
@@ -316,13 +302,11 @@ export function CustomerDetails() {
                     color="primary"
                     onClick={() =>
                       handleDownloadFile(customer.files!.photo!, "photo")
-                    }
-                  >
+                    }>
                     <MdDownload />
                   </IconButton>
                 </Box>
-              ) : (
-                <Box
+              : <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -331,21 +315,20 @@ export function CustomerDetails() {
                     border: "1px solid",
                     borderColor: "divider",
                     borderRadius: 0,
-                  }}
-                >
+                  }}>
                   <TbPhoto size={20} style={{ opacity: 0.3 }} />
                   <Typography color="text.secondary" sx={{ flex: 1 }}>
                     ---
                   </Typography>
                 </Box>
-              )}
+              }
             </Stack>
           </Paper>
           <Paper elevation={3} sx={{ p: 2 }}>
             <Typography mb={3} variant="h6">
               Yaqinlashayotgan to'lovlar
             </Typography>
-            {allActiveContracts && allActiveContracts.length > 0 ? (
+            {allActiveContracts && allActiveContracts.length > 0 ?
               <TableContainer component={Paper} elevation={0}>
                 <Table size="small">
                   <TableHead>
@@ -360,7 +343,7 @@ export function CustomerDetails() {
                       .sort(
                         (a: any, b: any) =>
                           new Date(a.nextPaymentDate).getTime() -
-                          new Date(b.nextPaymentDate).getTime()
+                          new Date(b.nextPaymentDate).getTime(),
                       )
                       .slice(0, 3)
                       .map((contract: any, idx: number) => (
@@ -376,11 +359,10 @@ export function CustomerDetails() {
                   </tbody>
                 </Table>
               </TableContainer>
-            ) : (
-              <Typography color="text.secondary" variant="body2">
+            : <Typography color="text.secondary" variant="body2">
                 Hozircha faol shartnomalar yo'q
               </Typography>
-            )}
+            }
           </Paper>
         </Grid>
       </Grid>

@@ -10,16 +10,10 @@ import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import Popover from "@mui/material/Popover";
 import Divider from "@mui/material/Divider";
-// import MenuList from "@mui/material/MenuList";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-// import MenuItem, { menuItemClasses } from "@mui/material/MenuItem";
-
-// import { useRouter, usePathname } from "@/routes/hooks";
 
 import { logout } from "@/store/actions/authActions"
-
-// ----------------------------------------------------------------------
 
 export type AccountPopoverProps = IconButtonProps & {
   data?: {
@@ -55,7 +49,6 @@ export function AccountPopover({
 
   const dispatch = useDispatch<AppDispatch>();
 
-  // Admin tekshiruvi
   const isAdmin = profile?.role === "admin";
 
   const handleResetClick = () => {
@@ -112,38 +105,7 @@ export function AccountPopover({
 
         <Divider sx={{ borderStyle: "dashed" }} />
 
-        {/* <MenuList
-          disablePadding
-          sx={{
-            p: 1,
-            gap: 0.5,
-            display: "flex",
-            flexDirection: "column",
-            [`& .${menuItemClasses.root}`]: {
-              px: 1,
-              gap: 2,
-              borderRadius: 0,
-              color: "text.secondary",
-              "&:hover": { color: "text.primary" },
-              [`&.${menuItemClasses.selected}`]: {
-                color: "text.primary",
-                bgcolor: "action.selected",
-                fontWeight: "fontWeightSemiBold",
-              },
-            },
-          }}
-        >
-          {data.map((option) => (
-            <MenuItem
-              key={option.label}
-              selected={option.href === pathname}
-              onClick={() => handleClickItem(option.href)}
-            >
-              {option.icon}
-              {option.label}
-            </MenuItem>
-          ))}
-        </MenuList> */}
+        
 
         <Divider sx={{ borderStyle: "dashed" }} />
 

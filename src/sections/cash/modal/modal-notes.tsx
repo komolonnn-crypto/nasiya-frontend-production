@@ -32,8 +32,7 @@ export default function NotesModal({
           justifyContent: "space-between",
           alignItems: "center",
           pb: 2,
-        }}
-      >
+        }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <MdNoteAlt size={24} color="var(--palette-primary-main)" />
           <Typography variant="h6" component="span">
@@ -84,8 +83,7 @@ export default function NotesModal({
             overflowY: "auto",
             whiteSpace: "pre-wrap",
             wordBreak: "break-word",
-          }}
-        >
+          }}>
           <Typography variant="body2">{notes || "Izoh yo'q"}</Typography>
         </Box>
       </DialogContent>

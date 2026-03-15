@@ -14,7 +14,6 @@ export const hideScrollY: CSSObject = {
   '&::-webkit-scrollbar': { display: 'none' },
 };
 
-
 export function textGradient(color: string): CSSObject {
   return {
     background: `linear-gradient(${color})`,
@@ -25,7 +24,6 @@ export function textGradient(color: string): CSSObject {
     color: 'transparent',
   };
 }
-
 
 export type BgGradientProps = {
   color: string;
@@ -43,7 +41,6 @@ export function bgGradient({ color, imgUrl }: BgGradientProps): CSSObject {
   }
   return { background: `linear-gradient(${color})` };
 }
-
 
 export type BgBlurProps = {
   color: string;
