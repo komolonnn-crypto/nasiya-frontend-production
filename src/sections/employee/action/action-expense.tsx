@@ -5,11 +5,11 @@ import Popover from "@mui/material/Popover";
 import MenuList from "@mui/material/MenuList";
 import MenuItem, { menuItemClasses } from "@mui/material/MenuItem";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import { closeExpense } from "@/store/actions/employeeActions"
+import { closeExpense } from "@/store/actions/employeeActions";
 
-import { Iconify } from "@/components/iconify"
+import { Iconify } from "@/components/iconify";
 
 export default function ActionExpense({
   id,
@@ -24,14 +24,14 @@ export default function ActionExpense({
 }) {
   const dispatch = useAppDispatch();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(
-    null
+    null,
   );
 
   const handleOpenPopover = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       setOpenPopover(event.currentTarget);
     },
-    []
+    [],
   );
 
   const handleClosePopover = useCallback(() => {
@@ -55,8 +55,7 @@ export default function ActionExpense({
         anchorEl={openPopover}
         onClose={handleClosePopover}
         anchorOrigin={{ vertical: "top", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-      >
+        transformOrigin={{ vertical: "top", horizontal: "right" }}>
         <MenuList
           disablePadding
           sx={{
@@ -71,8 +70,7 @@ export default function ActionExpense({
               borderRadius: 0,
               [`&.${menuItemClasses.selected}`]: { bgcolor: "action.selected" },
             },
-          }}
-        >
+          }}>
           <MenuItem onClick={handleSelect}>
             <Iconify icon="solar:refresh-circle-linear" />
             Yopish

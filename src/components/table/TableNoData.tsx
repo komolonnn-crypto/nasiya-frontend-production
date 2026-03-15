@@ -7,8 +7,6 @@ import Typography from "@mui/material/Typography";
 import { MdSearchOff } from "react-icons/md";
 import { excelNoDataStyle } from "./excel-table-styles";
 
-// ----------------------------------------------------------------------
-
 type TableNoDataProps = TableRowProps & {
   searchQuery: string;
   columns: number;

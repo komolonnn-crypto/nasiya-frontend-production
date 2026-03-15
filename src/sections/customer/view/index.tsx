@@ -1,13 +1,13 @@
-import type { RootState } from "@/store"
+import type { RootState } from "@/store";
 import type { TypedUseSelectorHook } from "react-redux";
 
 import { memo, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import { setCustomerId } from "@/store/slices/customerSlice"
-import { getManagers } from "@/store/actions/employeeActions"
+import { setCustomerId } from "@/store/slices/customerSlice";
+import { getManagers } from "@/store/actions/employeeActions";
 
 import CustomerView from "./customer-view";
 import ModalCustomer from "@/sections/customer/modal/modal-customer";
@@ -30,7 +30,9 @@ const CustomersView = () => {
 
   return (
     <>
-      {customerId ? <CustomerDetails /> : <CustomerView />}
+      {customerId ?
+        <CustomerDetails />
+      : <CustomerView />}
       <ModalCustomer />
     </>
   );

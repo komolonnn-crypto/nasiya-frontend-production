@@ -13,19 +13,16 @@ export const columnsPageContract: Column[] = [
     sortable: true,
     filterable: false,
     renderCell: (row) => {
-      // ✅ FIXED: originalPaymentDay ni birinchi tekshirish
       if (
         row.originalPaymentDay !== undefined &&
         row.originalPaymentDay !== null
       ) {
         return String(row.originalPaymentDay).padStart(2, "0");
       }
-      // Fallback: initialPaymentDueDate
       if (row.initialPaymentDueDate) {
         const day = dayjs(row.initialPaymentDueDate).date();
         return String(day).padStart(2, "0");
       }
-      // Fallback: startDate
       if (row.startDate) {
         const day = dayjs(row.startDate).date();
         return String(day).padStart(2, "0");
@@ -114,7 +111,6 @@ export const columnsPageContract: Column[] = [
     align: "center",
     renderCell: (row) => {
       if (row.startDate) {
-        // ✅ FIXED: Local date'ni to'g'ri format qilish (timezone fix)
         return dayjs(row.startDate).format("YYYY-MM-DD");
       }
       return "————";

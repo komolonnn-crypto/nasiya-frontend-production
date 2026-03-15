@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
 import {
   Box,
   Card,
@@ -17,9 +18,10 @@ import {
   Grid,
   Paper,
 } from "@mui/material";
+
 import { Warning, DeleteForever, Refresh } from "@mui/icons-material";
-import authApi from "@/server/auth"
-import type { RootState } from "@/store"
+import authApi from "@/server/auth";
+import type { RootState } from "@/store";
 
 interface ResetStats {
   customers: number;
@@ -87,7 +89,7 @@ export function ResetView() {
     } catch (err: any) {
       console.error("Reset xatolik:", err);
       setError(
-        err.response?.data?.message || "Ma'lumotlarni tozalashda xatolik"
+        err.response?.data?.message || "Ma'lumotlarni tozalashda xatolik",
       );
     } finally {
       setLoading(false);
@@ -105,14 +107,14 @@ export function ResetView() {
       if (response.data.success) {
         const { updatedCount, completedCount, activeCount } = response.data;
         setSuccess(
-          `Tekshiruv tugadi: ${updatedCount} ta shartnoma yangilandi (${completedCount} ta to'langan, ${activeCount} ta faol)`
+          `Tekshiruv tugadi: ${updatedCount} ta shartnoma yangilandi (${completedCount} ta to'langan, ${activeCount} ta faol)`,
         );
         await loadStats();
       }
     } catch (err: any) {
       console.error("Check contracts xatolik:", err);
       setError(
-        err.response?.data?.message || "Shartnomalarni tekshirishda xatolik"
+        err.response?.data?.message || "Shartnomalarni tekshirishda xatolik",
       );
     } finally {
       setCheckingContracts(false);
@@ -126,7 +128,7 @@ export function ResetView() {
   return (
     <Container maxWidth="lg">
       <Stack spacing={3} sx={{ py: 3 }}>
-        {/* Header */}
+        {}
         <Box>
           <Typography variant="h4" gutterBottom>
             Tizimni Tozalash
@@ -136,7 +138,7 @@ export function ResetView() {
           </Typography>
         </Box>
 
-        {/* Alerts */}
+        {}
         {error && (
           <Alert severity="error" onClose={() => setError(null)}>
             {error}
@@ -148,8 +150,12 @@ export function ResetView() {
           </Alert>
         )}
 
-        {/* Warning Card */}
-        <Card sx={{ p: 3, bgcolor: "rgba(var(--palette-error-mainChannel) / 0.1)" }}>
+        {}
+        <Card
+          sx={{
+            p: 3,
+            bgcolor: "rgba(var(--palette-error-mainChannel) / 0.1)",
+          }}>
           <Stack direction="row" spacing={2} alignItems="center">
             <Warning sx={{ fontSize: 40, color: "error.main" }} />
             <Box>
@@ -166,30 +172,28 @@ export function ResetView() {
           </Stack>
         </Card>
 
-        {/* Statistics */}
+        {}
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
             <Stack
               direction="row"
               justifyContent="space-between"
-              alignItems="center"
-            >
+              alignItems="center">
               <Typography variant="h6">Joriy Statistika</Typography>
               <Button
                 size="small"
                 startIcon={<Refresh />}
                 onClick={loadStats}
-                disabled={statsLoading}
-              >
+                disabled={statsLoading}>
                 Yangilash
               </Button>
             </Stack>
 
-            {statsLoading ? (
+            {statsLoading ?
               <Box sx={{ display: "flex", justifyContent: "center", py: 3 }}>
                 <CircularProgress />
               </Box>
-            ) : stats ? (
+            : stats ?
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6} md={4}>
                   <Paper sx={{ p: 2, textAlign: "center" }}>
@@ -255,13 +259,11 @@ export function ResetView() {
                   </Paper>
                 </Grid>
               </Grid>
-            ) : (
-              <Alert severity="info">Statistika mavjud emas</Alert>
-            )}
+            : <Alert severity="info">Statistika mavjud emas</Alert>}
           </Stack>
         </Card>
 
-        {/* Action Buttons */}
+        {}
         <Stack direction="row" spacing={2} justifyContent="center">
           <Button
             variant="outlined"
@@ -272,11 +274,10 @@ export function ResetView() {
             }
             onClick={handleCheckContracts}
             disabled={checkingContracts || !stats}
-            sx={{ minWidth: 200 }}
-          >
-            {checkingContracts
-              ? "Tekshirilmoqda..."
-              : "Shartnomalarni Tekshirish"}
+            sx={{ minWidth: 200 }}>
+            {checkingContracts ?
+              "Tekshirilmoqda..."
+            : "Shartnomalarni Tekshirish"}
           </Button>
           <Button
             variant="contained"
@@ -285,17 +286,15 @@ export function ResetView() {
             startIcon={<DeleteForever />}
             onClick={() => setOpenDialog(true)}
             disabled={loading || !stats}
-            sx={{ minWidth: 200 }}
-          >
+            sx={{ minWidth: 200 }}>
             Tizimni Tozalash
           </Button>
         </Stack>
 
-        {/* Confirmation Dialog */}
+        {}
         <Dialog
           open={openDialog}
-          onClose={() => !loading && setOpenDialog(false)}
-        >
+          onClose={() => !loading && setOpenDialog(false)}>
           <DialogTitle>
             <Stack direction="row" spacing={1} alignItems="center">
               <Warning color="error" />
@@ -307,7 +306,13 @@ export function ResetView() {
               Haqiqatan ham barcha ma'lumotlarni o'chirmoqchimisiz? Bu amal
               qaytarib bo'lmaydi!
             </Typography>
-            <Box sx={{ mt: 2, p: 2, bgcolor: "background.neutral", borderRadius: 0 }}>
+            <Box
+              sx={{
+                mt: 2,
+                p: 2,
+                bgcolor: "background.neutral",
+                borderRadius: 0,
+              }}>
               <Typography variant="body2" fontWeight="bold" gutterBottom>
                 O'chiriladigan ma'lumotlar:
               </Typography>
@@ -348,8 +353,7 @@ export function ResetView() {
               disabled={loading}
               startIcon={
                 loading ? <CircularProgress size={20} /> : <DeleteForever />
-              }
-            >
+              }>
               {loading ? "Tozalanmoqda..." : "Ha, Tozalash"}
             </Button>
           </DialogActions>

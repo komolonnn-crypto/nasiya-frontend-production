@@ -11,8 +11,6 @@ import {
 import { Dayjs } from "dayjs";
 import { Iconify } from "@/components/iconify";
 
-// ----------------------------------------------------------------------
-
 interface SummaryCardProps {
   title: string;
   value: number;
@@ -95,8 +93,6 @@ function SummaryCard({
   );
 }
 
-// ----------------------------------------------------------------------
-
 interface AuditLogSummaryProps {
   summary: {
     date: string;
@@ -149,7 +145,7 @@ export default function AuditLogSummary({
 
   return (
     <Grid container spacing={3}>
-      {/* Umumiy faoliyat */}
+      {}
       <Grid item xs={12} sm={6} md={3}>
         <SummaryCard
           title="Umumiy faoliyat"
@@ -161,7 +157,7 @@ export default function AuditLogSummary({
         />
       </Grid>
 
-      {/* Mijozlar */}
+      {}
       <Grid item xs={12} sm={6} md={3}>
         <SummaryCard
           title="Mijozlar"
@@ -173,7 +169,7 @@ export default function AuditLogSummary({
         />
       </Grid>
 
-      {/* Shartnomalar */}
+      {}
       <Grid item xs={12} sm={6} md={3}>
         <SummaryCard
           title="Shartnomalar"
@@ -185,7 +181,7 @@ export default function AuditLogSummary({
         />
       </Grid>
 
-      {/* To'lovlar */}
+      {}
       <Grid item xs={12} sm={6} md={3}>
         <SummaryCard
           title="To'lovlar"
@@ -197,7 +193,7 @@ export default function AuditLogSummary({
         />
       </Grid>
 
-      {/* Excel Import */}
+      {}
       <Grid item xs={12} sm={6} md={3}>
         <SummaryCard
           title="Excel Import"
@@ -209,7 +205,7 @@ export default function AuditLogSummary({
         />
       </Grid>
 
-      {/* Faol foydalanuvchilar */}
+      {}
       <Grid item xs={12} sm={6} md={3}>
         <SummaryCard
           title="Faol foydalanuvchilar"
@@ -221,7 +217,7 @@ export default function AuditLogSummary({
         />
       </Grid>
 
-      {/* Placeholder cards for better layout */}
+      {}
       <Grid item xs={12} sm={6} md={3}>
         <Card
           sx={{

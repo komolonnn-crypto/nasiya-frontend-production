@@ -50,7 +50,6 @@ const Uploader: React.FC<Iprops> = ({
     if (imageList.length === 0) return;
     setIsUploading(true);
     try {
-
       const selectedImage = imageList[indexImage];
 
       if (selectedImage?.file) {

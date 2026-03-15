@@ -98,7 +98,7 @@ const ContractEditAlert: React.FC<ContractEditAlertProps> = ({
           {formatDateTime(notification.editDate)}
         </Typography>
 
-        {/* Impact Summary */}
+        {}
         <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mt: 1 }}>
           {notification.impactSummary.underpaidCount > 0 && (
             <Chip
@@ -129,7 +129,7 @@ const ContractEditAlert: React.FC<ContractEditAlertProps> = ({
           )}
         </Stack>
 
-        {/* Expandable Changes */}
+        {}
         <Box>
           <Button
             size="small"
@@ -157,7 +157,7 @@ const ContractEditAlert: React.FC<ContractEditAlertProps> = ({
           </Collapse>
         </Box>
 
-        {/* Quick Actions */}
+        {}
         <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
           {onViewContract && (
             <Button

@@ -51,7 +51,6 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
     (state: RootState) => state.employee
   );
   
-  // ✅ Role tekshirish - faqat admin va moderator manager o'zgartirishi mumkin
   const { profile } = useSelector((state: RootState) => state.auth);
   const userRole = (typeof profile?.role === 'string' ? profile.role : (profile?.role as any)?.name)?.toLowerCase();
   const canEditManager = userRole === "admin" || userRole === "moderator";
@@ -78,23 +77,14 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
     }
   }, [customer, managers]);
 
-  // const handleCustomerFocus = useCallback(() => {
-  //   // if (!hasFetchedManager.current && managers.length === 0) {
-  //   dispatch(getManagers());
-  //   //   hasFetchedManager.current = true;
-  //   // }
-  // }, [dispatch]);
-
   const handleSubmit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       if (!customer || !selectedManager) return;
 
-      // Agar mijoz hali tasdiqlanmagan bo'lsa, dialog ko'rsatish
       if (!customer.isActive) {
         setConfirmDialog(true);
       } else {
-        // Agar faqat menејerni o'zgartirish bo'lsa, to'g'ridan-to'g'ri saqlash
         const formJson = {
           customerId: customer._id,
           managerId: selectedManager._id,
@@ -116,8 +106,6 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
     dispatch(confirmationCustomer(formJson));
     setConfirmDialog(false);
   }, [customer, selectedManager, dispatch]);
-
-  // const isFormValid = formValues.managerId;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -159,7 +147,6 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
           >
             <Autocomplete
               fullWidth
-              // onFocus={handleCustomerFocus}
               options={managers}
               getOptionLabel={(option) =>
                 option.fullName || `${option.firstName || ""} ${option.lastName || ""}`.trim() || ""
@@ -208,11 +195,6 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
               }}
               {...(!canEditManager && { disabled: true })}
               sx={{ flex: 1 ,borderRadius: "12px" }}
-              // ListboxProps={{
-              //   style: {
-              //     maxHeight: 300, // scroll chiqmasin desangiz buni olib tashlashingiz mumkin
-              //   },
-              // }}
             />
             <Button
               type="submit"
@@ -301,7 +283,7 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
         )}
       </Stack>
 
-      {/* Tasdiqlash Dialog */}
+      {}
       <Dialog
         open={confirmDialog}
         onClose={() => setConfirmDialog(false)}

@@ -8,7 +8,6 @@ import cashReducer, {
 import type { IPayment } from "@/types/cash";
 import { PaymentType, PaymentStatus } from "@/types/cash";
 
-// Mock payment data
 const mockPayment: IPayment = {
   _id: "507f1f77bcf86cd799439011",
   amount: 1000,
@@ -117,9 +116,6 @@ function testSetError() {
   }
 }
 
-/**
- * Test 4: start should set loading state
- */
 function testStart() {
   try {
     const initialState: CashState = {
@@ -175,7 +171,6 @@ export function runTests() {
     failed: 0,
   };
 
-  // Test 1
   results.total++;
   if (testInitialState()) {
     results.passed++;
@@ -183,7 +178,6 @@ export function runTests() {
     results.failed++;
   }
 
-  // Test 2
   results.total++;
   if (testSetPayments()) {
     results.passed++;
@@ -191,7 +185,6 @@ export function runTests() {
     results.failed++;
   }
 
-  // Test 3
   results.total++;
   if (testSetError()) {
     results.passed++;
@@ -199,7 +192,6 @@ export function runTests() {
     results.failed++;
   }
 
-  // Test 4
   results.total++;
   if (testStart()) {
     results.passed++;
@@ -207,7 +199,6 @@ export function runTests() {
     results.failed++;
   }
 
-  // Test 5
   results.total++;
   if (testSuccess()) {
     results.passed++;

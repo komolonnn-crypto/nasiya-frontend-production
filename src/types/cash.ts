@@ -27,10 +27,10 @@ export enum PaymentReason {
 }
 
 export enum PaymentMethod {
-  SOM_CASH = "som_cash", // So'm naqd
-  SOM_CARD = "som_card", // So'm karta
-  DOLLAR_CASH = "dollar_cash", // Dollar naqd
-  DOLLAR_CARD_VISA = "dollar_card_visa", // Dollar karta Visa
+  SOM_CASH = "som_cash",
+  SOM_CARD = "som_card",
+  DOLLAR_CASH = "dollar_cash",
+  DOLLAR_CARD_VISA = "dollar_card_visa",
 }
 
 export interface IPayment {
@@ -40,7 +40,7 @@ export interface IPayment {
   date: Date | string;
   isPaid: boolean;
   paymentType: PaymentType;
-  paymentMethod?: PaymentMethod; // ✅ YANGI: To'lov usuli
+  paymentMethod?: PaymentMethod;
   notes: string | { _id: string; text: string };
   customerId: {
     _id: string;
@@ -69,11 +69,11 @@ export interface IPayment {
   prepaidAmount?: number;
   appliedToPaymentId?: string;
   targetMonth?: number;
-  nextPaymentDate?: Date | string; // Kam to'lov bo'lsa, qolgan qismni qachon to'lash kerak
-  reminderDate?: Date | string; // Eslatma sanasi
-  reminderComment?: string; // Eslatma izohi
-  postponedDays?: number; // Kechiktirilgan kunlar
-  isReminderNotification?: boolean; // Bu eslatma notification'imi?
+  nextPaymentDate?: Date | string;
+  reminderDate?: Date | string;
+  reminderComment?: string;
+  postponedDays?: number;
+  isReminderNotification?: boolean;
   createdAt?: Date | string;
   updatedAt?: Date | string;
   reminder?: {

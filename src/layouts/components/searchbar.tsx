@@ -14,8 +14,6 @@ import { useTheme } from '@mui/material/styles';
 import { bgBlur } from '@/theme/styles'
 import { Iconify } from '@/components/iconify'
 
-// ----------------------------------------------------------------------
-
 export function Searchbar({ sx, ...other }: BoxProps) {
   const theme = useTheme();
 

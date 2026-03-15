@@ -1,10 +1,10 @@
-import type { IContract } from "@/types/contract"
+import type { IContract } from "@/types/contract";
 
 import React from "react";
 import { IoChevronDownOutline } from "react-icons/io5";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
-import { getCustomer } from "@/store/actions/customerActions"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { getCustomer } from "@/store/actions/customerActions";
 
 import {
   Box,
@@ -18,7 +18,7 @@ import {
   AccordionDetails,
 } from "@mui/material";
 
-import { PaymentSchedule } from "@/components/payment-schedule"
+import { PaymentSchedule } from "@/components/payment-schedule";
 
 interface IProps {
   customerContracts?: IContract[];
@@ -68,14 +68,13 @@ const CustomerContract: React.FC<IProps> = ({
         Xarid qilingan mahsulotlar
       </Typography>
 
-      {sortedContracts.length === 0 ? (
+      {sortedContracts.length === 0 ?
         <Paper sx={{ p: 4, textAlign: "center" }}>
           <Typography variant="body1" color="text.secondary">
             Hozircha xarid qilingan mahsulot yo'q
           </Typography>
         </Paper>
-      ) : (
-        sortedContracts.map((contract) => (
+      : sortedContracts.map((contract) => (
           <Paper
             elevation={0}
             sx={{
@@ -84,8 +83,7 @@ const CustomerContract: React.FC<IProps> = ({
               border: 1,
               borderColor: "divider",
             }}
-            key={contract._id}
-          >
+            key={contract._id}>
             <Accordion sx={{ boxShadow: "none" }}>
               <AccordionSummary
                 expandIcon={<IoChevronDownOutline size={20} />}
@@ -94,19 +92,26 @@ const CustomerContract: React.FC<IProps> = ({
                   "&:hover": { bgcolor: "action.hover" },
                   py: 1,
                   pl: 3.5,
-                }}
-              >
+                }}>
                 <Stack
                   direction="row"
                   spacing={8}
                   alignItems="center"
                   width="94%"
-                  flexWrap="wrap"
-                >
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, flex: 1 }}>
-                    {/* Day badge - NEW */}
+                  flexWrap="wrap">
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      flex: 1,
+                    }}>
+                    {}
                     <Chip
-                      label={new Date(contract.startDate).getDate().toString().padStart(2, "0")}
+                      label={new Date(contract.startDate)
+                        .getDate()
+                        .toString()
+                        .padStart(2, "0")}
                       size="small"
                       color="primary"
                       sx={{
@@ -117,10 +122,7 @@ const CustomerContract: React.FC<IProps> = ({
                         borderRadius: "18px",
                       }}
                     />
-                    <Typography
-                      variant="subtitle1"
-                      fontWeight="700"
-                    >
+                    <Typography variant="subtitle1" fontWeight="700">
                       {contract.productName}
                     </Typography>
                   </Box>
@@ -143,7 +145,7 @@ const CustomerContract: React.FC<IProps> = ({
                       </Typography>
                       <Typography variant="body2" fontWeight="600">
                         {new Date(contract.startDate).toLocaleDateString(
-                          "uz-UZ"
+                          "uz-UZ",
                         )}
                       </Typography>
                     </Box>
@@ -153,7 +155,9 @@ const CustomerContract: React.FC<IProps> = ({
                         Muddat
                       </Typography>
                       <Typography variant="body2" fontWeight="600">
-                        {contract.period ? `${contract.period} oy` : 'Belgilanmagan'}
+                        {contract.period ?
+                          `${contract.period} oy`
+                        : "Belgilanmagan"}
                       </Typography>
                     </Box>
 
@@ -162,11 +166,14 @@ const CustomerContract: React.FC<IProps> = ({
                         Oylik
                       </Typography>
                       <Typography variant="body2" fontWeight="600">
-                        {contract.monthlyPayment ? contract.monthlyPayment.toLocaleString() : '0'} $
+                        {contract.monthlyPayment ?
+                          contract.monthlyPayment.toLocaleString()
+                        : "0"}{" "}
+                        $
                       </Typography>
                     </Box>
 
-                    {/* Keyingi to'lov sanasi va kechiktirilgan sana */}
+                    {}
                     {contract.nextPaymentDate && (
                       <Box>
                         <Typography variant="caption" color="text.secondary">
@@ -174,18 +181,17 @@ const CustomerContract: React.FC<IProps> = ({
                         </Typography>
                         <Typography variant="body2" fontWeight="600">
                           {new Date(
-                            contract.nextPaymentDate
+                            contract.nextPaymentDate,
                           ).toLocaleDateString("uz-UZ")}
                         </Typography>
                         {contract.previousPaymentDate && (
                           <Typography
                             variant="caption"
                             color="warning.main"
-                            display="block"
-                          >
+                            display="block">
                             (Eski:{" "}
                             {new Date(
-                              contract.previousPaymentDate
+                              contract.previousPaymentDate,
                             ).toLocaleDateString("uz-UZ")}
                             )
                           </Typography>
@@ -198,7 +204,7 @@ const CustomerContract: React.FC<IProps> = ({
 
               <AccordionDetails sx={{ p: 2 }}>
                 <Stack spacing={2}>
-                  {/* Shartnoma ma'lumotlari - Tartibli Grid */}
+                  {}
                   <Box
                     sx={{
                       display: "grid",
@@ -207,19 +213,20 @@ const CustomerContract: React.FC<IProps> = ({
                       p: 1.5,
                       bgcolor: "background.neutral",
                       borderRadius: "12px",
-                    }}
-                  >
+                    }}>
                     <Box>
                       <Typography
                         variant="caption"
                         color="text.secondary"
                         display="block"
-                        mb={0.5}
-                      >
+                        mb={0.5}>
                         Asl narxi
                       </Typography>
                       <Typography variant="body2" fontWeight="600">
-                        {contract.originalPrice ? contract.originalPrice.toLocaleString() : '0'} $
+                        {contract.originalPrice ?
+                          contract.originalPrice.toLocaleString()
+                        : "0"}{" "}
+                        $
                       </Typography>
                     </Box>
 
@@ -228,12 +235,14 @@ const CustomerContract: React.FC<IProps> = ({
                         variant="caption"
                         color="text.secondary"
                         display="block"
-                        mb={0.5}
-                      >
+                        mb={0.5}>
                         Boshlang'ich to'lov
                       </Typography>
                       <Typography variant="body2" fontWeight="600">
-                        {contract.initialPayment ? contract.initialPayment.toLocaleString() : '0'} $
+                        {contract.initialPayment ?
+                          contract.initialPayment.toLocaleString()
+                        : "0"}{" "}
+                        $
                       </Typography>
                     </Box>
 
@@ -242,8 +251,7 @@ const CustomerContract: React.FC<IProps> = ({
                         variant="caption"
                         color="text.secondary"
                         display="block"
-                        mb={0.5}
-                      >
+                        mb={0.5}>
                         Foiz
                       </Typography>
                       <Typography variant="body2" fontWeight="600">
@@ -256,17 +264,19 @@ const CustomerContract: React.FC<IProps> = ({
                         variant="caption"
                         color="text.secondary"
                         display="block"
-                        mb={0.5}
-                      >
+                        mb={0.5}>
                         Umumiy narx
                       </Typography>
                       <Typography variant="body2" fontWeight="600">
-                        {contract.totalPrice ? contract.totalPrice.toLocaleString() : '0'} $
+                        {contract.totalPrice ?
+                          contract.totalPrice.toLocaleString()
+                        : "0"}{" "}
+                        $
                       </Typography>
                     </Box>
                   </Box>
 
-                  {/* To'lov holati - Alohida qator */}
+                  {}
                   <Box
                     sx={{
                       display: "grid",
@@ -275,22 +285,19 @@ const CustomerContract: React.FC<IProps> = ({
                       p: 1.5,
                       bgcolor: "background.neutral",
                       borderRadius: "12px",
-                    }}
-                  >
+                    }}>
                     <Box>
                       <Typography
                         variant="caption"
                         color="text.secondary"
                         display="block"
-                        mb={0.5}
-                      >
+                        mb={0.5}>
                         To'langan
                       </Typography>
                       <Typography
                         variant="body2"
                         fontWeight="600"
-                        color="success.main"
-                      >
+                        color="success.main">
                         {contract.totalPaid?.toLocaleString() || 0} $
                       </Typography>
                     </Box>
@@ -300,15 +307,13 @@ const CustomerContract: React.FC<IProps> = ({
                         variant="caption"
                         color="text.secondary"
                         display="block"
-                        mb={0.5}
-                      >
+                        mb={0.5}>
                         Qolgan qarz
                       </Typography>
                       <Typography
                         variant="body2"
                         fontWeight="600"
-                        color="error.main"
-                      >
+                        color="error.main">
                         {contract.remainingDebt?.toLocaleString() || 0} $
                       </Typography>
                     </Box>
@@ -316,7 +321,7 @@ const CustomerContract: React.FC<IProps> = ({
 
                   <Divider sx={{ my: 0.5 }} />
 
-                  {/* To'lov jadvali */}
+                  {}
                   <PaymentSchedule
                     startDate={contract.startDate}
                     monthlyPayment={contract.monthlyPayment}
@@ -329,7 +334,6 @@ const CustomerContract: React.FC<IProps> = ({
                     totalPrice={contract.totalPrice}
                     payments={contract.payments}
                     onPaymentSuccess={() => {
-                      // Mijozni qayta yuklash
                       if (customerId) {
                         dispatch(getCustomer(customerId));
                       }
@@ -340,7 +344,7 @@ const CustomerContract: React.FC<IProps> = ({
             </Accordion>
           </Paper>
         ))
-      )}
+      }
     </Stack>
   );
 };

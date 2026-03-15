@@ -13,11 +13,7 @@ export type SimpleLayoutProps = {
   };
 };
 
-export function SimpleLayout({
-  sx,
-  children,
-  content,
-}: SimpleLayoutProps) {
+export function SimpleLayout({ sx, children, content }: SimpleLayoutProps) {
   const layoutQuery: Breakpoint = "md";
 
   return (
@@ -27,14 +23,11 @@ export function SimpleLayout({
       cssVars={{
         "--layout-simple-content-compact-width": "448px",
       }}
-      sx={sx ?? {}}
-    >
+      sx={sx ?? {}}>
       <Main>
-        {content?.compact ? (
+        {content?.compact ?
           <CompactContent layoutQuery={layoutQuery}>{children}</CompactContent>
-        ) : (
-          children
-        )}
+        : children}
       </Main>
     </LayoutSection>
   );

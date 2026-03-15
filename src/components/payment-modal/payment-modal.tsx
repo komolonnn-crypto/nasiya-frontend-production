@@ -48,11 +48,6 @@ const PaymentModal: FC<PaymentModalProps> = ({
   const [dollarAmount, setDollarAmount] = useState(amount);
   const [sumAmount, setSumAmount] = useState(0);
   const [currencyCourse, setCurrencyCourse] = useState(0);
-  // const [paymentMethod, setPaymentMethod] = useState<string>("dollar_cash");
-  // console.log(paymentMethod);
-  //  // ✅ YANGI: To'lov usuli
-  //  const [checkIfMethodSet, setCheckIfMethodSet] = useState(false);
-  // //  Tasdiqlashdan oldin to'lov usuli to'g'ri tanlanganini tekshirish
 
   const [paymentMethod, setPaymentMethod] = useState<string>("");
 
@@ -86,9 +81,9 @@ const PaymentModal: FC<PaymentModalProps> = ({
 
         setCurrencyCourse(course);
         setDollarAmount(0);
-        setSumAmount(0); // So'm input bo'sh boshlanadi
-        setDollarInput(""); // Bo'sh boshlanadi
-        setSumInput(""); // So'm input bo'sh
+        setSumAmount(0);
+        setDollarInput("");
+        setSumInput("");
 
         setTimeout(() => {
           if (dollarInputRef.current) {
@@ -104,15 +99,8 @@ const PaymentModal: FC<PaymentModalProps> = ({
     }
   }, [open, amount]);
 
-  const [dollarInput, setDollarInput] = useState(""); // Bo'sh boshlanadi
-  const [sumInput, setSumInput] = useState(""); // So'm input bo'sh boshlanadi
-
-  // const formatNumber = (num: number): string => {
-  //   return new Intl.NumberFormat("en-US", {
-  //     minimumFractionDigits: 0,
-  //     maximumFractionDigits: 2,
-  //   }).format(num);
-  // };
+  const [dollarInput, setDollarInput] = useState("");
+  const [sumInput, setSumInput] = useState("");
 
   const parseInputNumber = (str: string): number => {
     const cleaned = str.replace(/[^\d.,]/g, "");
@@ -159,12 +147,6 @@ const PaymentModal: FC<PaymentModalProps> = ({
         return;
       }
 
-      // if (!checkIfMethodSet) {
-      //   setError("To'lov usuli tanlanmadi. Iltimos, qayta urinib ko'ring."); // ✅ YANGI: To'lov usuli
-      //   setLoading(false);
-      //   return;
-      // }
-
       if (!paymentMethod) {
         setError("To'lov usulini tanlang.");
         setLoading(false);
@@ -173,14 +155,14 @@ const PaymentModal: FC<PaymentModalProps> = ({
 
       const paymentData = {
         contractId,
-        amount: totalAmountInDollar, // Jami summa dolarda
+        amount: totalAmountInDollar,
         notes: note || "",
         currencyDetails: {
           dollar: dollarAmount,
           sum: sumAmount,
         },
         currencyCourse,
-        paymentMethod: paymentMethod, // ✅ YANGI: To'lov usuli
+        paymentMethod: paymentMethod,
       };
 
       let endpoint = "/payment/contract";
@@ -192,14 +174,14 @@ const PaymentModal: FC<PaymentModalProps> = ({
         endpoint = "/payment/pay-remaining";
         requestData = {
           paymentId: paymentId,
-          amount: totalAmountInDollar, // Jami summa dolarda
+          amount: totalAmountInDollar,
           notes: note || "",
           currencyDetails: {
             dollar: dollarAmount,
             sum: sumAmount,
           },
           currencyCourse,
-          paymentMethod: paymentMethod, // ✅ YANGI: To'lov usuli
+          paymentMethod: paymentMethod,
         };
       }
 
@@ -221,7 +203,6 @@ const PaymentModal: FC<PaymentModalProps> = ({
             `${res.data.paymentsCreated} oylik to'lovlar muvaffaqiyatli amalga oshirildi`;
         }
       } else if (paymentId) {
-        // payRemaining response
         const payment = res.data.payment;
         if (payment) {
           if (payment.status === "PAID" && payment.isPaid) {
@@ -233,7 +214,6 @@ const PaymentModal: FC<PaymentModalProps> = ({
           }
         }
       }
-      // Oddiy to'lov uchun
       else {
         const paymentDetails = res.data.paymentDetails;
         if (paymentDetails) {
@@ -254,15 +234,13 @@ const PaymentModal: FC<PaymentModalProps> = ({
         }),
       );
 
-      // Modal'ni yopish va ma'lumotlarni tozalash
       setNote("");
-      setDollarInput(""); // Dollar inputni tozalash
-      setSumInput(""); // So'm inputni tozalash
+      setDollarInput("");
+      setSumInput("");
       setDollarAmount(0);
       setSumAmount(0);
       onClose();
 
-      // Backend'da ma'lumotlar yangilanishi uchun biroz kutamiz
       setTimeout(() => {
         onSuccess();
       }, 1000);
@@ -285,7 +263,6 @@ const PaymentModal: FC<PaymentModalProps> = ({
     }
   };
 
-  // Real-time hisoblash (jami summa bilan)
   const difference = totalAmountInDollar - amount;
   const isUnderpaid = difference < -0.01;
   const isOverpaid = difference > 0.01;
@@ -294,8 +271,8 @@ const PaymentModal: FC<PaymentModalProps> = ({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth   PaperProps={{
     sx: {
-      borderRadius: "20px", // Matches your modern UI style
-      padding: "8px",       // Optional: adds some internal spacing
+      borderRadius: "20px",
+      padding: "8px",
     },
   }}>
       <DialogTitle>
@@ -309,7 +286,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
             </Alert>
           )}
 
-          {/* Oylik to'lov ma'lumoti */}
+          {}
           <Box
             sx={{
               p: 2,
@@ -360,8 +337,6 @@ const PaymentModal: FC<PaymentModalProps> = ({
             }}
           />
 
-          {/* ✅ YANGI: To'lov usuli tanlash */}
-
           <FormControl fullWidth>
             <InputLabel id="payment-method-label">To'lov usuli</InputLabel>
 
@@ -380,24 +355,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
               <MenuItem value="dollar_card_visa">Dollar karta (Visa)</MenuItem>
             </Select>
           </FormControl>
-          {/* <FormControl fullWidth>
-            <InputLabel id="payment-method-label">To'lov usuli</InputLabel>
-            <Select
-              labelId="payment-method-label"
-              id="payment-method-select"
-              value={paymentMethod}
-              label="To'lov usuli"
-              onChange={(e) => {
-                setPaymentMethod(e.target.value);
-                setCheckIfMethodSet(true);
-              }}
-            >
-              <MenuItem value="som_cash">So'm naqd</MenuItem>
-              <MenuItem value="som_card">So'm karta</MenuItem>
-              <MenuItem value="dollar_cash">Dollar naqd</MenuItem>
-              <MenuItem value="dollar_card_visa">Dollar karta (Visa)</MenuItem>
-            </Select>
-          </FormControl> */}
+          
 
           <Box
             sx={{
@@ -424,10 +382,10 @@ const PaymentModal: FC<PaymentModalProps> = ({
             )}
           </Box>
 
-          {/* Real-time hisoblash natijasi - faqat oddiy to'lov uchun */}
+          {}
           {!isPayAll && totalAmountInDollar > 0 && (
             <Box>
-              {/* Kam to'langan */}
+              {}
               {isUnderpaid && (
                 <Alert severity="error" sx={{ mb: 2 }}>
                   <Typography variant="subtitle2" fontWeight="bold">
@@ -444,7 +402,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
                 </Alert>
               )}
 
-              {/* Ko'p to'langan */}
+              {}
               {isOverpaid && (
                 <Alert severity="info" sx={{ mb: 2 }}>
                   <Typography variant="subtitle2" fontWeight="bold">
@@ -468,7 +426,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
                 </Alert>
               )}
 
-              {/* To'g'ri to'langan */}
+              {}
               {isExact && (
                 <Alert severity="success" sx={{ mb: 2 }}>
                   <Typography variant="subtitle2" fontWeight="bold">

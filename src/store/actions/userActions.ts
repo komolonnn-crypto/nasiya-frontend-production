@@ -4,7 +4,7 @@ import type {
   IUserAddTutorial,
 } from "@/types/user";
 
-import authApi from "@/server/auth"
+import authApi from "@/server/auth";
 
 import {
   start,
@@ -21,7 +21,6 @@ export const getUsers = (): AppThunk => async (dispatch) => {
   dispatch(start());
   try {
     const res = await authApi.get("/user/get-all");
-
     const { data } = res;
 
     dispatch(setUsers(data));
@@ -29,7 +28,6 @@ export const getUsers = (): AppThunk => async (dispatch) => {
     dispatch(failure());
   }
 };
-
 
 export const approvedUser =
   (data: IUserApproved): AppThunk =>
@@ -50,17 +48,14 @@ export const addUserCourse =
     try {
       await authApi.put("/user/add-user-course", data);
       dispatch(getUsers());
-    } catch (error: any) {
-      // dispatch(failure());
-    }
+    } catch (error: any) {}
   };
+
 export const addUserTutorial =
   (data: IUserAddTutorial): AppThunk =>
   async (dispatch) => {
     try {
       await authApi.put("/user/add-user-tutorial", data);
       dispatch(getUsers());
-    } catch (error: any) {
-      // dispatch(failure());
-    }
+    } catch (error: any) {}
   };

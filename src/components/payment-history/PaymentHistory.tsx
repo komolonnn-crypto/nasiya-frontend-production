@@ -46,7 +46,7 @@ interface PaymentItem {
   linkedPaymentId?: string;
   prepaidAmount?: number;
   targetMonth?: number;
-  contractId?: string; // ✅ YANGI: Shartnoma ID
+  contractId?: string;
 }
 
 const PaymentHistory: React.FC<PaymentHistoryProps> = ({

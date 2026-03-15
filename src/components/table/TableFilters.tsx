@@ -46,7 +46,7 @@ export function TableFilters({
         <Typography variant="subtitle1" gutterBottom>
           Filterlar
         </Typography>
-        {/* Date Range Filter */}
+        {}
         <Typography variant="body2" sx={{ mt: 2, mb: 1, fontWeight: 600 }}>
           Sana bo'yicha
         </Typography>
@@ -70,7 +70,7 @@ export function TableFilters({
           size="small"
           InputLabelProps={{ shrink: true }}
         />
-        {/* Column Filters */}
+        {}
         <Typography variant="body2" sx={{ mt: 2, mb: 1, fontWeight: 600 }}>
           Ustun bo'yicha
         </Typography>

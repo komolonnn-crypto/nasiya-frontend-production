@@ -1,4 +1,4 @@
-import type { RootState } from "@/store"
+import type { RootState } from "@/store";
 import type { SelectChangeEvent } from "@mui/material";
 
 import React from "react";
@@ -15,27 +15,30 @@ interface ManagerSelectCellProps {
 export const ManagerSelectCellDebtor = React.memo(
   ({ row, onManagerChange }: ManagerSelectCellProps) => {
     const { managers } = useSelector((state: RootState) => state.employee);
-    
-    const { profile } = useSelector((state: RootState) => state.auth);
-    const canEditManager = profile?.role === "admin" || profile?.role === "moderator";
 
-    // Manager ID'ni aniqlash (ismlar mosligini tekshirishda aniqroq logic)
+    const { profile } = useSelector((state: RootState) => state.auth);
+    const canEditManager =
+      profile?.role === "admin" || profile?.role === "moderator";
+
     const selectedManagerId = React.useMemo(() => {
       if (!row.manager || !managers.length) return "";
       const targetName = row.manager.trim().toLowerCase();
-      return managers.find((m) => {
-        const fullName = `${m.firstName} ${m.lastName}`.trim().toLowerCase();
-        return fullName === targetName || (m.fullName && m.fullName.trim().toLowerCase() === targetName);
-      })?._id || "";
+      return (
+        managers.find((m) => {
+          const fullName = `${m.firstName} ${m.lastName}`.trim().toLowerCase();
+          return (
+            fullName === targetName ||
+            (m.fullName && m.fullName.trim().toLowerCase() === targetName)
+          );
+        })?._id || ""
+      );
     }, [row.manager, managers]);
-
 
     const handleChange = (event: SelectChangeEvent<string>) => {
       const newManager = event.target.value as string;
       onManagerChange(row._id, newManager);
     };
-    
-    // Agar ruxsat bo'lmasa, faqat ko'rsatish
+
     if (!canEditManager) {
       return (
         <span style={{ fontSize: "14px" }}>
@@ -43,24 +46,24 @@ export const ManagerSelectCellDebtor = React.memo(
         </span>
       );
     }
-    
-    // Agar managerlar yuklanmagan bo'lsa
+
     if (!managers || managers.length === 0) {
       return (
-        <span style={{ fontSize: "14px", color: "var(--palette-text-disabled)" }}>
+        <span
+          style={{ fontSize: "14px", color: "var(--palette-text-disabled)" }}>
           Yuklanmoqda...
         </span>
       );
     }
-    
+
     return (
       <Select
         value={selectedManagerId}
         onChange={handleChange}
         displayEmpty
         size="small"
-        sx={{ 
-          minWidth: "100px", 
+        sx={{
+          minWidth: "100px",
           width: "100%",
           height: "22px",
           fontSize: "13px",
@@ -75,20 +78,21 @@ export const ManagerSelectCellDebtor = React.memo(
           },
           "&:hover .MuiOutlinedInput-notchedOutline": {
             border: "1px solid rgba(var(--palette-grey-500Channel) / 0.3)",
-          }
+          },
         }}
-        onClick={(e) => e.stopPropagation()}
-      >
+        onClick={(e) => e.stopPropagation()}>
         <MenuItem value="" sx={{ fontSize: "13px" }}>
           <em>Manager tanlang</em>
         </MenuItem>
         {managers.map((manager) => (
-          <MenuItem key={manager._id} value={manager._id} sx={{ fontSize: "13px" }}>
+          <MenuItem
+            key={manager._id}
+            value={manager._id}
+            sx={{ fontSize: "13px" }}>
             {`${manager.firstName} ${manager.lastName}`}
           </MenuItem>
         ))}
       </Select>
     );
-
-  }
+  },
 );

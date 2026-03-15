@@ -73,9 +73,7 @@ export function TableComponent<T extends Record<string, any>>({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  // const [filterName] = useState("");
 
-  // Barcha qatorlarni tanlash/olib tashlash
   const handleSelectAllRows = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = filteredData.map((row) => row["_id"] || row["id"]);
@@ -135,7 +133,6 @@ export function TableComponent<T extends Record<string, any>>({
 
   const renderCellValue = (row: T, column: Column) => {
     if (column.renderCell) {
-      // @ts-ignore - renderCell can accept optional second and third parameters
       return column.renderCell(row, onCustomerClick, onNotesClick);
     }
 
@@ -255,7 +252,6 @@ export function TableComponent<T extends Record<string, any>>({
                   const rowId = row["_id"] || row["id"] || index.toString();
                   const isSelected = selectedRows.includes(rowId);
 
-                  // ✅ Muddati o'tgan eslatmani tekshirish
                   const isExpiredReminder =
                     row["isReminderNotification"] &&
                     row["date"] &&

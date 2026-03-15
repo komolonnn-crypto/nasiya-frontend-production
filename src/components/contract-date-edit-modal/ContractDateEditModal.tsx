@@ -1,8 +1,4 @@
-/**
- * Contract Date Edit Modal
- * Shartnoma boshlanish sanasini o'zgartirish modali
- * ONLY: admin, moderator
- */
+
 
 import { useState, useEffect } from "react";
 import {
@@ -53,7 +49,7 @@ interface PreviewData {
     oldDate: string;
     newDate: string;
     isPaid: boolean;
-    willChange?: boolean;  // ✅ To'lov o'zgaradimi
+    willChange?: boolean;
   }>;
   affectedDebtors: Array<{
     debtorId: string;
@@ -73,7 +69,6 @@ export default function ContractDateEditModal({
   const { profile } = useSelector((state: RootState) => state.auth);
   const userRole = (typeof profile?.role === 'string' ? profile.role : (profile?.role as any)?.name)?.toLowerCase();
 
-  // Check if user is admin or moderator
   const isAuthorized = userRole === "admin" || userRole === "moderator";
 
   const [newStartDate, setNewStartDate] = useState<Dayjs | null>(null);
@@ -85,7 +80,6 @@ export default function ContractDateEditModal({
 
   useEffect(() => {
     if (open) {
-      // Default sana - hozirgi shartnoma boshlanish sanasi
       setNewStartDate(dayjs(currentStartDate));
       setReason("");
       setPreviewData(null);
@@ -350,13 +344,12 @@ export default function ContractDateEditModal({
                     <Stack spacing={0} divider={<Divider />}>
                       {previewData.affectedPayments
                         .sort((a, b) => {
-                          // To'lanmagan to'lovlarni avval ko'rsatish
                           if (a.willChange === b.willChange) return 0;
                           return a.willChange ? -1 : 1;
                         })
                         .slice(0, 10)
                         .map((payment) => {
-                        const willChange = payment.willChange !== false; // Default true agar field bo'lmasa
+                        const willChange = payment.willChange !== false;
                         
                         return (
                           <Box 

@@ -30,7 +30,6 @@ const ContractDetails = () => {
   const { customer } = useSelector((state: RootState) => state.customer);
   const { profile } = useSelector((state: RootState) => state.auth);
 
-  // Check if user is admin or moderator
   const userRole = (
     typeof profile?.role === "string" ?
       profile.role
@@ -50,11 +49,7 @@ const ContractDetails = () => {
   }
   return (
     <DashboardContent>
-      <Box
-        display="flex"
-        alignItems="center"
-        // mb={5}
-        justifyContent="space-between">
+      <Box display="flex" alignItems="center" justifyContent="space-between">
         <Button
           color="inherit"
           startIcon={<Iconify icon="weui:back-filled" />}
@@ -64,7 +59,7 @@ const ContractDetails = () => {
       </Box>
 
       <Grid container spacing={3} my={2}>
-        {/* Mijoz ma'lumotlari */}
+        {}
         <Grid xs={12}>
           <Paper elevation={3} sx={{ p: 2, borderRadius: "18px" }}>
             {contract?.customer && (
@@ -73,9 +68,9 @@ const ContractDetails = () => {
           </Paper>
         </Grid>
 
-        {/* Shartnoma ma'lumotlari va To'lov jadvali - YONMA-YON */}
+        {}
         <Grid xs={12} md={4}>
-          {/* Shartnoma ma'lumotlari */}
+          {}
           {contract && (
             <Calculate
               contract={contract}
@@ -85,7 +80,7 @@ const ContractDetails = () => {
         </Grid>
 
         <Grid xs={12} md={8}>
-          {/* To'lov jadvali */}
+          {}
           {contract && (
             <PaymentSchedule
               startDate={contract.startDate}
@@ -106,7 +101,7 @@ const ContractDetails = () => {
           )}
         </Grid>
 
-        {/* Tahrirlash tarixi */}
+        {}
         {contract?.editHistory && contract.editHistory.length > 0 && (
           <Grid xs={12}>
             <EditHistory editHistory={contract.editHistory} />

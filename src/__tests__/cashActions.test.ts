@@ -5,7 +5,6 @@ import {
   rejectPayment,
 } from "@/store/actions/cashActions";
 
-
 function testGetPendingPaymentsExists() {
   console.log("\n TEST 1: getPendingPayments exists");
 
@@ -49,9 +48,6 @@ function testConfirmPaymentsSignature() {
   }
 }
 
-/**
- * Test 3: rejectPayment should accept paymentId and reason
- */
 function testRejectPaymentSignature() {
   console.log("\n TEST 3: rejectPayment signature");
 
@@ -74,7 +70,6 @@ function testRejectPaymentSignature() {
   }
 }
 
-
 export function runTests() {
   console.log("=".repeat(50));
 
@@ -84,7 +79,6 @@ export function runTests() {
     failed: 0,
   };
 
-  // Test 1
   results.total++;
   if (testGetPendingPaymentsExists()) {
     results.passed++;
@@ -92,7 +86,6 @@ export function runTests() {
     results.failed++;
   }
 
-  // Test 2
   results.total++;
   if (testConfirmPaymentsSignature()) {
     results.passed++;
@@ -100,7 +93,6 @@ export function runTests() {
     results.failed++;
   }
 
-  // Test 3
   results.total++;
   if (testRejectPaymentSignature()) {
     results.passed++;
@@ -108,12 +100,9 @@ export function runTests() {
     results.failed++;
   }
 
-
-
   return results.failed === 0;
 }
 
-// Run tests if executed directly
 if (typeof window === "undefined") {
   runTests();
 }

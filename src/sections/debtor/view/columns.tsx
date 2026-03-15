@@ -1,4 +1,4 @@
-import type { Column } from "@/components/table/types"
+import type { Column } from "@/components/table/types";
 import dayjs from "dayjs";
 
 export const columnsDebtor: Column[] = [
@@ -11,38 +11,39 @@ export const columnsDebtor: Column[] = [
     width: 70,
     renderCell: (row: any) => {
       if (row.contracts && Array.isArray(row.contracts)) {
-        // ✅ TUZATISH: originalPaymentDay ni birinchi o'rinda ishlatish
         const days = row.contracts
           .map((contract: any) => {
-            // Birinchi: originalPaymentDay (eng ishonchli)
             if (contract.originalPaymentDay) {
               return contract.originalPaymentDay;
             }
-            // Ikkinchi: initialPaymentDueDate
             if (contract.initialPaymentDueDate) {
               return dayjs(contract.initialPaymentDueDate).date();
             }
-            // Fallback: startDate
             if (contract.startDate) {
               return dayjs(contract.startDate).date();
             }
             return null;
           })
           .filter((day: number | null) => day !== null);
-        
-        // Noyob kunlar
-        const uniqueDays = Array.from(new Set(days)).sort((a: any, b: any) => a - b);
-        
+
+        const uniqueDays = Array.from(new Set(days)).sort(
+          (a: any, b: any) => a - b,
+        );
+
         if (uniqueDays.length > 0) {
           if (uniqueDays.length <= 3) {
-            return uniqueDays.map((d: any) => d.toString().padStart(2, "0")).join(", ");
+            return uniqueDays
+              .map((d: any) => d.toString().padStart(2, "0"))
+              .join(", ");
           }
-          const shown = uniqueDays.slice(0, 3).map((d: any) => d.toString().padStart(2, "0")).join(", ");
+          const shown = uniqueDays
+            .slice(0, 3)
+            .map((d: any) => d.toString().padStart(2, "0"))
+            .join(", ");
           return `${shown} +${uniqueDays.length - 3}`;
         }
       }
-      
-      // Fallback - eski usul
+
       if (row.createdAt) {
         const day = dayjs(row.createdAt).date();
         return day.toString().padStart(2, "0");
@@ -50,9 +51,9 @@ export const columnsDebtor: Column[] = [
       return "—";
     },
   },
-  { 
-    id: "fullName", 
-    label: "Mijoz", 
+  {
+    id: "fullName",
+    label: "Mijoz",
     sortable: true,
     minWidth: 150,
     width: 180,
@@ -68,7 +69,7 @@ export const columnsDebtor: Column[] = [
       if (row.contracts && Array.isArray(row.contracts)) {
         const totalMonthly = row.contracts.reduce(
           (sum: number, contract: any) => sum + (contract.monthlyPayment || 0),
-          0
+          0,
         );
         return `${totalMonthly.toLocaleString()} $`;
       }
@@ -92,16 +93,16 @@ export const columnsDebtor: Column[] = [
     minWidth: 80,
     width: 100,
     renderCell: (row: any) => {
-      // Mijoz bo'yicha guruhlangan ma'lumotda contracts array bor
       if (row.contracts && Array.isArray(row.contracts)) {
-        // Barcha shartnomalardan to'langan oylar va umumiy oylarni yig'amiz
-        const totalPaid = row.contracts.reduce((sum: number, contract: any) => 
-          sum + (contract.paidMonthsCount || 0), 0
+        const totalPaid = row.contracts.reduce(
+          (sum: number, contract: any) => sum + (contract.paidMonthsCount || 0),
+          0,
         );
-        const totalMonths = row.contracts.reduce((sum: number, contract: any) => 
-          sum + (contract.period || 0), 0
+        const totalMonths = row.contracts.reduce(
+          (sum: number, contract: any) => sum + (contract.period || 0),
+          0,
         );
-        
+
         if (totalMonths > 0) {
           return `${totalPaid}/${totalMonths}`;
         }
@@ -133,8 +134,8 @@ export const columnsDebtor: Column[] = [
     minWidth: 100,
     width: 120,
   },
-  { 
-    id: "manager", 
+  {
+    id: "manager",
     label: "Manager",
     minWidth: 100,
     width: 130,
@@ -149,19 +150,16 @@ export const columnsContract: Column[] = [
     filterable: false,
     sticky: "left",
     stickyOffset: 0,
-    minWidth: 45, 
+    minWidth: 45,
     width: 45,
     renderCell: (row: any) => {
-      // ✅ TUZATISH: originalPaymentDay ni birinchi o'rinda ishlatish (eng ishonchli)
       if (row.originalPaymentDay) {
         return row.originalPaymentDay.toString();
       }
-      // Fallback: initialPaymentDueDate dan kun olish
       if (row.initialPaymentDueDate) {
         const day = dayjs(row.initialPaymentDueDate).date();
         return day.toString();
       }
-      // Fallback: startDate
       if (row.startDate) {
         const day = dayjs(row.startDate).date();
         return day.toString();
@@ -176,14 +174,14 @@ export const columnsContract: Column[] = [
     sticky: "left",
     stickyOffset: 45,
     minWidth: 150,
-    width: 180, 
+    width: 180,
   },
-  { 
-    id: "productName", 
-    label: "Mahsulot nomi", 
+  {
+    id: "productName",
+    label: "Mahsulot nomi",
     sortable: true,
     minWidth: 120,
-    width: 150, // ✅ Mahsulot nomlari uchun
+    width: 150,
   },
   {
     id: "monthlyPayment",
@@ -199,7 +197,7 @@ export const columnsContract: Column[] = [
     format: (value: any) => `${value.toLocaleString()} $`,
     sortable: true,
     minWidth: 80,
-    width: 100, 
+    width: 100,
   },
   {
     id: "initialPayment",
@@ -207,7 +205,7 @@ export const columnsContract: Column[] = [
     format: (value: any) => `${value.toLocaleString()} $`,
     sortable: true,
     minWidth: 80,
-    width: 100, 
+    width: 100,
   },
   {
     id: "totalPaid",
@@ -215,7 +213,7 @@ export const columnsContract: Column[] = [
     format: (value: any) => `${value.toLocaleString()} $`,
     sortable: true,
     minWidth: 80,
-    width: 100, 
+    width: 100,
   },
   {
     id: "remainingDebt",
@@ -223,7 +221,7 @@ export const columnsContract: Column[] = [
     format: (value: any) => `${value.toLocaleString()} $`,
     sortable: true,
     minWidth: 80,
-    width: 100, 
+    width: 100,
   },
   {
     id: "startDate",
@@ -232,7 +230,7 @@ export const columnsContract: Column[] = [
     sortable: true,
     filterable: false,
     minWidth: 90,
-    width: 110, 
+    width: 110,
   },
   {
     id: "paymentProgress",
@@ -244,7 +242,7 @@ export const columnsContract: Column[] = [
     renderCell: (row: any) => {
       const paidMonths = row.paidMonthsCount || 0;
       const totalMonths = row.period || 0;
-      
+
       if (totalMonths > 0) {
         return `${paidMonths}/${totalMonths}`;
       }
@@ -273,11 +271,11 @@ export const columnsContract: Column[] = [
       return `🟢 ${delayDays}`;
     },
   },
-  { 
-    id: "manager", 
-    label: "Manager", 
+  {
+    id: "manager",
+    label: "Manager",
     sortable: true,
     minWidth: 100,
-    width: 130, 
+    width: 130,
   },
 ];

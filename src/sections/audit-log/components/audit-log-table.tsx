@@ -20,6 +20,7 @@ import {
   IconButton,
   Paper,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Iconify } from "@/components/iconify";
@@ -43,6 +44,12 @@ dayjs.extend(relativeTime);
 dayjs.locale("uz-latn");
 
 const userCache: Record<string, string> = {};
+
+function formatAmount(value: number | undefined | null): string {
+  if (value == null) return "—";
+  const rounded = Math.round(value * 100) / 100;
+  return rounded % 1 === 0 ? rounded.toFixed(0) : rounded.toFixed(2);
+}
 
 function getUserDisplayName(userId: string, allLogs: IAuditLog[]): string {
   if (userCache[userId]) {
@@ -72,7 +79,6 @@ function getUserDisplayName(userId: string, allLogs: IAuditLog[]): string {
 
 function getFieldLabel(field: string): string {
   const fieldLabels: Record<string, string> = {
-    // To'lov maydonlari
     status: "Holat",
     isPaid: "To'langan",
     amount: "Summa",
@@ -86,12 +92,10 @@ function getFieldLabel(field: string): string {
     paymentStatus: "To'lov holati",
     paymentMethod: "To'lov usuli",
     paymentType: "To'lov turi",
-    // Tasdiqlash / Rad etish
     confirmedBy: "Tasdiqlagan xodim",
     confirmedAt: "Tasdiqlangan vaqt",
     rejectedBy: "Rad etgan xodim",
     rejectedAt: "Rad etilgan vaqt",
-    // Foydalanuvchi maydonlari
     firstName: "Ism",
     lastName: "Familiya",
     phone: "Telefon",
@@ -101,7 +105,6 @@ function getFieldLabel(field: string): string {
     role: "Lavozim",
     password: "Parol",
     isDeleted: "O'chirilgan",
-    // Shartnoma maydonlari
     totalPrice: "Umumiy summa",
     monthlyPayment: "Oylik to'lov",
     contractDate: "Shartnoma sanasi",
@@ -112,10 +115,8 @@ function getFieldLabel(field: string): string {
     initialPayment: "Boshlang'ich to'lov",
     contractStatus: "Shartnoma holati",
     notes: "Izoh",
-    // Vaqt maydonlari
     createdAt: "Yaratilgan vaqt",
     updatedAt: "Yangilangan vaqt",
-    // Holat qiymatlari
     PENDING: "Kutilmoqda",
     PAID: "To'liq to'langan",
     REJECTED: "Rad etilgan",
@@ -123,10 +124,8 @@ function getFieldLabel(field: string): string {
     OVERPAID: "Ortiqcha to'langan",
     COMPLETED: "Tugallangan",
     ACTIVE: "Faol",
-    // To'lov turi qiymatlari
     monthly: "Oylik",
     initial: "Boshlang'ich",
-    // Mantiqiy qiymatlar
     true: "Ha",
     false: "Yo'q",
   };
@@ -143,7 +142,6 @@ function formatFieldValue(
   if (value === true) return "Ha";
   if (value === false) return "Yo'q";
 
-  // To'lov holati qiymatlari
   if (value === "PENDING") return "Kutilmoqda";
   if (value === "PAID") return "To'liq to'langan";
   if (value === "UNDERPAID") return "Kam to'langan";
@@ -152,11 +150,9 @@ function formatFieldValue(
   if (value === "COMPLETED") return "Tugallangan";
   if (value === "ACTIVE") return "Faol";
 
-  // To'lov turi qiymatlari
   if (value === "monthly") return "Oylik";
   if (value === "initial") return "Boshlang'ich";
 
-  // To'lov usuli qiymatlari
   if (value === "som_cash") return "So'm naqd";
   if (value === "som_card") return "So'm karta";
   if (value === "dollar_cash") return "Dollar naqd";
@@ -195,7 +191,6 @@ function formatFieldValue(
 }
 
 function ExpandedRow({ log, allLogs }: ExpandedRowProps) {
-  // Ortiqcha o'zgarishlarni filter qilish
   const redundantFields = ["status", "isPaid", "confirmedBy", "confirmedAt"];
 
   const meaningfulChanges =
@@ -211,7 +206,7 @@ function ExpandedRow({ log, allLogs }: ExpandedRowProps) {
   return (
     <Box sx={{ p: 0.5, bgcolor: "background.neutral", borderRadius: 0 }}>
       <Stack spacing={0.5}>
-        {/* To'lov tasdiqlash/rad etish uchun sodda ko'rinish */}
+        {}
         {isPaymentAction && (
           <Paper
             sx={{
@@ -220,7 +215,7 @@ function ExpandedRow({ log, allLogs }: ExpandedRowProps) {
               border: "none",
               boxShadow: "none",
             }}>
-            <Stack spacing={0.5}>
+            <Stack spacing={1}>
               {log.action === "CONFIRM" && (
                 <Typography
                   variant="body2"
@@ -250,7 +245,7 @@ function ExpandedRow({ log, allLogs }: ExpandedRowProps) {
               )}
               {log.metadata?.amount && (
                 <Typography variant="body2">
-                  Summa: <strong>${log.metadata.amount}</strong>
+                  Summa: <strong>${formatAmount(log.metadata.amount)}</strong>
                   {log.metadata.targetMonth != null &&
                     log.metadata.targetMonth > 0 && (
                       <span
@@ -269,13 +264,13 @@ function ExpandedRow({ log, allLogs }: ExpandedRowProps) {
                   Mijoz: {log.metadata.customerName}
                 </Typography>
               )}
-              {/* ✅ YANGI: To'lovni qilgan xodim */}
+
               {log.metadata?.paymentCreatorName && (
                 <Typography variant="body2" color="primary.main">
                   Xodim: <strong>{log.metadata.paymentCreatorName}</strong>
                 </Typography>
               )}
-              {/* ✅ YANGI: To'lov usuli */}
+
               {log.metadata?.paymentMethod && (
                 <Typography variant="body2" color="text.secondary">
                   To'lov usuli:{" "}
@@ -305,11 +300,49 @@ function ExpandedRow({ log, allLogs }: ExpandedRowProps) {
                   />
                 </Typography>
               )}
+
+              {log.metadata?.excessAmount && log.metadata.excessAmount > 0 && (
+                <Box
+                  sx={{
+                    mt: 0.5,
+                    p: 0.75,
+                    px: 1,
+                    py: 1,
+                    borderRadius: "10px",
+                    bgcolor: (theme) => alpha(theme.palette.warning.main, 0.12),
+                    border: "1px solid",
+                    borderColor: (theme) =>
+                      alpha(theme.palette.warning.main, 0.4),
+                  }}>
+                  <Typography variant="body2" color="green" fontWeight={600}>
+                    Ko'p to'langan (zapasga o'tkazildi)
+                  </Typography>
+                  <Stack spacing={0.25} sx={{ mt: 0.25 }}>
+                    <Typography variant="caption" color="text.main">
+                      To'langan:{" "}
+                      <strong>
+                        ${formatAmount(log.metadata.originalAmount)}
+                      </strong>{" "}
+                      = Qabul:{" "}
+                      <strong>${formatAmount(log.metadata.amount)}</strong> +
+                      Zapas:{" "}
+                      <strong style={{ color: "inherit" }}>
+                        ${formatAmount(log.metadata.excessAmount)}
+                      </strong>
+                    </Typography>
+                    {log.metadata.prepaidRecordId && (
+                      <Typography variant="button" color="red">
+                        Zapas ID: {log.metadata.prepaidRecordId}
+                      </Typography>
+                    )}
+                  </Stack>
+                </Box>
+              )}
             </Stack>
           </Paper>
         )}
 
-        {/* Boshqa actionlar uchun o'zgarishlar */}
+        {}
         {!isPaymentAction && meaningfulChanges.length > 0 && (
           <Box>
             <Typography variant="subtitle2" gutterBottom>
@@ -359,7 +392,7 @@ function ExpandedRow({ log, allLogs }: ExpandedRowProps) {
           </Box>
         )}
 
-        {/* Boshqa actionlar uchun metadata (to'lov uchun emas) */}
+        {}
         {!isPaymentAction && log.metadata && (
           <Box>
             <Typography variant="subtitle2" gutterBottom>
@@ -401,7 +434,7 @@ function ExpandedRow({ log, allLogs }: ExpandedRowProps) {
                 {log.metadata.totalPrice && (
                   <Typography variant="caption">
                     <strong>Shartnoma summasi:</strong> $
-                    {log.metadata.totalPrice}
+                    {formatAmount(log.metadata.totalPrice)}
                   </Typography>
                 )}
               </Stack>
@@ -412,8 +445,6 @@ function ExpandedRow({ log, allLogs }: ExpandedRowProps) {
     </Box>
   );
 }
-
-// ----------------------------------------------------------------------
 
 export default function AuditLogTable({
   data,
@@ -489,21 +520,22 @@ export default function AuditLogTable({
       )}
 
       <CardContent sx={{ p: 0 }}>
-        {/* TableContainer render start */}
-        <TableContainer sx={{
-          maxHeight,
-          border: "none",
-          scrollbarWidth: "thin",
-          scrollbarColor: "rgba(128,128,128,0.35) transparent",
-          "&::-webkit-scrollbar": { width: "5px", height: "5px" },
-          "&::-webkit-scrollbar-track": { background: "transparent" },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "rgba(128,128,128,0.35)",
-            borderRadius: "10px",
-            "&:hover": { backgroundColor: "rgba(128,128,128,0.6)" },
-          },
-          "&::-webkit-scrollbar-corner": { background: "transparent" },
-        }}>
+        {}
+        <TableContainer
+          sx={{
+            maxHeight,
+            border: "none",
+            scrollbarWidth: "thin",
+            scrollbarColor: "rgba(128,128,128,0.35) transparent",
+            "&::-webkit-scrollbar": { width: "5px", height: "5px" },
+            "&::-webkit-scrollbar-track": { background: "transparent" },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "rgba(128,128,128,0.35)",
+              borderRadius: "10px",
+              "&:hover": { backgroundColor: "rgba(128,128,128,0.6)" },
+            },
+            "&::-webkit-scrollbar-corner": { background: "transparent" },
+          }}>
           <Table
             stickyHeader
             size="small"
@@ -527,7 +559,7 @@ export default function AuditLogTable({
                 bgcolor: "background.neutral",
               },
             }}>
-            {/* Jadvalni boshini render qiladi start */}
+            {}
             <TableHead>
               <TableRow>
                 {headers.map((item, index) => (
@@ -540,11 +572,10 @@ export default function AuditLogTable({
                 ))}
               </TableRow>
             </TableHead>
-            {/* Jadvalni boshini render qiladi end */}
+            {}
 
             <TableBody>
               {loading ?
-                // Loading skeleton start
                 Array.from({ length: rows }).map((_, rowIndex) => (
                   <TableRow key={`skeleton-row-${rowIndex}`}>
                     {headers.map((_, cellIndex) => (
@@ -555,7 +586,6 @@ export default function AuditLogTable({
                   </TableRow>
                 ))
               : data.length === 0 ?
-                // No data
                 <TableRow>
                   <TableCell colSpan={11} align="center" sx={{ py: 4 }}>
                     <Stack spacing={1} alignItems="center">
@@ -570,13 +600,11 @@ export default function AuditLogTable({
                     </Stack>
                   </TableCell>
                 </TableRow>
-                // Data rows
               : data.map((log) => {
                   const isExpanded = expandedRows.has(log._id);
                   const hasDetails =
                     log.changes?.length || log.metadata || log.ipAddress;
 
-                  // Cells start
                   const cells = [
                     {
                       key: "icon",
@@ -682,7 +710,7 @@ export default function AuditLogTable({
                           noWrap
                           sx={{ fontSize: "0.6rem", textAlign: "center" }}>
                           {log.metadata?.amount ?
-                            `$${log.metadata.amount}`
+                            `$${formatAmount(log.metadata.amount)}`
                           : "———"}
                         </Typography>
                       ),
@@ -727,7 +755,6 @@ export default function AuditLogTable({
                         ),
                     },
                   ];
-                  // Cells end
 
                   return (
                     <React.Fragment key={log._id}>
@@ -741,7 +768,7 @@ export default function AuditLogTable({
                         ))}
                       </TableRow>
 
-                      {/* Expanded row */}
+                      {}
                       {hasDetails && isExpanded && (
                         <TableRow sx={{ height: "auto" }}>
                           <TableCell
@@ -763,16 +790,16 @@ export default function AuditLogTable({
             </TableBody>
           </Table>
         </TableContainer>
-        {/* TableContainer render end */}
+        {}
 
-        {/* Pagination render start */}
+        {}
         {onPageChange && onLimitChange && (
           <TablePagination
             rowsPerPageOptions={[25, 50, 100, 200, 500]}
             component="div"
             count={total}
             rowsPerPage={limit}
-            page={page - 1} // MUI uses 0-based indexing
+            page={page - 1}
             onPageChange={onPageChange}
             onRowsPerPageChange={onLimitChange}
             labelRowsPerPage="Sahifada:"
@@ -781,7 +808,7 @@ export default function AuditLogTable({
             }
           />
         )}
-        {/* Pagination render end */}
+        {}
       </CardContent>
     </Card>
   );

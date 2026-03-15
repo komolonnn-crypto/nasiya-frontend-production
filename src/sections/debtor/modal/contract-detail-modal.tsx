@@ -1,4 +1,4 @@
-import type { IContract } from "@/types/contract"
+import type { IContract } from "@/types/contract";
 
 import {
   Box,
@@ -25,10 +25,19 @@ interface ContractDetailModalProps {
   contract: IContract | null;
 }
 
-// Oy nomlari
 const monthNames = [
-  "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
-  "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"
+  "Yanvar",
+  "Fevral",
+  "Mart",
+  "Aprel",
+  "May",
+  "Iyun",
+  "Iyul",
+  "Avgust",
+  "Sentabr",
+  "Oktabr",
+  "Noyabr",
+  "Dekabr",
 ];
 
 export function ContractDetailModal({
@@ -41,23 +50,20 @@ export function ContractDetailModal({
   const delayDays = (contract as any).delayDays || 0;
   const hasDelay = delayDays > 0;
 
-  // To'langan oylar sonini hisoblash
-  const paidMonths = contract.period && contract.monthlyPayment
-    ? Math.floor((contract.totalPaid - contract.initialPayment) / contract.monthlyPayment)
+  const paidMonths =
+    contract.period && contract.monthlyPayment ?
+      Math.floor(
+        (contract.totalPaid - contract.initialPayment) /
+          contract.monthlyPayment,
+      )
     : 0;
 
-  // const progressPercent = contract.period 
-  //   ? Math.min((paidMonths / contract.period) * 100, 100)
-  //   : 0;
-
-  // Qaysi oy to'lovi kechikkanini aniqlash
   const getOverdueMonthInfo = () => {
     if (delayDays <= 0) return null;
-    
-    const nextPaymentDate = contract.nextPaymentDate 
-      ? new Date(contract.nextPaymentDate) 
-      : null;
-    
+
+    const nextPaymentDate =
+      contract.nextPaymentDate ? new Date(contract.nextPaymentDate) : null;
+
     if (!nextPaymentDate) return null;
 
     const monthName = monthNames[nextPaymentDate.getMonth()];
@@ -75,14 +81,12 @@ export function ContractDetailModal({
   const overdueInfo = getOverdueMonthInfo();
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="md"
-      fullWidth
-    >
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center">
           <Box>
             <Typography variant="h6" fontWeight={600}>
               {contract.productName || "Noma'lum mahsulot"}
@@ -93,9 +97,9 @@ export function ContractDetailModal({
           </Box>
           <Stack direction="row" spacing={1} alignItems="center">
             {hasDelay && (
-              <Chip 
-                label={`${delayDays} kun kechikish`} 
-                color="error" 
+              <Chip
+                label={`${delayDays} kun kechikish`}
+                color="error"
                 size="small"
               />
             )}
@@ -109,9 +113,15 @@ export function ContractDetailModal({
       <Divider />
 
       <DialogContent>
-        {/* Kechikish ogohlantirish */}
         {overdueInfo && hasDelay && (
-          <Box sx={{ mb: 2, p: 1.5, bgcolor: "error.main", color: "white", borderRadius: 0 }}>
+          <Box
+            sx={{
+              mb: 2,
+              p: 1.5,
+              bgcolor: "error.main",
+              color: "white",
+              borderRadius: 0,
+            }}>
             <Typography variant="body2" fontWeight={600}>
               ⚠️ {overdueInfo.overdueMonthNumber}-oy to'lovi kechikkan
             </Typography>
@@ -121,9 +131,7 @@ export function ContractDetailModal({
           </Box>
         )}
 
-        {/* Asosiy ma'lumotlar - 2 ta ustun */}
         <Stack direction="row" spacing={3}>
-          {/* Chap ustun - Moliyaviy ma'lumotlar */}
           <Box flex={1}>
             <Typography variant="subtitle2" fontWeight={600} mb={1.5}>
               Moliyaviy ma'lumotlar
@@ -136,31 +144,44 @@ export function ContractDetailModal({
                     ${contract.totalPrice?.toLocaleString() || 0}
                   </TableCell>
                 </TableRow>
-                <TableRow sx={{ bgcolor: "rgba(var(--palette-success-mainChannel) / 0.1)" }}>
+                <TableRow
+                  sx={{
+                    bgcolor: "rgba(var(--palette-success-mainChannel) / 0.1)",
+                  }}>
                   <TableCell>To'langan:</TableCell>
-                  <TableCell align="right" sx={{ color: "success.main", fontWeight: 600 }}>
+                  <TableCell
+                    align="right"
+                    sx={{ color: "success.main", fontWeight: 600 }}>
                     ${contract.totalPaid?.toLocaleString() || 0}
                   </TableCell>
                 </TableRow>
-                <TableRow sx={{ bgcolor: "rgba(var(--palette-error-mainChannel) / 0.1)" }}>
+                <TableRow
+                  sx={{
+                    bgcolor: "rgba(var(--palette-error-mainChannel) / 0.1)",
+                  }}>
                   <TableCell>Qoldiq qarz:</TableCell>
-                  <TableCell align="right" sx={{ color: "error.main", fontWeight: 600 }}>
+                  <TableCell
+                    align="right"
+                    sx={{ color: "error.main", fontWeight: 600 }}>
                     ${contract.remainingDebt?.toLocaleString() || 0}
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Oldindan to'lov:</TableCell>
-                  <TableCell align="right">${contract.initialPayment?.toLocaleString() || 0}</TableCell>
+                  <TableCell align="right">
+                    ${contract.initialPayment?.toLocaleString() || 0}
+                  </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Oylik to'lov:</TableCell>
-                  <TableCell align="right">${contract.monthlyPayment?.toLocaleString() || 0}</TableCell>
+                  <TableCell align="right">
+                    ${contract.monthlyPayment?.toLocaleString() || 0}
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
           </Box>
 
-          {/* O'ng ustun - Shartnoma ma'lumotlari */}
           <Box flex={1}>
             <Typography variant="subtitle2" fontWeight={600} mb={1.5}>
               Shartnoma ma'lumotlari
@@ -171,29 +192,51 @@ export function ContractDetailModal({
                   <TableCell>Muddat:</TableCell>
                   <TableCell align="right">
                     <Typography variant="body2">
-                      <Box component="span" sx={{ color: "primary.main", fontWeight: 600 }}>
+                      <Box
+                        component="span"
+                        sx={{ color: "primary.main", fontWeight: 600 }}>
                         {paidMonths}
                       </Box>
-                      {" / "}{contract.period || 0} oy
+                      {" / "}
+                      {contract.period || 0} oy
                     </Typography>
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Shartnoma sanasi:</TableCell>
                   <TableCell align="right">
-                    {contract.startDate ? new Date(contract.startDate).toLocaleDateString("uz-UZ") : "—"}
+                    {contract.startDate ?
+                      new Date(contract.startDate).toLocaleDateString("uz-UZ")
+                    : "—"}
                   </TableCell>
                 </TableRow>
-                <TableRow sx={{ bgcolor: hasDelay ? "rgba(var(--palette-error-mainChannel) / 0.1)" : "background.paper" }}>
+                <TableRow
+                  sx={{
+                    bgcolor:
+                      hasDelay ?
+                        "rgba(var(--palette-error-mainChannel) / 0.1)"
+                      : "background.paper",
+                  }}>
                   <TableCell>Keyingi to'lov:</TableCell>
-                  <TableCell align="right" sx={{ color: hasDelay ? "error.main" : "text.primary", fontWeight: hasDelay ? 600 : 400 }}>
-                    {contract.nextPaymentDate ? new Date(contract.nextPaymentDate).toLocaleDateString("uz-UZ") : "—"}
+                  <TableCell
+                    align="right"
+                    sx={{
+                      color: hasDelay ? "error.main" : "text.primary",
+                      fontWeight: hasDelay ? 600 : 400,
+                    }}>
+                    {contract.nextPaymentDate ?
+                      new Date(contract.nextPaymentDate).toLocaleDateString(
+                        "uz-UZ",
+                      )
+                    : "—"}
                   </TableCell>
                 </TableRow>
                 {(contract as any).manager && (
                   <TableRow>
                     <TableCell>Menejer:</TableCell>
-                    <TableCell align="right">{(contract as any).manager}</TableCell>
+                    <TableCell align="right">
+                      {(contract as any).manager}
+                    </TableCell>
                   </TableRow>
                 )}
               </TableBody>

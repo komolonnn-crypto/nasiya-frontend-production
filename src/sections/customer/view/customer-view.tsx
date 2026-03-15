@@ -94,9 +94,6 @@ const CustomerView = () => {
   const [tab, setTab] = useState(0);
   const [uploading, setUploading] = useState(false);
 
-  // const selectedCustomersData= customers.filter((customer) => selectedRows.includes(customer._id));
-  // console.log("Selected Customers Data:", selectedCustomersData); // ✅ DEBUG: selectedRows ile eşleşen müşteri verilerini kontrol et
-
   const handleChangeTab = (_event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
@@ -303,9 +300,12 @@ const CustomerView = () => {
               bgcolor: "rgba(var(--palette-error-mainChannel) / 0.12)",
               border: "1px solid rgba(var(--palette-error-mainChannel) / 0.24)",
               borderRadius: 1,
-            }}
-          >
-            <Typography variant="body2" color="error.main" fontWeight={700} sx={{ flex: '1 1 auto' }}>
+            }}>
+            <Typography
+              variant="body2"
+              color="error.main"
+              fontWeight={700}
+              sx={{ flex: "1 1 auto" }}>
               {selectedRows.length} ta mijoz tanlandi
             </Typography>
             <Box display="flex" gap={1} flexShrink={0}>
@@ -314,16 +314,14 @@ const CustomerView = () => {
                 color="error"
                 size="small"
                 startIcon={<Iconify icon="mingcute:delete-2-line" />}
-                onClick={() => setBulkDeleteDialog(true)}
-              >
+                onClick={() => setBulkDeleteDialog(true)}>
                 O'chirish
               </Button>
               <Button
                 variant="outlined"
                 color="inherit"
                 size="small"
-                onClick={() => setSelectedRows([])}
-              >
+                onClick={() => setSelectedRows([])}>
                 Bekor qilish
               </Button>
             </Box>
@@ -355,29 +353,27 @@ const CustomerView = () => {
         </CustomTabPanel>
       </Stack>
 
-      {/* Bulk delete tasdiqlash dialogi */}
+      {}
       <Dialog
         open={bulkDeleteDialog}
         onClose={() => setBulkDeleteDialog(false)}
         maxWidth="xs"
-        fullWidth
-      >
+        fullWidth>
         <DialogTitle sx={{ color: "error.main" }}>
           {selectedRows.length} ta mijozni o'chirish
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
             Tanlangan <b>{selectedRows.length}</b> ta mijoz va ularning barcha
-            shartnoma, to'lov ma'lumotlari bazadan{" "}
-            <b>butunlay o'chiriladi</b>. Bu amalni qaytarib bo'lmaydi!
+            shartnoma, to'lov ma'lumotlari bazadan <b>butunlay o'chiriladi</b>.
+            Bu amalni qaytarib bo'lmaydi!
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button
             onClick={() => setBulkDeleteDialog(false)}
             variant="outlined"
-            color="inherit"
-          >
+            color="inherit">
             Bekor qilish
           </Button>
           <Button onClick={handleBulkDelete} variant="contained" color="error">

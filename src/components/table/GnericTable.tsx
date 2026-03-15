@@ -1,4 +1,3 @@
-// src/components/table/GenericTable.tsx
 import type { useTableLogic } from "@/hooks/useTableLogic";
 
 import { Card } from "@mui/material";
@@ -95,8 +94,6 @@ export function GenericTable<T extends Record<string, any>>({
           ...excelCardStyle,
           overflow: "hidden",
           height: "100%",
-          // maxHeight: "calc(100vh - 200px)",
-          // boxShadow: 3,
           border: "none",
           borderRadius: "18px",
         }}>

@@ -1,9 +1,8 @@
-import type { ICustomer } from "@/types/customer"
-import type { Column } from "@/components/table/types"
+import type { ICustomer } from "@/types/customer";
+import type { Column } from "@/components/table/types";
 
-import { useTableLogic } from "@/hooks/useTableLogic"
-
-import { GenericTable } from "@/components/table/GnericTable"
+import { useTableLogic } from "@/hooks/useTableLogic";
+import { GenericTable } from "@/components/table/GnericTable";
 
 interface CustomerTableProps {
   data: ICustomer[];

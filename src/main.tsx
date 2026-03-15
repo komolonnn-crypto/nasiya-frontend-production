@@ -1,9 +1,10 @@
 import { Suspense } from "react";
 import { Provider } from "react-redux";
 import ReactDOM from "react-dom/client";
-import { SnackbarProvider } from "notistack";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+
+import { SnackbarProvider } from "notistack";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 

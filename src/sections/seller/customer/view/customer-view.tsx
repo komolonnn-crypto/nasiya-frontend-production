@@ -1,5 +1,5 @@
-import type { RootState } from "@/store"
-import type { Column } from "@/components/table/types"
+import type { RootState } from "@/store";
+import type { Column } from "@/components/table/types";
 
 import { useSelector } from "react-redux";
 import { memo, useState, useEffect } from "react";
@@ -15,11 +15,11 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import authApi from "@/server/auth"
-import { setModal } from "@/store/slices/modalSlice"
-import { DashboardContent } from "@/layouts/dashboard"
+import authApi from "@/server/auth";
+import { setModal } from "@/store/slices/modalSlice";
+import { DashboardContent } from "@/layouts/dashboard";
 import {
   setCustomers,
   setNewCustomers,
@@ -28,9 +28,9 @@ import {
 
 import { enqueueSnackbar } from "notistack";
 
-import { Iconify } from "@/components/iconify"
-import Loader from "@/components/loader/Loader"
-import { exportCustomersToCSV } from "@/utils/export-csv"
+import { Iconify } from "@/components/iconify";
+import Loader from "@/components/loader/Loader";
+import { exportCustomersToCSV } from "@/utils/export-csv";
 
 import CustomerTable from "./customerTable";
 
@@ -49,8 +49,7 @@ function CustomTabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
+      {...other}>
       {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
     </div>
   );
@@ -100,9 +99,9 @@ const columns: Column[] = [
     label: "Menejer",
     sortable: false,
     renderCell: (row) =>
-      row.manager
-        ? `${row.manager.firstName} ${row.manager.lastName || "_"}`
-        : "—",
+      row.manager ?
+        `${row.manager.firstName} ${row.manager.lastName || "_"}`
+      : "—",
   },
 ];
 
@@ -110,7 +109,7 @@ const CustomerView = () => {
   const dispatch = useAppDispatch();
 
   const { customers, newCustomers, isLoading } = useSelector(
-    (state: RootState) => state.customer
+    (state: RootState) => state.customer,
   );
 
   useEffect(() => {
@@ -147,8 +146,7 @@ const CustomerView = () => {
           alignItems="center"
           justifyContent="end"
           gap={3}
-          mb={2}
-        >
+          mb={2}>
           <Tooltip title="CSV formatda yuklab olish">
             <Button
               variant="outlined"
@@ -160,8 +158,7 @@ const CustomerView = () => {
                 enqueueSnackbar("Mijozlar CSV formatda yuklandi", {
                   variant: "success",
                 });
-              }}
-            >
+              }}>
               Export CSV
             </Button>
           </Tooltip>
@@ -175,10 +172,9 @@ const CustomerView = () => {
                   setModal({
                     modal: "customerModal",
                     data: { type: "add", data: undefined },
-                  })
+                  }),
                 );
-              }}
-            >
+              }}>
               Qo&apos;shish
             </Button>
           </Tooltip>
@@ -187,8 +183,7 @@ const CustomerView = () => {
           <Tabs
             value={tab}
             onChange={handleChangeTab}
-            aria-label="basic tabs example"
-          >
+            aria-label="basic tabs example">
             <Tab
               label={
                 <Typography variant="h6" flexGrow={1}>

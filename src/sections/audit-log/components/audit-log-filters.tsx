@@ -31,7 +31,6 @@ import {
   AUDIT_ENTITY_LABELS,
 } from "@/types/auditlog-page-types";
 
-// Manager interface
 interface Manager {
   _id: string;
   firstName: string;
@@ -58,21 +57,16 @@ export default function AuditLogFilters({
   const [managers, setManagers] = useState<Manager[]>([]);
   const [loadingManagers, setLoadingManagers] = useState(true);
 
-  // Manager'larni yuklash
   useEffect(() => {
     const fetchManagers = async () => {
       setLoadingManagers(true);
       try {
         console.log("🔍 Xodimlarni yuklash boshlandi...");
 
-        // ✅ /manager endpoint'i permission talab qilmaydi
-        // ✅ axiosInstance avtomatik baseURL va token qo'shadi
-        // ✅ To'g'ri URL: /api + /employee/manager = /api/employee/manager
         const response = await axiosInstance.get("/employee/manager");
 
         console.log("📦 API javobi:", response.data);
 
-        // API javobini tekshirish
         let employees = [];
         if (response.data.data && Array.isArray(response.data.data)) {
           employees = response.data.data;
@@ -91,7 +85,6 @@ export default function AuditLogFilters({
         console.log("👥 Xodimlar soni:", employees.length);
         console.log("👥 Xodimlar:", employees);
 
-        // Barcha xodimlarni qo'shamiz
         setManagers(employees);
 
         if (employees.length === 0) {
@@ -106,7 +99,7 @@ export default function AuditLogFilters({
           console.error("📡 Status:", error.response?.status);
           console.error("📡 URL:", error.config?.url);
         }
-        setManagers([]); // Xato bo'lsa bo'sh array
+        setManagers([]);
       } finally {
         setLoadingManagers(false);
       }
@@ -166,7 +159,7 @@ export default function AuditLogFilters({
     <Card sx={{ boxShadow: 1, borderRadius: "18px" }}>
       <CardContent sx={{ py: 2, px: 3, "&:last-child": { pb: 2 }, my: 2 }}>
         <Grid container spacing={2} alignItems="center">
-          {/* Search Input */}
+          {}
           <Grid item xs={12} sm={3}>
             <TextField
               fullWidth
@@ -196,7 +189,6 @@ export default function AuditLogFilters({
                 shrink: true,
               }}
               InputProps={{
-                // 1. Ikonkani o'ng tomonga (endAdornment) qo'yamiz
                 endAdornment: (
                   <InputAdornment position="end">
                     <Iconify icon="eva:calendar-fill" width={20} />
@@ -204,9 +196,8 @@ export default function AuditLogFilters({
                 ),
               }}
               sx={{
-                // 2. Brauzerning standart (ko'k) ikonkasini yashirish va o'rniga biznikini ishlashini ta'minlash
                 "& input::-webkit-calendar-picker-indicator": {
-                  opacity: 0, // Standart ikonkani ko'rinmas qilamiz
+                  opacity: 0,
                   position: "absolute",
                   right: 0,
                   width: "40px",
@@ -214,14 +205,13 @@ export default function AuditLogFilters({
                   cursor: "pointer",
                   zIndex: 1,
                 },
-                // 3. Radius va Dizayn
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "12px",
                   "& fieldset": {
                     borderRadius: "12px",
                   },
                   "& .MuiInputAdornment-root": {
-                    pointerEvents: "none", // Ikonka bosilishga xalaqit bermasligi uchun
+                    pointerEvents: "none",
                   },
                 },
               }}

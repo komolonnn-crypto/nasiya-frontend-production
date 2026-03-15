@@ -2,7 +2,7 @@ export interface Column<T = any> {
   id: string;
   label: string;
   minWidth?: number;
-  width?: number; // ✅ Ustun kengligi (px)
+  width?: number;
   align?: "right" | "left" | "center";
   format?: (value: T) => string | React.ReactNode;
   renderCell?: (
@@ -12,8 +12,8 @@ export interface Column<T = any> {
   ) => React.ReactNode;
   sortable?: boolean;
   filterable?: boolean;
-  sticky?: "left" | "right"; // Sticky column support
-  stickyOffset?: number; // Offset for multiple sticky columns
+  sticky?: "left" | "right";
+  stickyOffset?: number;
 }
 
 export interface SortConfig<T> {

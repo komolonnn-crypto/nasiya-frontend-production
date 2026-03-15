@@ -3,10 +3,9 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
-import { RouterLink } from "@/routes/components"
+import { RouterLink } from "@/routes/components";
 
-import { SimpleLayout } from "@/layouts/simple"
-
+import { SimpleLayout } from "@/layouts/simple";
 
 export function NotFoundView() {
   return (
@@ -37,8 +36,7 @@ export function NotFoundView() {
           href="/"
           size="large"
           variant="contained"
-          color="inherit"
-        >
+          color="inherit">
           Asosiy sahigaqa qaytish
         </Button>
       </Container>

@@ -1,4 +1,3 @@
-
 export interface IUser {
   _id: string;
   name: string;
@@ -9,15 +8,12 @@ export interface IUser {
   birthday: string;
   managerId: string;
   telegramId: string;
-
 }
 
 export interface IUserApproved {
   userId: string;
   isApproved: boolean;
 }
-
-
 
 export interface IUserAddCourse {
   userId: string;

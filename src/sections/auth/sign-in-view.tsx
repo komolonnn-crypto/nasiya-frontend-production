@@ -1,5 +1,5 @@
-import type { RootState, AppDispatch } from "@/store"
-import type { ILoginFormValues } from "@/types/login"
+import type { RootState, AppDispatch } from "@/store";
+import type { ILoginFormValues } from "@/types/login";
 
 import { useDispatch, useSelector } from "react-redux";
 import React, { memo, useState, useEffect, useCallback } from "react";
@@ -11,10 +11,10 @@ import Typography from "@mui/material/Typography";
 import { Button, CircularProgress } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 
-import { login } from "@/store/actions/authActions"
-import { enqueueSnackbar } from "@/store/slices/snackbar"
+import { login } from "@/store/actions/authActions";
+import { enqueueSnackbar } from "@/store/slices/snackbar";
 
-import { Iconify } from "@/components/iconify"
+import { Iconify } from "@/components/iconify";
 
 const SignInView = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,7 +37,7 @@ const SignInView = () => {
 
     if (!input.startsWith("+998")) return;
 
-    const formatted = input.replace(/[^\d+]/g, ""); 
+    const formatted = input.replace(/[^\d+]/g, "");
 
     if (formatted.length > 13) return;
 
@@ -48,7 +48,7 @@ const SignInView = () => {
   };
 
   const handlePasswordChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { value } = e.target;
 
@@ -86,13 +86,13 @@ const SignInView = () => {
           enqueueSnackbar({
             message: "Parol juda qisqa",
             options: { variant: "error" },
-          })
+          }),
         );
       } else {
         dispatch(login(formValues));
       }
     },
-    [dispatch, formValues]
+    [dispatch, formValues],
   );
 
   const renderForm = (
@@ -102,8 +102,7 @@ const SignInView = () => {
       alignItems="flex-end"
       component="form"
       noValidate
-      onSubmit={onSubmit}
-    >
+      onSubmit={onSubmit}>
       <TextField
         value={formValues.phoneNumber}
         onChange={handlePhoneChange}
@@ -137,8 +136,7 @@ const SignInView = () => {
             <InputAdornment position="end">
               <IconButton
                 onClick={() => setShowPassword(!showPassword)}
-                edge="end"
-              >
+                edge="end">
                 <Iconify
                   icon={
                     showPassword ? "solar:eye-bold" : "solar:eye-closed-bold"
@@ -151,7 +149,7 @@ const SignInView = () => {
         sx={{ mb: 3 }}
       />
 
-      {isLoading ? (
+      {isLoading ?
         <Button
           type="button"
           fullWidth
@@ -159,23 +157,20 @@ const SignInView = () => {
           size="large"
           color="inherit"
           variant="contained"
-          sx={{ mt: 3, mb: 2, gap: 2, mx: "auto" }}
-        >
+          sx={{ mt: 3, mb: 2, gap: 2, mx: "auto" }}>
           <CircularProgress size={20} />
           Tekshirilmoqda...
         </Button>
-      ) : (
-        <Button
+      : <Button
           type="submit"
           fullWidth
           size="large"
           color="inherit"
           variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-        >
+          sx={{ mt: 3, mb: 2 }}>
           Kirish
         </Button>
-      )}
+      }
     </Box>
   );
 
@@ -186,8 +181,7 @@ const SignInView = () => {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        sx={{ mb: 5 }}
-      >
+        sx={{ mb: 5 }}>
         <Typography variant="h5">Tizimga kirish</Typography>
       </Box>
 

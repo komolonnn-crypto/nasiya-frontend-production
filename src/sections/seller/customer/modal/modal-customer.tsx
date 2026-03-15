@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import type { FC } from "react";
-import type { RootState } from "@/store"
+import type { RootState } from "@/store";
 
 import { useSelector } from "react-redux";
 import { useState, useEffect, useCallback } from "react";
@@ -23,10 +22,10 @@ import { FaRegFileLines } from "react-icons/fa6";
 import { TbPhoto } from "react-icons/tb";
 import { MdDelete, MdUpload } from "react-icons/md";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import authApi from "@/server/auth"
-import { closeModal } from "@/store/slices/modalSlice"
+import authApi from "@/server/auth";
+import { closeModal } from "@/store/slices/modalSlice";
 import {
   addCustomerSeller,
   updateCustomerSeller,
@@ -87,7 +86,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
   }, [customerModal]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     let newValue: string | Date = value;
@@ -111,7 +110,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
 
     if (!input.startsWith("+998")) return;
 
-    const formatted = input.replace(/[^\d+]/g, ""); 
+    const formatted = input.replace(/[^\d+]/g, "");
 
     if (formatted.length > 13) return;
 
@@ -142,7 +141,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
         try {
           const phoneNumber = phone.replace("+", "");
           const res = await authApi.get(
-            `/customer/check-phone?phone=${phoneNumber}`
+            `/customer/check-phone?phone=${phoneNumber}`,
           );
           if (res.data.exists) {
             setPhoneError(true);
@@ -186,7 +185,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
       const checkPassport = async () => {
         try {
           const res = await authApi.get(
-            `/customer/check-passport?passport=${passport}`
+            `/customer/check-passport?passport=${passport}`,
           );
           if (res.data.exists) {
             setPassportError(true);
@@ -214,7 +213,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
     if (!/^[A-Z]{2}\d{7}$/.test(passport)) {
       setPassportError(true);
       setPassportHelper(
-        "2 ta harf va 7 ta raqamdan iborat bo'lishi kerak (masalan: AA1234567)"
+        "2 ta harf va 7 ta raqamdan iborat bo'lishi kerak (masalan: AA1234567)",
       );
     }
   };
@@ -264,7 +263,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
       }
       handleClose();
     },
-    [dispatch, formValues, handleClose, show, customerModal]
+    [dispatch, formValues, handleClose, show, customerModal],
   );
 
   const isFormValid =
@@ -284,14 +283,13 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
         component: "form",
         onSubmit: handleSubmit,
       }}
-      fullWidth
-    >
+      fullWidth>
       {!!customerModal?.type && (
         <>
           <DialogTitle>
-            {customerModal.type === "edit"
-              ? "Mijozni tahrirlash"
-              : "Yangi mijoz qo'shish"}
+            {customerModal.type === "edit" ?
+              "Mijozni tahrirlash"
+            : "Yangi mijoz qo'shish"}
           </DialogTitle>
           <DialogContent>
             <Grid container spacing={1}>
@@ -346,9 +344,9 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
               <Grid xs={12} md={4}>
                 <TextField
                   value={
-                    formValues.birthDate
-                      ? formValues.birthDate.toISOString().split("T")[0]
-                      : ""
+                    formValues.birthDate ?
+                      formValues.birthDate.toISOString().split("T")[0]
+                    : ""
                   }
                   onChange={handleChange}
                   margin="dense"
@@ -376,12 +374,12 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
               rows={2}
             />
 
-            {/* File Upload Section */}
+            {}
             <Typography variant="subtitle2" sx={{ mb: 2, mt: 2 }}>
               Yuklangan hujjatlar (ixtiyoriy)
             </Typography>
             <Stack spacing={2}>
-              {/* Passport */}
+              {}
               <Box
                 sx={{
                   display: "flex",
@@ -395,20 +393,19 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                     borderColor: "primary.main",
                     bgcolor: "action.hover",
                   },
-                }}
-              >
+                }}>
                 <FaPassport size={20} />
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="body2">
                     Passport
-                    {formValues.passportFile
-                      ? `.${formValues.passportFile.name.split(".").pop()}`
-                      : ""}
+                    {formValues.passportFile ?
+                      `.${formValues.passportFile.name.split(".").pop()}`
+                    : ""}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    {formValues.passportFile
-                      ? formValues.passportFile.name
-                      : "Fayl yuklanmagan"}
+                    {formValues.passportFile ?
+                      formValues.passportFile.name
+                    : "Fayl yuklanmagan"}
                   </Typography>
                 </Box>
                 <input
@@ -438,14 +435,12 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                         ...prev,
                         passportFile: null,
                       }));
-                    }}
-                  >
+                    }}>
                     <MdDelete />
                   </IconButton>
                 )}
               </Box>
 
-              {/* Shartnoma */}
               <Box
                 sx={{
                   display: "flex",
@@ -459,20 +454,19 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                     borderColor: "primary.main",
                     bgcolor: "action.hover",
                   },
-                }}
-              >
+                }}>
                 <FaRegFileLines size={20} />
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="body2">
                     Shartnoma
-                    {formValues.shartnomaFile
-                      ? `.${formValues.shartnomaFile.name.split(".").pop()}`
-                      : ""}
+                    {formValues.shartnomaFile ?
+                      `.${formValues.shartnomaFile.name.split(".").pop()}`
+                    : ""}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    {formValues.shartnomaFile
-                      ? formValues.shartnomaFile.name
-                      : "Fayl yuklanmagan"}
+                    {formValues.shartnomaFile ?
+                      formValues.shartnomaFile.name
+                    : "Fayl yuklanmagan"}
                   </Typography>
                 </Box>
                 <input
@@ -502,14 +496,12 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                         ...prev,
                         shartnomaFile: null,
                       }));
-                    }}
-                  >
+                    }}>
                     <MdDelete />
                   </IconButton>
                 )}
               </Box>
 
-              {/* Photo */}
               <Box
                 sx={{
                   display: "flex",
@@ -523,20 +515,19 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                     borderColor: "primary.main",
                     bgcolor: "action.hover",
                   },
-                }}
-              >
+                }}>
                 <TbPhoto size={20} />
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="body2">
                     Foto
-                    {formValues.photoFile
-                      ? `.${formValues.photoFile.name.split(".").pop()}`
-                      : ""}
+                    {formValues.photoFile ?
+                      `.${formValues.photoFile.name.split(".").pop()}`
+                    : ""}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    {formValues.photoFile
-                      ? formValues.photoFile.name
-                      : "Fayl yuklanmagan"}
+                    {formValues.photoFile ?
+                      formValues.photoFile.name
+                    : "Fayl yuklanmagan"}
                   </Typography>
                 </Box>
                 <input
@@ -566,8 +557,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                         ...prev,
                         photoFile: null,
                       }));
-                    }}
-                  >
+                    }}>
                     <MdDelete />
                   </IconButton>
                 )}

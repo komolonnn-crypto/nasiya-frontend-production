@@ -1,8 +1,6 @@
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from "react-helmet-async";
 
-import { AuditLogView } from '@/sections/audit-log/view'
-
-// ----------------------------------------------------------------------
+import { AuditLogView } from "@/sections/audit-log/view";
 
 export default function AuditLogPage() {
   return (

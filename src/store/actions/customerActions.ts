@@ -261,7 +261,6 @@ export const updateCustomerManager =
       if (res.data.status === "ok") {
         dispatch(getCustomers());
 
-        // dispatch(updateCustomersManager({ customerId, managerId }));
         dispatch(
           enqueueSnackbar({
             message: res.data.message,
@@ -320,7 +319,6 @@ export const confirmationCustomer =
       if (res.data.status === "ok") {
         dispatch(getCustomer(customerId));
 
-        // dispatch(updateCustomersManager({ customerId, managerId }));
         dispatch(
           enqueueSnackbar({
             message: res.data.message,
@@ -361,7 +359,6 @@ export const confirmationCustomer =
     }
   };
 
-// Ko'plab mijozlarni o'chirish (Bulk Hard Delete)
 export const bulkDeleteCustomers =
   (customerIds: string[]): AppThunk =>
   async (dispatch) => {
@@ -394,7 +391,6 @@ export const bulkDeleteCustomers =
     }
   };
 
-// seller
 export const addCustomerSeller =
   (data: IAddCustomer | FormData, show: boolean): AppThunk =>
   async (dispatch) => {
@@ -456,7 +452,6 @@ export const updateCustomerSeller =
             : "application/json",
         },
       });
-      // Seller uchun customer ma'lumotlarini qayta yuklash
       const customerRes = await authApi.get(`/seller/customer/get-one/${id}`);
       dispatch(setCustomer(customerRes.data));
       dispatch(success());

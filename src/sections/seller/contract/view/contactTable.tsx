@@ -1,8 +1,8 @@
-import type { IContract } from "@/types/contract"
-import type { Column } from "@/components/table/types"
+import type { IContract } from "@/types/contract";
+import type { Column } from "@/components/table/types";
 
-import { useTableLogic } from "@/hooks/useTableLogic"
-import { GenericTable } from "@/components/table/GnericTable"
+import { useTableLogic } from "@/hooks/useTableLogic";
+import { GenericTable } from "@/components/table/GnericTable";
 
 interface ContractTableProps {
   data: IContract[];

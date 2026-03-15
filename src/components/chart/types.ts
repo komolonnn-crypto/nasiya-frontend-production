@@ -1,8 +1,6 @@
 import type { Props } from 'react-apexcharts';
 import type { Theme, SxProps } from '@mui/material/styles';
 
-// ----------------------------------------------------------------------
-
 export type ChartProps = {
   type: Props['type'];
   series: Props['series'];

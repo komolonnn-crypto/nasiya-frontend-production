@@ -16,11 +16,9 @@ export function setFont(fontName: string) {
   return `"${fontName}",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"`;
 }
 
-
 export function remToPx(value: string): number {
   return Math.round(parseFloat(value) * 16);
 }
-
 
 export function pxToRem(value: number): string {
   return `${value / 16}rem`;
@@ -34,7 +32,6 @@ export function responsiveFontSizes({ sm, md, lg }: { sm: number; md: number; lg
   };
 }
 
-
 export function hexToRgbChannel(hex: string) {
   if (!/^#[0-9A-F]{6}$/i.test(hex)) {
     throw new Error(`Invalid hex color: ${hex}`);
@@ -46,7 +43,6 @@ export function hexToRgbChannel(hex: string) {
 
   return `${r} ${g} ${b}`;
 }
-
 
 export function createPaletteChannel(hexPalette: Record<string, string>) {
   const channelPalette: Record<string, string> = {};

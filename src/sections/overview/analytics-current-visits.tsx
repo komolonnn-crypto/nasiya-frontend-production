@@ -45,9 +45,9 @@ export function AnalyticsCurrentVisits({
     chart: { sparkline: { enabled: true } },
     colors: chartColors,
     labels: chart.series.map((item) => item.label),
-    stroke: { 
-      width: 2, 
-      colors: [isDark ? theme.palette.background.paper : "#ffffff"] 
+    stroke: {
+      width: 2,
+      colors: [isDark ? theme.palette.background.paper : "#ffffff"],
     },
     dataLabels: { enabled: true, dropShadow: { enabled: false } },
     tooltip: {
@@ -69,36 +69,41 @@ export function AnalyticsCurrentVisits({
         bgcolor: "background.paper",
         borderRadius: "18px",
         backgroundImage: "none",
-        boxShadow: isDark 
-          ? "0 4px 20px 0 rgba(0,0,0,0.4)" 
+        boxShadow:
+          isDark ?
+            "0 4px 20px 0 rgba(0,0,0,0.4)"
           : "0 1px 2px rgba(0, 0, 0, 0.02), 0 4px 14px rgba(0, 0, 0, 0.03), 0 15px 35px rgba(0, 0, 0, 0.05)",
         border: `0.5px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0, 0, 0, 0.08)"}`,
         transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         ...other.sx,
-      }}
-    >
-      <Typography 
-        sx={{ 
-          textTransform: "uppercase", 
-          fontWeight: "900", // Matches your Bar Chart title weight
-          fontSize: "0.75rem", // Matches Bar Chart title size
-          lineHeight: "1rem", 
-          color: "var(--layout-nav-item-color)", // Matches sidebars/header labels
-          mb: 1
-        }}
-      >
+      }}>
+      <Typography
+        sx={{
+          textTransform: "uppercase",
+          fontWeight: "900",
+          fontSize: "0.75rem",
+          lineHeight: "1rem",
+          color: "var(--layout-nav-item-color)",
+          mb: 1,
+        }}>
         {title}
       </Typography>
 
       {subheader && (
-        <Typography variant="caption" sx={{ color: 'text.secondary', mb: 2 }}>
+        <Typography variant="caption" sx={{ color: "text.secondary", mb: 2 }}>
           {subheader}
         </Typography>
       )}
-      
-      <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}>
         <Chart
           type="pie"
           series={chartSeries}
@@ -114,15 +119,15 @@ export function AnalyticsCurrentVisits({
       <ChartLegends
         {...(chartOptions?.labels && { labels: chartOptions.labels })}
         {...(chartOptions?.colors && { colors: chartOptions.colors })}
-        sx={{ 
-          px: 1, 
-          pb: 1, 
+        sx={{
+          px: 1,
+          pb: 1,
           justifyContent: "center",
-          '& .MuiTypography-root': {
-            fontSize: '0.75rem',
+          "& .MuiTypography-root": {
+            fontSize: "0.75rem",
             fontWeight: 600,
-            color: 'text.secondary'
-          }
+            color: "text.secondary",
+          },
         }}
       />
     </Card>

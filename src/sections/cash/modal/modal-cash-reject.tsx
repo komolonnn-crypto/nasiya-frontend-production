@@ -1,5 +1,5 @@
-import type { RootState } from "@/store"
-import type { IPayment } from "@/types/cash"
+import type { RootState } from "@/store";
+import type { IPayment } from "@/types/cash";
 
 import { useSelector } from "react-redux";
 import { useState, useCallback } from "react";
@@ -15,10 +15,10 @@ import {
   DialogContent,
 } from "@mui/material";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import { closeModal } from "@/store/slices/modalSlice"
-import { rejectPayment } from "@/store/actions/cashActions"
+import { closeModal } from "@/store/slices/modalSlice";
+import { rejectPayment } from "@/store/actions/cashActions";
 
 const ModalCashReject = () => {
   const dispatch = useAppDispatch();
@@ -64,8 +64,7 @@ const ModalCashReject = () => {
       open={!!cashRejectModal?.type}
       maxWidth="sm"
       fullWidth
-      onClose={handleClose}
-    >
+      onClose={handleClose}>
       <DialogTitle>To'lovni Rad Etish</DialogTitle>
       <DialogContent>
         <Stack spacing={3} sx={{ mt: 2 }}>
@@ -78,9 +77,10 @@ const ModalCashReject = () => {
             <Stack spacing={1}>
               <Typography variant="body2" color="text.secondary">
                 <strong>Mijoz:</strong>{" "}
-                {typeof payment.customerId === "object"
-                  ? `${payment.customerId.firstName || ""} ${payment.customerId.lastName || ""}`.trim() || "___"
-                  : "___"}
+                {typeof payment.customerId === "object" ?
+                  `${payment.customerId.firstName || ""} ${payment.customerId.lastName || ""}`.trim() ||
+                  "___"
+                : "___"}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 <strong>Summa:</strong> ${payment.amount.toLocaleString()}
@@ -116,8 +116,7 @@ const ModalCashReject = () => {
           color="error"
           variant="contained"
           onClick={handleReject}
-          disabled={!reason.trim()}
-        >
+          disabled={!reason.trim()}>
           Rad Etish
         </Button>
       </DialogActions>

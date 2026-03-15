@@ -8,7 +8,6 @@ export const columnsPageCustomers: Column[] = [
     sortable: true,
     filterable: false,
     renderCell: (row) => {
-      // 🔍 DEBUG LOG - MIJOZLAR BO'LIMI
       if (
         row.fullName?.includes("P AUS ZAFAR") ||
         row.fullName?.includes("P ISLOM")
@@ -22,7 +21,6 @@ export const columnsPageCustomers: Column[] = [
         });
       }
 
-      // ✅ TUZATISH: originalPaymentDay ni birinchi o'rinda ishlatish
       if (
         row.contracts &&
         Array.isArray(row.contracts) &&
@@ -30,11 +28,9 @@ export const columnsPageCustomers: Column[] = [
       ) {
         const days = row.contracts
           .map((c: any) => {
-            // Birinchi: originalPaymentDay (eng ishonchli)
             if (c.originalPaymentDay) {
               return c.originalPaymentDay;
             }
-            // Fallback: initialPaymentDueDate dan kun olish
             if (c.initialPaymentDueDate) {
               return dayjs(c.initialPaymentDueDate).date();
             }
@@ -109,7 +105,6 @@ export const columnsNewPageCustomers: Column[] = [
     sortable: true,
     filterable: false,
     renderCell: (row) => {
-      // ✅ TUZATISH: originalPaymentDay ni birinchi o'rinda ishlatish
       if (
         row.contracts &&
         Array.isArray(row.contracts) &&
@@ -117,11 +112,9 @@ export const columnsNewPageCustomers: Column[] = [
       ) {
         const days = row.contracts
           .map((c: any) => {
-            // Birinchi: originalPaymentDay (eng ishonchli)
             if (c.originalPaymentDay) {
               return c.originalPaymentDay;
             }
-            // Fallback: initialPaymentDueDate dan kun olish
             if (c.initialPaymentDueDate) {
               return dayjs(c.initialPaymentDueDate).date();
             }

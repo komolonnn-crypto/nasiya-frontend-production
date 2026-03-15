@@ -59,7 +59,6 @@ const EditHistoryTimeline: FC<EditHistoryTimelineProps> = ({
     if (typeof value === "string" && value.match(/^\d{4}-\d{2}-\d{2}/)) {
       return new Date(value).toLocaleDateString("uz-UZ");
     }
-    // ObjectId formatini tekshirish (24 ta hex belgi)
     if (typeof value === "string" && value.match(/^[0-9a-fA-F]{24}$/)) {
       return "ID: " + value.substring(0, 8) + "...";
     }
@@ -68,7 +67,6 @@ const EditHistoryTimeline: FC<EditHistoryTimelineProps> = ({
 
   const formatFieldName = (field: string): string => {
     const fieldNames: Record<string, string> = {
-      // Shartnoma fieldlari
       monthlyPayment: "Oylik to'lov",
       initialPayment: "Boshlang'ich to'lov",
       totalPrice: "Umumiy narx",
@@ -81,7 +79,6 @@ const EditHistoryTimeline: FC<EditHistoryTimelineProps> = ({
       price: "Narx",
       originalPrice: "Asl narx",
 
-      // Mijoz fieldlari
       firstName: "Ism",
       lastName: "Familiya",
       phoneNumber: "Telefon",
@@ -91,7 +88,6 @@ const EditHistoryTimeline: FC<EditHistoryTimelineProps> = ({
       telegramName: "Telegram",
       Manager: "Meneger",
 
-      // Fayl fieldlari
       "Passport fayli": "Passport fayli",
       "Shartnoma fayli": "Shartnoma fayli",
       Foto: "Foto",

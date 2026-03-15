@@ -142,7 +142,6 @@ export function CashView() {
   const filteredCash =
     managerFullName ?
       pendingPayments.filter((payment: any) => {
-        // ✅ Faqat managerId'dan filter qilish
         if (payment.managerId && typeof payment.managerId === "object") {
           const paymentManagerName =
             `${payment.managerId.firstName || ""} ${payment.managerId.lastName || ""}`.trim();
@@ -156,7 +155,7 @@ export function CashView() {
     <Autocomplete
       onFocus={handleCustomerFocus}
       options={dataEmployee.managers}
-      getOptionLabel={(option) => `${option.firstName} ${option.lastName}`} // ✅ combine names
+      getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
       isOptionEqualToValue={(option, value) =>
         `${option.firstName} ${option.lastName}` ===
         `${value.firstName} ${value.lastName}`
@@ -220,7 +219,7 @@ export function CashView() {
           )}
         </Box>
 
-        {/* Bo'sh holat - pending to'lovlar yo'q */}
+        {}
         {!isLoading && pendingPayments.length === 0 && (
           <Card
             sx={{
@@ -260,7 +259,7 @@ export function CashView() {
           </Card>
         )}
 
-        {/* Error message */}
+        {}
         {error && (
           <Alert
             severity="error"
@@ -372,7 +371,7 @@ export function CashView() {
         <DialogContent>
           {customerInfoDialog.customer && (
             <Stack spacing={2} sx={{ mt: 1 }}>
-              {/* Avatar va ism */}
+              {}
               <Stack direction="row" spacing={2} alignItems="center">
                 <Avatar sx={{ width: 60, height: 60, bgcolor: "primary.main" }}>
                   {customerInfoDialog.customer.fullName?.charAt(0) || "M"}

@@ -46,7 +46,7 @@ const EditHistory: React.FC<EditHistoryProps> = ({ editHistory }) => {
         if (!isNaN(date.getTime())) {
           return format(date, "dd.MM.yyyy", { locale: uz });
         }
-      } catch (e) { /* ignore */ }
+      } catch (e) {  }
     }
     if (typeof value === 'number') {
       return `$${value.toLocaleString()}`;
@@ -71,7 +71,7 @@ const EditHistory: React.FC<EditHistoryProps> = ({ editHistory }) => {
   if (!editHistory || editHistory.length === 0) return null;
 
   return (
-    <Card sx={{ p: 2, borderRadius: "18px" }}> {/* LARGE RADIUS */}
+    <Card sx={{ p: 2, borderRadius: "18px" }}> {}
       <Box display="flex" alignItems="center" gap={1} mb={2}>
         <Iconify icon="mdi:history" width={24} />
         <Typography variant="h6">Tahrirlash Tarixi</Typography>
@@ -79,7 +79,7 @@ const EditHistory: React.FC<EditHistoryProps> = ({ editHistory }) => {
           label={`${editHistory.length} ta`} 
           size="small" 
           color="primary" 
-          sx={{ borderRadius: "12px" }} // SMALL RADIUS
+          sx={{ borderRadius: "12px" }}
         />
       </Box>
 
@@ -89,11 +89,11 @@ const EditHistory: React.FC<EditHistoryProps> = ({ editHistory }) => {
             key={index} 
             defaultExpanded={index === 0}
             sx={{
-              borderRadius: "12px !important", // SMALL RADIUS
+              borderRadius: "12px !important",
               overflow: "hidden",
               border: (theme) => `1px solid ${theme.palette.divider}`,
               boxShadow: "none",
-              "&:before": { display: "none" }, // Remove MUI default line
+              "&:before": { display: "none" },
             }}
           >
             <AccordionSummary expandIcon={<Iconify icon="mdi:chevron-down" />}>
@@ -104,7 +104,7 @@ const EditHistory: React.FC<EditHistoryProps> = ({ editHistory }) => {
                     size="small"
                     color="primary"
                     variant="outlined"
-                    sx={{ borderRadius: "12px" }} // SMALL RADIUS
+                    sx={{ borderRadius: "12px" }}
                   />
                   <Typography variant="body2" fontWeight="medium">
                     {edit.editedBy.firstName} {edit.editedBy.lastName}
@@ -151,7 +151,7 @@ const EditHistory: React.FC<EditHistoryProps> = ({ editHistory }) => {
                               <Chip
                                 label={formatDifference(change)}
                                 size="small"
-                                sx={{ borderRadius: "8px" }} // Extra small internal elements
+                                sx={{ borderRadius: "8px" }}
                                 color={change.difference > 0 ? "success" : change.difference < 0 ? "error" : "default"}
                               />
                             </TableCell>
@@ -186,7 +186,7 @@ const EditHistory: React.FC<EditHistoryProps> = ({ editHistory }) => {
                           sx={{ borderRadius: "12px" }}
                         />
                       )}
-                      {/* ... other chips follow same 12px pattern */}
+                      {}
                     </Stack>
                   </Box>
                 )}

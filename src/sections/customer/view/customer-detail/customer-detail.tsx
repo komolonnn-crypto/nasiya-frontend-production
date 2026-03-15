@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 
-import type { RootState } from "@/store"
+import type { RootState } from "@/store";
 import { TbPhoto } from "react-icons/tb";
 import { useSelector } from "react-redux";
 import { FaPassport } from "react-icons/fa";
@@ -28,16 +28,16 @@ import {
 } from "@mui/material";
 import { MdDelete, MdDownload } from "react-icons/md";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import { DashboardContent } from "@/layouts/dashboard"
-import { setCustomerId } from "@/store/slices/customerSlice"
-import { getCustomer } from "@/store/actions/customerActions"
+import { DashboardContent } from "@/layouts/dashboard";
+import { setCustomerId } from "@/store/slices/customerSlice";
+import { getCustomer } from "@/store/actions/customerActions";
 
-import { Iconify } from "@/components/iconify"
-import Loader from "@/components/loader/Loader"
-import CustomerInfo from "@/components/customer-infos/customerInfo"
-import { EditHistoryTimeline } from "@/components/edit-history-timeline"
+import { Iconify } from "@/components/iconify";
+import Loader from "@/components/loader/Loader";
+import CustomerInfo from "@/components/customer-infos/customerInfo";
+import { EditHistoryTimeline } from "@/components/edit-history-timeline";
 
 import Statistics from "./statistics";
 
@@ -46,10 +46,10 @@ const CustomerContract = lazy(() => import("./customer-contract"));
 export function CustomerDetails() {
   const dispatch = useAppDispatch();
   const { customer, isLoading, customerId } = useSelector(
-    (state: RootState) => state.customer
+    (state: RootState) => state.customer,
   );
   const allActiveContracts = customer?.contracts?.filter(
-    (c) => c.isActive && c.status === "active"
+    (c) => c.isActive && c.status === "active",
   );
 
   const [deleteDialog, setDeleteDialog] = useState<{
@@ -61,7 +61,7 @@ export function CustomerDetails() {
     type: "",
     fileName: "",
   });
-  
+
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDownloadFile = async (filePath: string, type: string) => {
@@ -70,7 +70,7 @@ export function CustomerDetails() {
       if (!filename) return;
 
       const baseUrl =
-        import.meta.env['VITE_API_BASE_URL'] || "http://localhost:3000";
+        import.meta.env["VITE_API_BASE_URL"] || "http://localhost:3000";
       const token = localStorage.getItem("accessToken");
 
       const response = await fetch(
@@ -79,7 +79,7 @@ export function CustomerDetails() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Download failed");
@@ -124,10 +124,10 @@ export function CustomerDetails() {
     if (!customerId || !deleteDialog.type || isDeleting) return;
 
     setIsDeleting(true);
-    
+
     try {
       const baseUrl =
-        import.meta.env['VITE_API_BASE_URL'] || "http://localhost:3000";
+        import.meta.env["VITE_API_BASE_URL"] || "http://localhost:3000";
       const token = localStorage.getItem("accessToken");
 
       const response = await fetch(
@@ -137,12 +137,11 @@ export function CustomerDetails() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (response.ok) {
         closeDeleteDialog();
-        // Refresh customer data after dialog close (non-blocking)
         setTimeout(() => {
           dispatch(getCustomer(customerId));
         }, 100);
@@ -171,14 +170,12 @@ export function CustomerDetails() {
           display="flex"
           alignItems="center"
           mb={5}
-          justifyContent="space-between"
-        >
+          justifyContent="space-between">
           <Button
             color="inherit"
             startIcon={<Iconify icon="weui:back-filled" />}
             onClick={() => dispatch(setCustomerId(null))}
-            sx={{ borderRadius: "18px" }}
-          >
+            sx={{ borderRadius: "18px" }}>
             Ortga
           </Button>
         </Box>
@@ -189,27 +186,21 @@ export function CustomerDetails() {
 
   return (
     <DashboardContent>
-      <Box
-        display="flex"
-        alignItems="center"
-        // mb={5}
-        justifyContent="space-between"
-      >
+      <Box display="flex" alignItems="center" justifyContent="space-between">
         <Button
           color="inherit"
           startIcon={<Iconify icon="weui:back-filled" />}
           onClick={() => dispatch(setCustomerId(null))}
-          sx={{ borderRadius: "18px" }}
-        >
+          sx={{ borderRadius: "18px" }}>
           Ortga
         </Button>
       </Box>
 
       <Grid container spacing={3} my={2}>
         <Grid xs={12}>
-          <Statistics 
-            customer={customer} 
-            {...(allActiveContracts && { contracts: allActiveContracts })} 
+          <Statistics
+            customer={customer}
+            {...(allActiveContracts && { contracts: allActiveContracts })}
           />
         </Grid>
         <Grid xs={12} md={6}>
@@ -223,7 +214,7 @@ export function CustomerDetails() {
               Yuklangan hujjatlar
             </Typography>
             <Stack direction="column" spacing={2}>
-              {customer?.files?.passport ? (
+              {customer?.files?.passport ?
                 <Box
                   sx={{
                     display: "flex",
@@ -237,15 +228,14 @@ export function CustomerDetails() {
                       borderColor: "primary.main",
                       bgcolor: "action.hover",
                     },
-                  }}
-                >
+                  }}>
                   <FaPassport size={20} />
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">
                       Passport
-                      {customer.files.passport.split(".").pop()
-                        ? `.${customer.files.passport.split(".").pop()}`
-                        : ""}
+                      {customer.files.passport.split(".").pop() ?
+                        `.${customer.files.passport.split(".").pop()}`
+                      : ""}
                     </Typography>
                   </Box>
                   <IconButton
@@ -253,20 +243,17 @@ export function CustomerDetails() {
                     color="primary"
                     onClick={() =>
                       handleDownloadFile(customer.files!.passport!, "passport")
-                    }
-                  >
+                    }>
                     <MdDownload />
                   </IconButton>
                   <IconButton
                     size="small"
                     color="error"
-                    onClick={() => openDeleteDialog("passport")}
-                  >
+                    onClick={() => openDeleteDialog("passport")}>
                     <MdDelete />
                   </IconButton>
                 </Box>
-              ) : (
-                <Box
+              : <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -275,16 +262,15 @@ export function CustomerDetails() {
                     border: "1px solid",
                     borderColor: "divider",
                     borderRadius: "18px",
-                  }}
-                >
+                  }}>
                   <FaPassport size={20} style={{ opacity: 0.3 }} />
                   <Typography color="text.secondary" sx={{ flex: 1 }}>
                     ---
                   </Typography>
                 </Box>
-              )}
+              }
 
-              {customer?.files?.shartnoma ? (
+              {customer?.files?.shartnoma ?
                 <Box
                   sx={{
                     display: "flex",
@@ -298,15 +284,14 @@ export function CustomerDetails() {
                       borderColor: "primary.main",
                       bgcolor: "action.hover",
                     },
-                  }}
-                >
+                  }}>
                   <FaRegFileLines size={20} />
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">
                       Shartnoma
-                      {customer.files.shartnoma.split(".").pop()
-                        ? `.${customer.files.shartnoma.split(".").pop()}`
-                        : ""}
+                      {customer.files.shartnoma.split(".").pop() ?
+                        `.${customer.files.shartnoma.split(".").pop()}`
+                      : ""}
                     </Typography>
                   </Box>
                   <IconButton
@@ -315,22 +300,19 @@ export function CustomerDetails() {
                     onClick={() =>
                       handleDownloadFile(
                         customer.files!.shartnoma!,
-                        "shartnoma"
+                        "shartnoma",
                       )
-                    }
-                  >
+                    }>
                     <MdDownload />
                   </IconButton>
                   <IconButton
                     size="small"
                     color="error"
-                    onClick={() => openDeleteDialog("shartnoma")}
-                  >
+                    onClick={() => openDeleteDialog("shartnoma")}>
                     <MdDelete />
                   </IconButton>
                 </Box>
-              ) : (
-                <Box
+              : <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -339,16 +321,15 @@ export function CustomerDetails() {
                     border: "1px solid",
                     borderColor: "divider",
                     borderRadius: "18px",
-                  }}
-                >
+                  }}>
                   <FaRegFileLines size={20} style={{ opacity: 0.3 }} />
                   <Typography color="text.secondary" sx={{ flex: 1 }}>
                     ---
                   </Typography>
                 </Box>
-              )}
+              }
 
-              {customer?.files?.photo ? (
+              {customer?.files?.photo ?
                 <Box
                   sx={{
                     display: "flex",
@@ -362,15 +343,14 @@ export function CustomerDetails() {
                       borderColor: "primary.main",
                       bgcolor: "action.hover",
                     },
-                  }}
-                >
+                  }}>
                   <TbPhoto size={20} />
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">
                       Foto
-                      {customer.files.photo.split(".").pop()
-                        ? `.${customer.files.photo.split(".").pop()}`
-                        : ""}
+                      {customer.files.photo.split(".").pop() ?
+                        `.${customer.files.photo.split(".").pop()}`
+                      : ""}
                     </Typography>
                   </Box>
                   <IconButton
@@ -378,20 +358,17 @@ export function CustomerDetails() {
                     color="primary"
                     onClick={() =>
                       handleDownloadFile(customer.files!.photo!, "photo")
-                    }
-                  >
+                    }>
                     <MdDownload />
                   </IconButton>
                   <IconButton
                     size="small"
                     color="error"
-                    onClick={() => openDeleteDialog("photo")}
-                  >
+                    onClick={() => openDeleteDialog("photo")}>
                     <MdDelete />
                   </IconButton>
                 </Box>
-              ) : (
-                <Box
+              : <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -400,21 +377,23 @@ export function CustomerDetails() {
                     border: "1px solid",
                     borderColor: "divider",
                     borderRadius: "18px",
-                  }}
-                >
+                  }}>
                   <TbPhoto size={20} style={{ opacity: 0.3 }} />
                   <Typography color="text.secondary" sx={{ flex: 1 }}>
                     ---
                   </Typography>
                 </Box>
-              )}
+              }
             </Stack>
           </Paper>
           <Paper elevation={3} sx={{ p: 2, borderRadius: "18px" }}>
             <Typography mb={3} variant="h6">
               Yaqinlashayotgan to‘lovlar
             </Typography>
-            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: "18px", overflow: "hidden" }}>
+            <TableContainer
+              component={Paper}
+              elevation={0}
+              sx={{ borderRadius: "18px", overflow: "hidden" }}>
               <Table size="small">
                 <TableHead>
                   <TableRow>
@@ -428,7 +407,7 @@ export function CustomerDetails() {
                     .sort(
                       (a, b) =>
                         new Date(a.nextPaymentDate).getTime() -
-                        new Date(b.nextPaymentDate).getTime()
+                        new Date(b.nextPaymentDate).getTime(),
                     )
                     .slice(0, 3)
                     .map((contract, idx) => (
@@ -451,37 +430,47 @@ export function CustomerDetails() {
           <Suspense
             fallback={
               <Stack spacing={3}>
-                <Skeleton variant="rounded" width="100%" height={60} sx={{ borderRadius: "18px" }} />
-                <Skeleton variant="rounded" width="100%" height={60} sx={{ borderRadius: "18px" }} />
+                <Skeleton
+                  variant="rounded"
+                  width="100%"
+                  height={60}
+                  sx={{ borderRadius: "18px" }}
+                />
+                <Skeleton
+                  variant="rounded"
+                  width="100%"
+                  height={60}
+                  sx={{ borderRadius: "18px" }}
+                />
               </Stack>
-            }
-          >
+            }>
             <CustomerContract
-              {...(customer.contracts && { customerContracts: customer.contracts })}
+              {...(customer.contracts && {
+                customerContracts: customer.contracts,
+              })}
               {...(customerId && { customerId })}
             />
           </Suspense>
         </Grid>
 
-        {customer['editHistory'] && customer['editHistory'].length > 0 && (
+        {customer["editHistory"] && customer["editHistory"].length > 0 && (
           <Grid xs={12}>
             <EditHistoryTimeline
-              history={customer['editHistory']}
+              history={customer["editHistory"]}
               title="Mijoz Tahrirlash Tarixi"
             />
           </Grid>
         )}
       </Grid>
 
-      {/* Delete Confirmation Dialog */}
+      {}
       <Dialog
         open={deleteDialog.open}
         onClose={closeDeleteDialog}
         aria-labelledby="delete-dialog-title"
         PaperProps={{
-          sx: { borderRadius: "18px" }
-        }}
-      >
+          sx: { borderRadius: "18px" },
+        }}>
         <DialogTitle id="delete-dialog-title">Faylni o'chirish</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -490,21 +479,19 @@ export function CustomerDetails() {
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button 
-            onClick={closeDeleteDialog} 
-            color="inherit" 
+          <Button
+            onClick={closeDeleteDialog}
+            color="inherit"
             sx={{ borderRadius: "18px" }}
-            {...(isDeleting && { disabled: true })}
-          >
+            {...(isDeleting && { disabled: true })}>
             Bekor qilish
           </Button>
-          <Button 
-            onClick={confirmDeleteFile} 
-            color="error" 
+          <Button
+            onClick={confirmDeleteFile}
+            color="error"
             variant="contained"
             sx={{ borderRadius: "18px" }}
-            {...(isDeleting && { disabled: true })}
-          >
+            {...(isDeleting && { disabled: true })}>
             {isDeleting ? "O'chirilmoqda..." : "O'chirish"}
           </Button>
         </DialogActions>

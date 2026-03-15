@@ -1,4 +1,4 @@
-import type { RootState } from "@/store"
+import type { RootState } from "@/store";
 import type { TypedUseSelectorHook } from "react-redux";
 
 import { memo } from "react";
@@ -16,7 +16,9 @@ const ContractView = () => {
 
   return (
     <>
-      {contractId ? <ContractDetails /> : <ContractsView />}
+      {contractId ?
+        <ContractDetails />
+      : <ContractsView />}
       <ModalContract />
       <ModalCustomer show />
     </>

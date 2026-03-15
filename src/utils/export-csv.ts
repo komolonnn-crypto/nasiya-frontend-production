@@ -6,7 +6,7 @@ export const exportToCSV = (data: any[], filename: string) => {
 
   const headers = Object.keys(data[0]);
   const csvContent = [
-    headers.join(","), // Header row
+    headers.join(","),
     ...data.map((row) =>
       headers
         .map((header) => {
@@ -106,7 +106,7 @@ export const exportContractsToCSV = (contracts: any[]) => {
     const unpaidMonths = pendingPayments
       .filter((p: any) => p.paymentType === "monthly")
       .map(
-        ( i: number) =>
+        (i: number) =>
           `${paidPayments.filter((pp: any) => pp.paymentType === "monthly").length + i + 1}-oy`,
       )
       .join(", ");

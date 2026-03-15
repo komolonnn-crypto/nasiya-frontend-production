@@ -47,7 +47,6 @@ const WithdrawAllBalanceCard: FC<Props> = ({ employee }) => {
     (state: RootState) => state.dashboard
   );
 
-  // We allow string or number to make the TextField behavior smooth
   const [amounts, setAmounts] = useState<Record<CurrencyKey, string | number>>({
     dollar: "",
     sum: "",
@@ -63,7 +62,6 @@ const WithdrawAllBalanceCard: FC<Props> = ({ employee }) => {
   };
 
   const handleChange = (key: CurrencyKey, value: string) => {
-    // 1. Allow clearing the input
     if (value === "") {
       setAmounts((prev) => ({ ...prev, [key]: "" }));
       return;
@@ -72,10 +70,8 @@ const WithdrawAllBalanceCard: FC<Props> = ({ employee }) => {
     const numValue = Number(value);
     const max = employee.balance[key] ?? 0;
 
-    // 2. Prevent negative numbers
     if (numValue < 0) return;
 
-    // 3. Validation for max balance
     if (numValue > max) {
       dispatch(
         enqueueSnackbar({
@@ -93,7 +89,6 @@ const WithdrawAllBalanceCard: FC<Props> = ({ employee }) => {
     setAmounts((prev) => ({ 
         ...prev, 
         [key]: employee.balance[key] || 0,
-        // Clear the other field to respect the mutual exclusivity
         [key === "dollar" ? "sum" : "dollar"]: ""
     }));
   };
@@ -146,7 +141,6 @@ const WithdrawAllBalanceCard: FC<Props> = ({ employee }) => {
       <Stack spacing={2}>
         {balanceFields.map(({ key, label }) => {
           const otherKey = key === "dollar" ? "sum" : "dollar";
-          // Disable if the OTHER field has any value > 0
           const isOtherFieldActive = Number(amounts[otherKey]) > 0;
 
           return (
@@ -167,7 +161,6 @@ const WithdrawAllBalanceCard: FC<Props> = ({ employee }) => {
                   fullWidth
                   placeholder="0.00"
                   disabled={!showControls || isOtherFieldActive}
-                  // Prevents mouse wheel from changing values accidentally
                   onWheel={(e) => (e.target as HTMLElement).blur()}
                   sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
                 />

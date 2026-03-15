@@ -1,7 +1,7 @@
-import "react-datepicker/dist/react-datepicker.css";
+// import "react-datepicker/dist/react-datepicker.css";
 
-import type { RootState } from "@/store"
-import type { IDebt } from "@/types/debtor"
+import type { RootState } from "@/store";
+import type { IDebt } from "@/types/debtor";
 
 import DatePicker from "react-datepicker";
 import { useSelector } from "react-redux";
@@ -21,12 +21,12 @@ import {
   Stack,
 } from "@mui/material";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import { DashboardContent } from "@/layouts/dashboard"
-import { getDebtors, getDebtContract } from "@/store/actions/debtorActions"
+import { DashboardContent } from "@/layouts/dashboard";
+import { getDebtors, getDebtContract } from "@/store/actions/debtorActions";
 
-import Loader from "@/components/loader/Loader"
+import Loader from "@/components/loader/Loader";
 
 import DebtorTable from "./debtorTable";
 import { columnsDebtor, columnsContract } from "./columns";
@@ -49,8 +49,7 @@ function CustomTabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
+      {...other}>
       {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
     </div>
   );
@@ -68,7 +67,7 @@ export function DebtorView() {
 
   const dataEmployee = useSelector((state: RootState) => state.employee);
   const { isLoading, debtors, debtContracts } = useSelector(
-    (state: RootState) => state.debtor
+    (state: RootState) => state.debtor,
   );
   const [manager, setManager] = useState<{
     firstName: string;
@@ -83,7 +82,6 @@ export function DebtorView() {
 
   const hasFetchedManager = useRef(false);
 
-  // Modal states
   const [debtorModalOpen, setDebtorModalOpen] = useState(false);
   const [contractModalOpen, setContractModalOpen] = useState(false);
   const [selectedDebtor, setSelectedDebtor] = useState<IDebt | null>(null);
@@ -113,16 +111,17 @@ export function DebtorView() {
     hasFetchedManager.current = true;
   }, [dispatch]);
 
-  const managerFullName = manager
-    ? `${manager.firstName} ${manager.lastName}`
-    : null;
+  const managerFullName =
+    manager ? `${manager.firstName} ${manager.lastName}` : null;
 
-  const filteredDebtors = managerFullName
-    ? debtors.filter((debtor) => debtor.manager === managerFullName)
+  const filteredDebtors =
+    managerFullName ?
+      debtors.filter((debtor) => debtor.manager === managerFullName)
     : debtors;
 
-  const filteredContracts = managerFullName
-    ? debtContracts.filter((contract) => contract.manager === managerFullName)
+  const filteredContracts =
+    managerFullName ?
+      debtContracts.filter((contract) => contract.manager === managerFullName)
     : debtContracts;
 
   const ManagerFilter = (
@@ -131,7 +130,8 @@ export function DebtorView() {
       options={dataEmployee.managers}
       getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
       isOptionEqualToValue={(option, value) =>
-        `${option.firstName} ${option.lastName}` === `${value.firstName} ${value.lastName}`
+        `${option.firstName} ${option.lastName}` ===
+        `${value.firstName} ${value.lastName}`
       }
       loading={dataEmployee.isLoading}
       loadingText="Yuklanmoqda..."
@@ -150,9 +150,9 @@ export function DebtorView() {
             ...params.InputProps,
             endAdornment: (
               <>
-                {dataEmployee.isLoading ? (
+                {dataEmployee.isLoading ?
                   <CircularProgress color="inherit" size={20} />
-                ) : null}
+                : null}
                 {params.InputProps.endAdornment}
               </>
             ),
@@ -195,8 +195,7 @@ export function DebtorView() {
           <Tabs
             value={tab}
             onChange={handleChangeTab}
-            aria-label="basic tabs example"
-          >
+            aria-label="basic tabs example">
             <Tab
               label={
                 <Typography variant="h6" fontWeight="bold">
@@ -215,8 +214,7 @@ export function DebtorView() {
                       fontSize: "0.75rem",
                       fontWeight: "bold",
                     },
-                  }}
-                >
+                  }}>
                   <Typography variant="h6" fontWeight="bold" sx={{ pr: 2 }}>
                     Qarzdorliklar
                   </Typography>
@@ -238,7 +236,6 @@ export function DebtorView() {
           />
         </CustomTabPanel>
         <CustomTabPanel value={tab} index={1}>
-
           <DebtorTable
             data={filteredContracts}
             columns={columnsContract}
@@ -252,7 +249,7 @@ export function DebtorView() {
         </CustomTabPanel>
       </Stack>
 
-      {/* Modals */}
+      {}
       <DebtorDetailModal
         open={debtorModalOpen}
         onClose={() => {

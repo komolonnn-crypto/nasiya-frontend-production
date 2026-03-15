@@ -1,5 +1,5 @@
-import type { RootState } from "@/store"
-import type { IContract } from "@/types/contract"
+import type { RootState } from "@/store";
+import type { IContract } from "@/types/contract";
 
 import { useSelector } from "react-redux";
 import { useState, useEffect, useCallback, useMemo } from "react";
@@ -21,17 +21,17 @@ import {
   Chip,
 } from "@mui/material";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
-import { formatNumber } from "@/utils/format-number"
-import { closeModal } from "@/store/slices/modalSlice"
-import authApi from "@/server/auth"
-import { enqueueSnackbar } from "@/store/slices/snackbar"
-import { getContract } from "@/store/actions/contractActions"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { formatNumber } from "@/utils/format-number";
+import { closeModal } from "@/store/slices/modalSlice";
+import authApi from "@/server/auth";
+import { enqueueSnackbar } from "@/store/slices/snackbar";
+import { getContract } from "@/store/actions/contractActions";
 
-import { ImpactSummary } from "@/components/impact-summary"
-import type { ImpactSummaryData } from "@/components/impact-summary"
-import ContractDateEditModal from "@/components/contract-date-edit-modal/ContractDateEditModal"
-import { Iconify } from "@/components/iconify"
+import { ImpactSummary } from "@/components/impact-summary";
+import type { ImpactSummaryData } from "@/components/impact-summary";
+import ContractDateEditModal from "@/components/contract-date-edit-modal/ContractDateEditModal";
+import { Iconify } from "@/components/iconify";
 
 interface IForm {
   monthlyPayment: number;
@@ -67,7 +67,7 @@ const ModalContractEdit = () => {
   });
 
   const [impactSummary, setImpactSummary] = useState<ImpactSummaryData | null>(
-    null
+    null,
   );
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,8 +75,10 @@ const ModalContractEdit = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [dateEditModalOpen, setDateEditModalOpen] = useState(false);
 
-  // Check if user can edit date
-  const userRole = typeof profile?.role === 'string' ? profile.role : (profile?.role as any)?.name;
+  const userRole =
+    typeof profile?.role === "string" ?
+      profile.role
+    : (profile?.role as any)?.name;
   const canEditDate = userRole === "admin" || userRole === "moderator";
 
   useEffect(() => {
@@ -149,7 +151,7 @@ const ModalContractEdit = () => {
             monthlyPayment: formValues.monthlyPayment,
             initialPayment: formValues.initialPayment,
             totalPrice: formValues.totalPrice,
-          }
+          },
         );
 
         if (response.data.impactSummary) {
@@ -183,7 +185,7 @@ const ModalContractEdit = () => {
       setFormValues((prev) => ({ ...prev, [name]: numValue }));
       setShowConfirmation(false);
     },
-    []
+    [],
   );
 
   const handleClose = useCallback(() => {
@@ -238,7 +240,7 @@ const ModalContractEdit = () => {
         enqueueSnackbar({
           message: result.message || "Shartnoma muvaffaqiyatli yangilandi",
           options: { variant: "success" },
-        })
+        }),
       );
 
       if (contract._id) {
@@ -254,7 +256,7 @@ const ModalContractEdit = () => {
         enqueueSnackbar({
           message: errorMessage || "Shartnomani yangilashda xatolik",
           options: { variant: "error" },
-        })
+        }),
       );
 
       if (Array.isArray(errorMessages)) {
@@ -263,7 +265,7 @@ const ModalContractEdit = () => {
             enqueueSnackbar({
               message: err,
               options: { variant: "error" },
-            })
+            }),
           );
         });
       }
@@ -288,8 +290,7 @@ const ModalContractEdit = () => {
       }}
       maxWidth="md"
       fullWidth
-      fullScreen={fullScreen}
-    >
+      fullScreen={fullScreen}>
       <DialogTitle>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="h6">Shartnomani Tahrirlash</Typography>
@@ -309,8 +310,14 @@ const ModalContractEdit = () => {
       <DialogContent sx={{ p: { xs: 2, md: 3 } }}>
         {contract && (
           <Box>
-            {/* Contract Info */}
-            <Box sx={{ mb: 3, p: 2, bgcolor: "background.neutral", borderRadius: 0 }}>
+            {}
+            <Box
+              sx={{
+                mb: 3,
+                p: 2,
+                bgcolor: "background.neutral",
+                borderRadius: 0,
+              }}>
               <Typography variant="subtitle2" color="text.secondary">
                 Shartnoma
               </Typography>
@@ -331,9 +338,9 @@ const ModalContractEdit = () => {
                   name="monthlyPayment"
                   label="Oylik to'lov"
                   helperText={
-                    contract.monthlyPayment !== formValues.monthlyPayment
-                      ? `Eski: $${contract.monthlyPayment}`
-                      : ""
+                    contract.monthlyPayment !== formValues.monthlyPayment ?
+                      `Eski: $${contract.monthlyPayment}`
+                    : ""
                   }
                 />
               </Grid>
@@ -348,9 +355,9 @@ const ModalContractEdit = () => {
                   name="initialPayment"
                   label="Boshlang'ich to'lov"
                   helperText={
-                    contract.initialPayment !== formValues.initialPayment
-                      ? `Eski: $${contract.initialPayment}`
-                      : ""
+                    contract.initialPayment !== formValues.initialPayment ?
+                      `Eski: $${contract.initialPayment}`
+                    : ""
                   }
                 />
               </Grid>
@@ -365,9 +372,9 @@ const ModalContractEdit = () => {
                   name="totalPrice"
                   label="Umumiy narx"
                   helperText={
-                    contract.totalPrice !== formValues.totalPrice
-                      ? `Eski: $${contract.totalPrice}`
-                      : ""
+                    contract.totalPrice !== formValues.totalPrice ?
+                      `Eski: $${contract.totalPrice}`
+                    : ""
                   }
                 />
               </Grid>
@@ -383,8 +390,7 @@ const ModalContractEdit = () => {
                     key={change.field}
                     severity="info"
                     sx={{ mb: 1 }}
-                    icon={false}
-                  >
+                    icon={false}>
                     <Typography variant="body2">
                       <strong>{change.label}:</strong> ${change.oldValue} → $
                       {change.newValue}
@@ -393,8 +399,7 @@ const ModalContractEdit = () => {
                         color={
                           change.difference > 0 ? "success.main" : "error.main"
                         }
-                        sx={{ ml: 1 }}
-                      >
+                        sx={{ ml: 1 }}>
                         ({change.difference > 0 ? "+" : ""}
                         {change.difference.toFixed(2)})
                       </Typography>
@@ -404,7 +409,7 @@ const ModalContractEdit = () => {
               </Box>
             )}
 
-            {/* Validation Errors */}
+            {}
             {validationErrors.length > 0 && (
               <Box sx={{ mt: 2 }}>
                 {validationErrors.map((error, index) => (
@@ -415,7 +420,7 @@ const ModalContractEdit = () => {
               </Box>
             )}
 
-            {/* Impact Analysis */}
+            {}
             {isAnalyzing && (
               <Box
                 sx={{
@@ -423,8 +428,7 @@ const ModalContractEdit = () => {
                   display: "flex",
                   alignItems: "center",
                   gap: 2,
-                }}
-              >
+                }}>
                 <CircularProgress size={20} />
                 <Typography variant="body2" color="text.secondary">
                   Ta'sir tahlil qilinmoqda...
@@ -436,7 +440,7 @@ const ModalContractEdit = () => {
               <ImpactSummary impact={impactSummary} />
             )}
 
-            {/* Confirmation Warning */}
+            {}
             {showConfirmation && isFormValid && (
               <Alert severity="warning" sx={{ mt: 2 }}>
                 <Typography variant="subtitle2" gutterBottom>
@@ -455,28 +459,25 @@ const ModalContractEdit = () => {
         <Button color="error" onClick={handleClose} disabled={isSubmitting}>
           Bekor Qilish
         </Button>
-        {!showConfirmation ? (
+        {!showConfirmation ?
           <Button
             type="submit"
             variant="contained"
-            disabled={!isFormValid || isAnalyzing}
-          >
+            disabled={!isFormValid || isAnalyzing}>
             Davom Etish
           </Button>
-        ) : (
-          <Button
+        : <Button
             type="submit"
             variant="contained"
             color="warning"
             disabled={isSubmitting}
-            startIcon={isSubmitting && <CircularProgress size={20} />}
-          >
+            startIcon={isSubmitting && <CircularProgress size={20} />}>
             {isSubmitting ? "Saqlanmoqda..." : "Tasdiqlash va Saqlash"}
           </Button>
-        )}
+        }
       </DialogActions>
 
-      {/* Contract Date Edit Modal */}
+      {}
       {contract && (
         <ContractDateEditModal
           open={dateEditModalOpen}

@@ -125,7 +125,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
         </MenuList>
       </Popover>
 
-      {/* O'chirish Dialog */}
+      {}
       <Dialog
         open={deleteDialog}
         onClose={() => setDeleteDialog(false)}
@@ -203,7 +203,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
         </DialogActions>
       </Dialog>
 
-      {/* Tiklash Dialog */}
+      {}
       <Dialog
         open={restoreDialog}
         onClose={() => setRestoreDialog(false)}

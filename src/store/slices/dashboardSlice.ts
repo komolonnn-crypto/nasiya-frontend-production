@@ -1,5 +1,5 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { CurrencyDetails } from "@/types/cash"
+import type { CurrencyDetails } from "@/types/cash";
 
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -69,14 +69,14 @@ const dashbordSlice = createSlice({
       action: PayloadAction<{
         granularity: "daily" | "monthly" | "yearly";
         data: IStatistic;
-      }>
+      }>,
     ) {
       state.statistic[action.payload.granularity] = action.payload.data;
       state.isLoadingStatistic = false;
     },
     setGranularity(
       state,
-      action: PayloadAction<"daily" | "monthly" | "yearly">
+      action: PayloadAction<"daily" | "monthly" | "yearly">,
     ) {
       state.selectedGranularity = action.payload;
     },

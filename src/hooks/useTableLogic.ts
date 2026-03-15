@@ -36,13 +36,11 @@ export function useTableLogic<T extends Record<string, any>>(
       "passportSeries",
     ];
 
-    // Search
     if (searchText) {
       const lowerSearch = searchText.toLowerCase();
       result = result.filter((item) =>
         searchableFields.some((key) => {
           const value = item[key];
-          // Nested object support (e.g., manager.firstName)
           if (
             key === "manager" &&
             typeof value === "object" &&
@@ -57,13 +55,11 @@ export function useTableLogic<T extends Record<string, any>>(
       );
     }
 
-    // Filters
     Object.entries(filterValues).forEach(([key, value]) => {
       if (value) {
         result = result.filter((item) => {
           const itemValue = item[key];
 
-          // Handle nested objects (e.g., manager)
           if (typeof itemValue === "object" && itemValue !== null) {
             if (key === "manager") {
               const managerName =
@@ -84,10 +80,9 @@ export function useTableLogic<T extends Record<string, any>>(
       }
     });
 
-    // Date Filters
     if (dateFilterFrom || dateFilterTo) {
       result = result.filter((item) => {
-        const itemDate = item['createdAt'] || item['date'] || item['startDate'];
+        const itemDate = item["createdAt"] || item["date"] || item["startDate"];
         if (!itemDate) return true;
 
         const itemDateObj = new Date(itemDate);
@@ -104,13 +99,11 @@ export function useTableLogic<T extends Record<string, any>>(
       });
     }
 
-    // Sorting
     if (sortConfig) {
       result.sort((a, b) => {
         let aValue: any = a[sortConfig.key];
         let bValue: any = b[sortConfig.key];
 
-        // Handle nested objects for sorting
         if (typeof aValue === "object" && aValue !== null) {
           if (sortConfig.key === "manager") {
             aValue = `${aValue.firstName || ""} ${aValue.lastName || ""}`;
@@ -125,7 +118,14 @@ export function useTableLogic<T extends Record<string, any>>(
     }
 
     return result;
-  }, [data, searchText, filterValues, dateFilterFrom, dateFilterTo, sortConfig]);
+  }, [
+    data,
+    searchText,
+    filterValues,
+    dateFilterFrom,
+    dateFilterTo,
+    sortConfig,
+  ]);
 
   const handleColumnToggle = (columnId: string) => {
     setSelectedColumns((prev) =>

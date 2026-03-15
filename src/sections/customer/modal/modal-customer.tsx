@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import type { FC } from "react";
-import type { RootState } from "@/store"
+import type { RootState } from "@/store";
 
 import { useSelector } from "react-redux";
 import { useState, useEffect, useCallback } from "react";
@@ -20,18 +19,18 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
+
 import { FaPassport } from "react-icons/fa";
 import { FaRegFileLines } from "react-icons/fa6";
 import { TbPhoto } from "react-icons/tb";
 import { MdDelete, MdUpload } from "react-icons/md";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import authApi from "@/server/auth"
-import { closeModal } from "@/store/slices/modalSlice"
-import { getManagers } from "@/store/actions/employeeActions"
-import { addCustomer, updateCustomer } from "@/store/actions/customerActions"
-
+import authApi from "@/server/auth";
+import { closeModal } from "@/store/slices/modalSlice";
+import { getManagers } from "@/store/actions/employeeActions";
+import { addCustomer, updateCustomer } from "@/store/actions/customerActions";
 
 interface IForm {
   fullName: string;
@@ -53,7 +52,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
   const dispatch = useAppDispatch();
   const { customerModal } = useSelector((state: RootState) => state.modal);
   const { managers, isLoading } = useSelector(
-    (state: RootState) => state.employee
+    (state: RootState) => state.employee,
   );
 
   const [phoneError, setPhoneError] = useState(false);
@@ -85,9 +84,8 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
         passportSeries: customer.data.passportSeries || "",
         phoneNumber: customer.data.phoneNumber || "+998",
         address: customer.data.address || "",
-        birthDate: customer.data.birthDate
-          ? new Date(customer.data.birthDate)
-          : null,
+        birthDate:
+          customer.data.birthDate ? new Date(customer.data.birthDate) : null,
         managerId: customer.data.manager?._id || "",
         passportFile: null,
         shartnomaFile: null,
@@ -97,7 +95,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
   }, [customer, customerModal?.type]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     let newValue: string | Date = value;
@@ -121,7 +119,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
 
     if (!input.startsWith("+998")) return;
 
-    const formatted = input.replace(/[^\d+]/g, ""); 
+    const formatted = input.replace(/[^\d+]/g, "");
 
     if (formatted.length > 13) return;
 
@@ -143,7 +141,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
             setChecking(true);
             const phoneNumber = phone.replace("+", "");
             const res = await authApi.get(
-              `/customer/check-phone?phone=${phoneNumber}`
+              `/customer/check-phone?phone=${phoneNumber}`,
             );
             if (res.data.exists) {
               setPhoneError(true);
@@ -181,7 +179,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
         const checkPassport = async () => {
           try {
             const res = await authApi.get(
-              `/customer/check-passport?passport=${passport}`
+              `/customer/check-passport?passport=${passport}`,
             );
             if (res.data.exists) {
               setPassportError(true);
@@ -210,7 +208,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
     if (!/^[A-Z]{2}\d{7}$/.test(passport)) {
       setPassportError(true);
       setPassportHelper(
-        "2 ta harf va 7 ta raqamdan iborat bo‘lishi kerak (masalan: AA1234567)"
+        "2 ta harf va 7 ta raqamdan iborat bo‘lishi kerak (masalan: AA1234567)",
       );
     }
   };
@@ -257,7 +255,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
 
       handleClose();
     },
-    [formValues, customer, customerModal?.type, dispatch, handleClose, show]
+    [formValues, customer, customerModal?.type, dispatch, handleClose, show],
   );
 
   const handleCustomerFocus = useCallback(() => {
@@ -282,14 +280,13 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
         component: "form",
         onSubmit: handleSubmit,
       }}
-      fullWidth
-    >
+      fullWidth>
       {!!customerModal?.type && (
         <>
           <DialogTitle>
-            {customerModal?.type === "edit"
-              ? "Mijozni Tahrirlash"
-              : "Yangi Mijoz Qo'shish"}
+            {customerModal?.type === "edit" ?
+              "Mijozni Tahrirlash"
+            : "Yangi Mijoz Qo'shish"}
           </DialogTitle>
           <DialogContent>
             <Grid container spacing={1}>
@@ -308,7 +305,6 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
               </Grid>
               <Grid xs={12} md={6}>
                 <TextField
-
                   value={formValues.passportSeries}
                   onChange={handleChange}
                   onBlur={handlePassportBlur}
@@ -345,9 +341,9 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
               <Grid xs={12}>
                 <TextField
                   value={
-                    formValues.birthDate
-                      ? formValues.birthDate.toISOString().split("T")[0]
-                      : ""
+                    formValues.birthDate ?
+                      formValues.birthDate.toISOString().split("T")[0]
+                    : ""
                   }
                   onChange={handleChange}
                   margin="dense"
@@ -379,16 +375,18 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                 <Autocomplete
                   onFocus={handleCustomerFocus}
                   options={managers}
-                  getOptionLabel={(option) =>
-                    option.fullName || ""
-                  }
+                  getOptionLabel={(option) => option.fullName || ""}
                   loading={isLoading}
                   loadingText="Yuklanmoqda..."
                   noOptionsText="Menejer topilmadi"
                   renderInput={(params) => {
                     const { size, InputLabelProps, ...restParams } = params;
-                    const { className: labelClassName, style: labelStyle, ...restLabelProps } = InputLabelProps || {};
-                    
+                    const {
+                      className: labelClassName,
+                      style: labelStyle,
+                      ...restLabelProps
+                    } = InputLabelProps || {};
+
                     return (
                       <TextField
                         {...restParams}
@@ -403,9 +401,9 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                           ...params.InputProps,
                           endAdornment: (
                             <>
-                              {isLoading ? (
+                              {isLoading ?
                                 <CircularProgress color="inherit" size={20} />
-                              ) : null}
+                              : null}
                               {params.InputProps.endAdornment}
                             </>
                           ),
@@ -444,24 +442,23 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                         borderColor: "primary.main",
                         bgcolor: "action.hover",
                       },
-                    }}
-                  >
+                    }}>
                     <FaPassport size={20} />
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="body2">
                         Passport
-                        {formValues.passportFile
-                          ? `.${formValues.passportFile.name.split(".").pop()}`
-                          : customer.data?.files?.passport
-                            ? `.${customer.data.files.passport.split(".").pop()}`
-                            : ""}
+                        {formValues.passportFile ?
+                          `.${formValues.passportFile.name.split(".").pop()}`
+                        : customer.data?.files?.passport ?
+                          `.${customer.data.files.passport.split(".").pop()}`
+                        : ""}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        {formValues.passportFile
-                          ? formValues.passportFile.name
-                          : customer.data?.files?.passport
-                            ? "Mavjud fayl"
-                            : "Fayl yuklanmagan"}
+                        {formValues.passportFile ?
+                          formValues.passportFile.name
+                        : customer.data?.files?.passport ?
+                          "Mavjud fayl"
+                        : "Fayl yuklanmagan"}
                       </Typography>
                     </Box>
                     <input
@@ -492,14 +489,12 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                             ...prev,
                             passportFile: null,
                           }));
-                        }}
-                      >
+                        }}>
                         <MdDelete />
                       </IconButton>
                     )}
                   </Box>
 
-                  {/* Shartnoma */}
                   <Box
                     sx={{
                       display: "flex",
@@ -513,24 +508,23 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                         borderColor: "primary.main",
                         bgcolor: "action.hover",
                       },
-                    }}
-                  >
+                    }}>
                     <FaRegFileLines size={20} />
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="body2">
                         Shartnoma
-                        {formValues.shartnomaFile
-                          ? `.${formValues.shartnomaFile.name.split(".").pop()}`
-                          : customer.data?.files?.shartnoma
-                            ? `.${customer.data.files.shartnoma.split(".").pop()}`
-                            : ""}
+                        {formValues.shartnomaFile ?
+                          `.${formValues.shartnomaFile.name.split(".").pop()}`
+                        : customer.data?.files?.shartnoma ?
+                          `.${customer.data.files.shartnoma.split(".").pop()}`
+                        : ""}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        {formValues.shartnomaFile
-                          ? formValues.shartnomaFile.name
-                          : customer.data?.files?.shartnoma
-                            ? "Mavjud fayl"
-                            : "Fayl yuklanmagan"}
+                        {formValues.shartnomaFile ?
+                          formValues.shartnomaFile.name
+                        : customer.data?.files?.shartnoma ?
+                          "Mavjud fayl"
+                        : "Fayl yuklanmagan"}
                       </Typography>
                     </Box>
                     <input
@@ -561,14 +555,12 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                             ...prev,
                             shartnomaFile: null,
                           }));
-                        }}
-                      >
+                        }}>
                         <MdDelete />
                       </IconButton>
                     )}
                   </Box>
 
-                  {/* Photo */}
                   <Box
                     sx={{
                       display: "flex",
@@ -582,24 +574,23 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                         borderColor: "primary.main",
                         bgcolor: "action.hover",
                       },
-                    }}
-                  >
+                    }}>
                     <TbPhoto size={20} />
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="body2">
                         Foto
-                        {formValues.photoFile
-                          ? `.${formValues.photoFile.name.split(".").pop()}`
-                          : customer.data?.files?.photo
-                            ? `.${customer.data.files.photo.split(".").pop()}`
-                            : ""}
+                        {formValues.photoFile ?
+                          `.${formValues.photoFile.name.split(".").pop()}`
+                        : customer.data?.files?.photo ?
+                          `.${customer.data.files.photo.split(".").pop()}`
+                        : ""}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        {formValues.photoFile
-                          ? formValues.photoFile.name
-                          : customer.data?.files?.photo
-                            ? "Mavjud fayl"
-                            : "Fayl yuklanmagan"}
+                        {formValues.photoFile ?
+                          formValues.photoFile.name
+                        : customer.data?.files?.photo ?
+                          "Mavjud fayl"
+                        : "Fayl yuklanmagan"}
                       </Typography>
                     </Box>
                     <input
@@ -629,8 +620,7 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
                             ...prev,
                             photoFile: null,
                           }));
-                        }}
-                      >
+                        }}>
                         <MdDelete />
                       </IconButton>
                     )}
@@ -643,18 +633,20 @@ const ModalCustomer: FC<IProps> = ({ show = false }) => {
             <Button color="error" onClick={handleClose}>
               Bekor qilish
             </Button>
-            <Button 
+            <Button
               type="submit"
               color={
-                customerModal?.type === "edit" && !customerModal.data?.isActive
-                  ? "success"
-                  : "primary"
+                (
+                  customerModal?.type === "edit" &&
+                  !customerModal.data?.isActive
+                ) ?
+                  "success"
+                : "primary"
               }
-              {...(!isFormValid && { disabled: true })}
-            >
-              {customerModal?.type === "edit" && !customerModal.data?.isActive
-                ? "Tasdiqlash"
-                : "Saqlash"}
+              {...(!isFormValid && { disabled: true })}>
+              {customerModal?.type === "edit" && !customerModal.data?.isActive ?
+                "Tasdiqlash"
+              : "Saqlash"}
             </Button>
           </DialogActions>
         </>

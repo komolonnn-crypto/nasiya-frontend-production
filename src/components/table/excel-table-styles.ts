@@ -1,47 +1,37 @@
-// Excel-style jadval uchun umumiy stillar
 import type { SxProps, Theme } from "@mui/material";
 
 export const EXCEL_COLORS = {
-  // Excel header ranglari
   headerBg: "#217346",
   headerBgHover: "#1a5c37",
   headerText: "#FFFFFF",
   headerBorder: "#1A5C37",
 
-  // Grid ranglari (CSS vars for dark mode support)
   gridLine: "rgba(var(--palette-grey-500Channel) / 0.2)",
   gridLineLight: "rgba(var(--palette-grey-500Channel) / 0.12)",
 
-  // Row ranglari (CSS vars for dark mode support)
   rowEven: "var(--palette-background-paper)",
   rowOdd: "var(--palette-background-neutral)",
   rowHover: "rgba(var(--palette-primary-mainChannel) / 0.08)",
   rowSelected: "rgba(var(--palette-primary-mainChannel) / 0.16)",
 
-  // Cell ranglari (CSS vars for dark mode support)
   cellText: "var(--palette-text-primary)",
   cellTextSecondary: "var(--palette-text-secondary)",
   cellBorder: "rgba(var(--palette-grey-500Channel) / 0.2)",
 } as const;
 
 export const EXCEL_DIMENSIONS = {
-  // Balandliklar (Excel kabi compact)
   headerHeight: 22,
   rowHeight: 32,
 
-  // Padding
   cellPaddingX: 6,
   cellPaddingY: 4,
 
-  // Font sizes
   headerFontSize: 10,
   cellFontSize: 10,
 
-  // Border widths
   borderWidth: 1,
 } as const;
 
-// Header cell style
 export const excelHeaderCellStyle: SxProps<Theme> = {
   height: `${EXCEL_DIMENSIONS.headerHeight}px`,
   minHeight: `${EXCEL_DIMENSIONS.headerHeight}px`,
@@ -69,7 +59,6 @@ export const excelHeaderCellStyle: SxProps<Theme> = {
   },
 };
 
-// Body cell style
 export const excelBodyCellStyle: SxProps<Theme> = {
   height: `${EXCEL_DIMENSIONS.rowHeight}px`,
   minHeight: `${EXCEL_DIMENSIONS.rowHeight}px`,
@@ -88,7 +77,6 @@ export const excelBodyCellStyle: SxProps<Theme> = {
   verticalAlign: "middle",
 };
 
-// Row style
 export const excelRowStyle: SxProps<Theme> = {
   height: `${EXCEL_DIMENSIONS.rowHeight}px`,
   minHeight: `${EXCEL_DIMENSIONS.rowHeight}px`,
@@ -115,7 +103,6 @@ export const excelRowStyle: SxProps<Theme> = {
   },
 };
 
-// Table container style
 export const excelTableContainerStyle: SxProps<Theme> = {
   border: `${EXCEL_DIMENSIONS.borderWidth}px solid rgba(var(--palette-grey-500Channel) / 0.2)`,
   borderRadius: 0,
@@ -124,7 +111,6 @@ export const excelTableContainerStyle: SxProps<Theme> = {
   backgroundColor: "var(--palette-background-paper)",
   borderTopLeftRadius: "12px",
   borderTopRightRadius: "12px",
-  // Firefox-style minimal scrollbar
   scrollbarWidth: "thin",
   scrollbarColor: "rgba(var(--palette-grey-500Channel) / 0.35) transparent",
   "&::-webkit-scrollbar": {
@@ -146,7 +132,6 @@ export const excelTableContainerStyle: SxProps<Theme> = {
   },
 };
 
-// Card wrapper style
 export const excelCardStyle: SxProps<Theme> = {
   boxShadow: "none",
   border: `${EXCEL_DIMENSIONS.borderWidth}px solid ${EXCEL_COLORS.gridLine}`,
@@ -155,7 +140,6 @@ export const excelCardStyle: SxProps<Theme> = {
   backgroundColor: "transparent",
 };
 
-// Pagination style
 export const excelPaginationStyle: SxProps<Theme> = {
   borderTop: `${EXCEL_DIMENSIONS.borderWidth}px solid rgba(var(--palette-grey-500Channel) / 0.2)`,
   backgroundColor: "var(--palette-background-neutral)",
@@ -179,7 +163,6 @@ export const excelPaginationStyle: SxProps<Theme> = {
   },
 };
 
-// Sticky column styles
 export const excelStickyLeftStyle = (offset: number = 0): SxProps<Theme> => ({
   position: "sticky",
   left: offset,
@@ -212,7 +195,6 @@ export const excelStickyRightStyle = (offset: number = 0): SxProps<Theme> => ({
   },
 });
 
-// Checkbox style
 export const excelCheckboxStyle: SxProps<Theme> = {
   p: 0,
   transform: "scale(0.75)",
@@ -221,7 +203,6 @@ export const excelCheckboxStyle: SxProps<Theme> = {
   },
 };
 
-// Empty/No data style
 export const excelNoDataStyle: SxProps<Theme> = {
   py: 4,
   textAlign: "center",

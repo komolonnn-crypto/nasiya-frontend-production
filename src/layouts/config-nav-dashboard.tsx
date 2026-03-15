@@ -1,7 +1,4 @@
-// import { Label } from "@/components/label";
-import { SvgColor } from "@/components/svg-color"
-
-// ----------------------------------------------------------------------
+import { SvgColor } from "@/components/svg-color";
 
 const icon = (name: string) => (
   <SvgColor
@@ -55,7 +52,6 @@ export const navData = {
       path: "/moderator",
       icon: icon("ic-analytics"),
     },
-    // ❌ Xodimlar moderator uchun yo'q (faqat admin)
     {
       title: "Mijozlar",
       path: "/moderator/user",
@@ -83,11 +79,6 @@ export const navData = {
     },
   ],
   seller: [
-    // {
-    //   title: "Dashboard",
-    //   path: "/seller",
-    //   icon: icon("ic-analytics"),
-    // },
     {
       title: "Mijozlar",
       path: "/seller",
@@ -127,31 +118,4 @@ export const navData = {
     },
   ],
   no: [],
-
-  // {
-  //   title: "Darslar",
-  //   path: "/tutorials",
-  //   icon: icon("ic-blog"),
-  // },
-  // {
-  //   title: "Xizmatlar",
-  //   path: "/service",
-  //   icon: icon("ic-service"),
-  // },
-  // {
-  //   title: "Kanal savdosi",
-  //   path: "/channel",
-  //   icon: icon("ic-channel"),
-  // },
-
-  // {
-  //   title: "Sign in",
-  //   path: "/sign-in",
-  //   icon: icon("ic-lock"),
-  // },
-  // {
-  //   title: "Not found",
-  //   path: "/404",
-  //   icon: icon("ic-disabled"),
-  // },
 } as const;
