@@ -42,7 +42,6 @@ export default defineConfig(({ mode }) => {
       minify: "esbuild",
       target: "es2020",
       cssCodeSplit: true,
-      
       // Optimize chunk splitting
       rollupOptions: {
         output: {
@@ -67,7 +66,6 @@ export default defineConfig(({ mode }) => {
 
       // Chunk size warnings
       chunkSizeWarningLimit: 1000,
-      
       // Optimize dependencies
       commonjsOptions: {
         include: [/node_modules/],

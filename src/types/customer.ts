@@ -17,6 +17,8 @@ export interface ICustomer {
     _id: string;
     fullName: string;
     phoneNumber: string;
+    firstName: string;
+    lastName: string;
   };
   contracts?: IContract[];
   files?: {

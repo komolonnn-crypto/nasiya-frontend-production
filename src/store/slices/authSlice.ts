@@ -45,10 +45,6 @@ const authSlice = createSlice({
       state.loggedIn = true;
       state.profile = action.payload.profile;
       state.error = null;
-      console.log(
-        "refreshSuccess - profile.role:",
-        action.payload.profile.role,
-      );
 
       const token = action.payload.accessToken || action.payload.token;
       if (token) {
@@ -97,7 +93,6 @@ const authSlice = createSlice({
       state.loggedIn = true;
       state.profile = action.payload.profile;
       state.error = null;
-      console.log("loginSuccess - profile.role:", action.payload.profile.role);
 
       const token = action.payload.accessToken || action.payload.token;
       if (token) {

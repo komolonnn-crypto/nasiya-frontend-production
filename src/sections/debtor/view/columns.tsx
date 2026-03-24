@@ -48,7 +48,7 @@ export const columnsDebtor: Column[] = [
         const day = dayjs(row.createdAt).date();
         return day.toString().padStart(2, "0");
       }
-      return "—";
+      return "———";
     },
   },
   {
@@ -107,7 +107,7 @@ export const columnsDebtor: Column[] = [
           return `${totalPaid}/${totalMonths}`;
         }
       }
-      return "—";
+      return "———";
     },
   },
   {
@@ -136,7 +136,7 @@ export const columnsDebtor: Column[] = [
   },
   {
     id: "manager",
-    label: "Manager",
+    label: "Menejer",
     minWidth: 100,
     width: 130,
   },

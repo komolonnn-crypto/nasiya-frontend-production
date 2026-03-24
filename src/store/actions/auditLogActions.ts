@@ -44,10 +44,6 @@ export const fetchDailyActivity = createAsyncThunk(
         {} as any,
       );
 
-      console.log("📡 API REQUEST: /audit/daily");
-      console.log("📦 Params:", cleanedParams);
-      console.log("🔑 employeeId:", cleanedParams.employeeId);
-
       const response = await api.get<AuditLogDailyResponse>("/audit/daily", {
         params: cleanedParams,
       });

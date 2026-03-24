@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 
 import dayjs, { Dayjs } from "dayjs";
-import axios from "axios";
 import axiosInstance from "@/server/api";
 import { Iconify } from "@/components/iconify";
 
@@ -51,7 +50,7 @@ export default function AuditLogFilters({
   loading,
 }: AuditLogFiltersProps) {
   const [localFilters, setLocalFilters] = useState<FilterType>(filters);
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(
+  const [_selectedDate, setSelectedDate] = useState<Dayjs | null>(
     filters.date ? dayjs(filters.date) : null,
   );
   const [managers, setManagers] = useState<Manager[]>([]);
@@ -61,44 +60,22 @@ export default function AuditLogFilters({
     const fetchManagers = async () => {
       setLoadingManagers(true);
       try {
-        console.log("🔍 Xodimlarni yuklash boshlandi...");
-
         const response = await axiosInstance.get("/employee/manager");
-
-        console.log("📦 API javobi:", response.data);
 
         let employees = [];
         if (response.data.data && Array.isArray(response.data.data)) {
           employees = response.data.data;
-          console.log("✅ response.data.data dan olindi");
         } else if (
           response.data.employees &&
           Array.isArray(response.data.employees)
         ) {
           employees = response.data.employees;
-          console.log("✅ response.data.employees dan olindi");
         } else if (Array.isArray(response.data)) {
           employees = response.data;
-          console.log("✅ response.data dan olindi");
         }
-
-        console.log("👥 Xodimlar soni:", employees.length);
-        console.log("👥 Xodimlar:", employees);
 
         setManagers(employees);
-
-        if (employees.length === 0) {
-          console.warn(
-            "⚠️ Manager'lar topilmadi. Database'da 'manager' role'idagi active xodimlar yo'qmi?",
-          );
-        }
       } catch (error) {
-        console.error("❌ Xodimlarni yuklashda xato:", error);
-        if (axios.isAxiosError(error)) {
-          console.error("📡 Response:", error.response?.data);
-          console.error("📡 Status:", error.response?.status);
-          console.error("📡 URL:", error.config?.url);
-        }
         setManagers([]);
       } finally {
         setLoadingManagers(false);

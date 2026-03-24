@@ -1,5 +1,5 @@
-import type { RootState } from "@/store"
-import type { ICustomer } from "@/types/customer"
+import type { RootState } from "@/store";
+import type { ICustomer } from "@/types/customer";
 
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -29,12 +29,12 @@ import {
   DialogContentText,
 } from "@mui/material";
 
-import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-import { setModal } from "@/store/slices/modalSlice"
-import { setEmployeeId } from "@/store/slices/employeeSlice"
-import { getManagers } from "@/store/actions/employeeActions"
-import { confirmationCustomer } from "@/store/actions/customerActions"
+import { setModal } from "@/store/slices/modalSlice";
+import { setEmployeeId } from "@/store/slices/employeeSlice";
+import { getManagers } from "@/store/actions/employeeActions";
+import { confirmationCustomer } from "@/store/actions/customerActions";
 
 import { Iconify } from "@/components/iconify";
 
@@ -48,14 +48,18 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
   const navigate = useNavigate();
 
   const { managers, isLoading } = useSelector(
-    (state: RootState) => state.employee
+    (state: RootState) => state.employee,
   );
-  
+
   const { profile } = useSelector((state: RootState) => state.auth);
-  const userRole = (typeof profile?.role === 'string' ? profile.role : (profile?.role as any)?.name)?.toLowerCase();
+  const userRole = (
+    typeof profile?.role === "string" ?
+      profile.role
+    : (profile?.role as any)?.name)?.toLowerCase();
   const canEditManager = userRole === "admin" || userRole === "moderator";
-  const currentManager = customer?.manager
-    ? managers.find((manager) => manager._id === customer.manager?._id)
+  const currentManager =
+    customer?.manager ?
+      managers.find((manager) => manager._id === customer.manager?._id)
     : null;
 
   const [selectedManager, setSelectedManager] = useState<
@@ -92,7 +96,7 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
         dispatch(confirmationCustomer(formJson));
       }
     },
-    [customer, selectedManager, dispatch]
+    [customer, selectedManager, dispatch],
   );
 
   const handleConfirmCustomer = useCallback(() => {
@@ -114,42 +118,39 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
           direction="row"
           justifyContent="space-between"
           alignItems="center"
-          gap={2}
-        >
+          gap={2}>
           <Stack direction="row" spacing={2} alignItems="center">
-            <Avatar 
-              sx={{ width: 50, height: 50 }} 
+            <Avatar
+              sx={{ width: 50, height: 50 }}
               {...(customer?.fullName && { alt: customer.fullName })}
             />
-            <Typography variant="h6">
-              {customer?.fullName || "___"}
-            </Typography>
-            {customer?.isActive ? (
+            <Typography variant="h6">{customer?.fullName || "___"}</Typography>
+            {customer?.isActive ?
               <Tooltip title="Tasdiqlangan mijoz" placement="top">
                 <Typography>
                   <MdCheckCircle color="var(--palette-success-main)" />
                 </Typography>
               </Tooltip>
-            ) : (
-              <Tooltip title="Hali tasdiqlanmagan" placement="top">
+            : <Tooltip title="Hali tasdiqlanmagan" placement="top">
                 <Typography>
                   <MdCancel color="var(--palette-error-main)" />
                 </Typography>
               </Tooltip>
-            )}
+            }
           </Stack>
           <Stack
             direction="row"
             width="full"
             spacing={2}
             alignItems="center"
-            sx={{ flex: 1 }}
-          >
+            sx={{ flex: 1 }}>
             <Autocomplete
               fullWidth
               options={managers}
               getOptionLabel={(option) =>
-                option.fullName || `${option.firstName || ""} ${option.lastName || ""}`.trim() || ""
+                option.fullName ||
+                `${option.firstName || ""} ${option.lastName || ""}`.trim() ||
+                ""
               }
               isOptionEqualToValue={(option, value) => option._id === value._id}
               loading={isLoading}
@@ -158,8 +159,12 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
               value={selectedManager}
               renderInput={(params) => {
                 const { size, InputLabelProps, ...restParams } = params;
-                const { className: labelClassName, style: labelStyle, ...restLabelProps } = InputLabelProps || {};
-                
+                const {
+                  className: labelClassName,
+                  style: labelStyle,
+                  ...restLabelProps
+                } = InputLabelProps || {};
+
                 return (
                   <TextField
                     {...restParams}
@@ -175,16 +180,16 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
                       ...params.InputProps,
                       endAdornment: (
                         <>
-                          {isLoading ? (
+                          {isLoading ?
                             <CircularProgress color="inherit" size={20} />
-                          ) : null}
+                          : null}
                           {params.InputProps.endAdornment}
                         </>
                       ),
                     }}
                     sx={{
-                      '& .MuiInputBase-root': {
-                        borderRadius: '12px',
+                      "& .MuiInputBase-root": {
+                        borderRadius: "12px",
                       },
                     }}
                   />
@@ -194,13 +199,13 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
                 setSelectedManager(value);
               }}
               {...(!canEditManager && { disabled: true })}
-              sx={{ flex: 1 ,borderRadius: "12px" }}
+              sx={{ flex: 1, borderRadius: "12px" }}
             />
             <Button
               type="submit"
               color={!customer?.isActive ? "success" : "primary"}
-              {...((!selectedManager && customer?.isActive) && { disabled: true })}
-            >
+              {...(!selectedManager &&
+                customer?.isActive && { disabled: true })}>
               {!selectedManager ? "Tasdiqlash" : "Saqlash"}
             </Button>
 
@@ -212,10 +217,9 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
                   setModal({
                     modal: "customerModal",
                     data: { type: "edit", data: customer },
-                  })
+                  }),
                 );
-              }}
-            >
+              }}>
               <Iconify icon="solar:pen-bold" />
             </IconButton>
           </Stack>
@@ -240,9 +244,9 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
               <ListItemText
                 primary="Tug'ilgan sana"
                 secondary={
-                  customer?.birthDate
-                    ? new Date(customer?.birthDate).toLocaleDateString()
-                    : "___"
+                  customer?.birthDate ?
+                    new Date(customer?.birthDate).toLocaleDateString()
+                  : "___"
                 }
               />
             </ListItem>
@@ -262,7 +266,10 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
                 secondary={
                   <Chip
                     avatar={<Avatar />}
-                    label={customer?.manager?.fullName || "___"}
+                    label={
+                      `${customer?.manager?.firstName || ""} ${customer?.manager?.lastName || ""}`.trim() ||
+                      "___"
+                    }
                     variant="outlined"
                     sx={{ mt: 1, cursor: "pointer" }}
                     onClick={(e) => {
@@ -288,32 +295,29 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
         open={confirmDialog}
         onClose={() => setConfirmDialog(false)}
         maxWidth="sm"
-        fullWidth
-      >
+        fullWidth>
         <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <MdCheckCircle color="var(--palette-success-main)" size={24} />
           Mijozni tasdiqlash
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <strong>
-              {customer?.fullName}
-            </strong>{" "}
-            mijozini tasdiqlashni xohlaysizmi?
+            <strong>{customer?.fullName}</strong> mijozini tasdiqlashni
+            xohlaysizmi?
           </DialogContentText>
           <Box sx={{ mt: 2, p: 2, bgcolor: "action.hover", borderRadius: 0 }}>
             <Typography variant="body2" color="text.secondary" gutterBottom>
               Mas'ul menejer:
             </Typography>
             <Typography variant="body1" fontWeight="medium">
-                {selectedManager?.fullName || `${selectedManager?.firstName || ""} ${selectedManager?.lastName || ""}`}
+              {selectedManager?.fullName ||
+                `${selectedManager?.firstName || ""} ${selectedManager?.lastName || ""}`}
             </Typography>
           </Box>
           <Typography
             variant="caption"
             color="text.secondary"
-            sx={{ mt: 2, display: "block" }}
-          >
+            sx={{ mt: 2, display: "block" }}>
             Tasdiqlangandan so'ng mijoz tizimda faol bo'ladi va shartnoma tuzish
             mumkin bo'ladi.
           </Typography>
@@ -322,16 +326,14 @@ const CustomerInfo: FC<IProps> = ({ customer, top = false }) => {
           <Button
             onClick={() => setConfirmDialog(false)}
             color="inherit"
-            variant="outlined"
-          >
+            variant="outlined">
             Bekor qilish
           </Button>
           <Button
             onClick={handleConfirmCustomer}
             color="success"
             variant="contained"
-            startIcon={<MdCheckCircle />}
-          >
+            startIcon={<MdCheckCircle />}>
             Tasdiqlash
           </Button>
         </DialogActions>

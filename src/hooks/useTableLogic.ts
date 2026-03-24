@@ -34,6 +34,7 @@ export function useTableLogic<T extends Record<string, any>>(
       "lastName",
       "address",
       "passportSeries",
+      "customId",
     ];
 
     if (searchText) {
