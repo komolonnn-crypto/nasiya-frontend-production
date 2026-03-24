@@ -30,7 +30,6 @@ export const columnsPageContract: Column[] = [
       return "———";
     },
   },
-
   {
     id: "customId",
     label: "Shartnoma ID",
@@ -82,7 +81,6 @@ export const columnsPageContract: Column[] = [
       );
     },
   },
-
   {
     id: "customerName",
     label: "Mijoz",
@@ -113,7 +111,7 @@ export const columnsPageContract: Column[] = [
       if (row.startDate) {
         return dayjs(row.startDate).format("YYYY-MM-DD");
       }
-      return "————";
+      return "———";
     },
     sortable: true,
     filterable: false,
@@ -152,6 +150,16 @@ export const columnsPageContract: Column[] = [
     align: "center",
     format: (value: number) => `$${value?.toLocaleString() || 0}`,
     sortable: true,
+  },
+  {
+    id: "manager",
+    label: "Menejer",
+    renderCell: (row) => {
+      if (row.manager) row.manager;
+      return "———";
+    },
+    sortable: true,
+    filterable: true,
   },
   {
     id: "info",

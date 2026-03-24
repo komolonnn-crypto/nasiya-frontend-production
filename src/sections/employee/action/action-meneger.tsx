@@ -139,7 +139,7 @@ export default function ActionEmployee({ employee }: { employee: IEmployee }) {
                   Rol:
                 </Typography>
                 <Typography variant="body1" fontWeight="medium">
-                  {employee.role || "—"}
+                  {employee.role || "———"}
                 </Typography>
               </Box>
             </Stack>

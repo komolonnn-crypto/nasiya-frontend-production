@@ -143,7 +143,7 @@ export default function ActionContract({ contract }: { contract: IContract }) {
                   Mijoz:
                 </Typography>
                 <Typography variant="body1" fontWeight="medium">
-                  {contract.customer?.fullName || "—"}
+                  {contract.customer?.fullName || "———"}
                 </Typography>
               </Box>
               <Box>

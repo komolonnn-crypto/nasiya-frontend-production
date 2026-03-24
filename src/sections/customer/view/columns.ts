@@ -48,7 +48,7 @@ export const columnsPageCustomers: Column[] = [
           return `${uniqueDays.slice(0, 3).join(", ")} +${uniqueDays.length - 3}`;
         }
       }
-      return "—";
+      return "———";
     },
   },
   {
@@ -68,20 +68,20 @@ export const columnsPageCustomers: Column[] = [
     id: "phoneNumber",
     label: "Telefon raqami",
     sortable: true,
-    format: (value: any) => (value ? `${value}` : "—"),
+    format: (value: any) => (value ? `${value}` : "———"),
   },
   {
     id: "address",
     label: "Manzil",
     sortable: true,
-    format: (value: any) => (value ? `${value}` : "—"),
+    format: (value: any) => (value ? `${value}` : "———"),
   },
 
   {
     id: "passportSeries",
     label: "Password seriya",
     sortable: true,
-    format: (value: any) => (value ? `${value}` : "—"),
+    format: (value: any) => (value ? `${value}` : "———"),
   },
   {
     id: "birthDate",
@@ -89,12 +89,13 @@ export const columnsPageCustomers: Column[] = [
     sortable: true,
     filterable: false,
     format: (value: any) =>
-      value ? new Date(value).toLocaleDateString() : "—",
+      value ? new Date(value).toLocaleDateString() : "———",
   },
   {
     id: "manager",
     label: "Menejer",
-    sortable: false,
+    sortable: true,
+    filterable: true,
   },
 ];
 
@@ -132,7 +133,7 @@ export const columnsNewPageCustomers: Column[] = [
           return `${uniqueDays.slice(0, 3).join(", ")} +${uniqueDays.length - 3}`;
         }
       }
-      return "—";
+      return "———";
     },
   },
   {
@@ -144,20 +145,20 @@ export const columnsNewPageCustomers: Column[] = [
     id: "phoneNumber",
     label: "Telefon raqami",
     sortable: true,
-    format: (value: any) => (value ? `${value}` : "—"),
+    format: (value: any) => (value ? `${value}` : "———"),
   },
   {
     id: "address",
     label: "Manzil",
     sortable: true,
-    format: (value: any) => (value ? `${value}` : "—"),
+    format: (value: any) => (value ? `${value}` : "———"),
   },
 
   {
     id: "passportSeries",
     label: "Password seriya",
     sortable: true,
-    format: (value: any) => (value ? `${value}` : "—"),
+    format: (value: any) => (value ? `${value}` : "———"),
   },
   {
     id: "birthDate",
@@ -165,6 +166,6 @@ export const columnsNewPageCustomers: Column[] = [
     sortable: true,
     filterable: false,
     format: (value: any) =>
-      value ? new Date(value).toLocaleDateString() : "—",
+      value ? new Date(value).toLocaleDateString() : "———",
   },
 ];
