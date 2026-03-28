@@ -12,6 +12,7 @@ interface ContractTableProps {
   renderActions?: (row: IContract) => React.ReactNode;
   setSelectedRows?: (selected: string[]) => void;
   selectable?: boolean;
+  component?: React.ReactNode;
 }
 
 const ContractTable = ({
@@ -22,6 +23,7 @@ const ContractTable = ({
   renderActions,
   selectable,
   setSelectedRows,
+  component,
 }: ContractTableProps) => {
   const logic = useTableLogic<IContract>(data, columns);
 
@@ -35,6 +37,7 @@ const ContractTable = ({
       {...(renderActions && { renderActions })}
       selectable={selectable ?? false}
       {...(setSelectedRows && { setSelectedRows })}
+      component={component}
     />
   );
 };

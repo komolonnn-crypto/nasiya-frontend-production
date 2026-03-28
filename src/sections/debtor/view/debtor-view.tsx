@@ -69,17 +69,17 @@ export function DebtorView() {
   const { isLoading, debtors, debtContracts } = useSelector(
     (state: RootState) => state.debtor,
   );
-  const [manager, setManager] = useState<{
-    firstName: string;
-    lastName: string;
-  } | null>(null);
-
+  
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
     null,
     null,
   ]);
   const [startDate, endDate] = dateRange;
-
+  
+  const [manager, setManager] = useState<{
+    firstName: string;
+    lastName: string;
+  } | null>(null);
   const hasFetchedManager = useRef(false);
 
   const [debtorModalOpen, setDebtorModalOpen] = useState(false);
