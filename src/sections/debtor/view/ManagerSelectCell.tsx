@@ -63,9 +63,7 @@ export const ManagerSelectCellDebtor = React.memo(
         displayEmpty
         size="small"
         sx={{
-          minWidth: "100px",
-          width: "100%",
-          height: "22px",
+          height: "30px",
           fontSize: "13px",
           "& .MuiSelect-select": {
             py: 0,

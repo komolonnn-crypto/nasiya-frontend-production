@@ -354,3 +354,58 @@ export const bulkDeleteContracts =
       );
     }
   };
+
+export const updateContractManager =
+  (contractId: string, managerId: string): AppThunk =>
+  async (dispatch) => {
+    dispatch(start());
+    try {
+      const customerId = contractId; // Contract update endpoint'da customer ID ishlatiladi
+      const res = await authApi.put(`/customer/manager`, {
+        customerId,
+        managerId,
+      });
+      if (res.data.status === "ok") {
+        dispatch(getContracts());
+        dispatch(getNewContracts());
+        dispatch(getCompletedContracts());
+
+        dispatch(
+          enqueueSnackbar({
+            message: res.data.message,
+            options: { variant: "success" },
+          }),
+        );
+      } else {
+        dispatch(
+          enqueueSnackbar({
+            message: res.data.message,
+            options: { variant: "success" },
+          }),
+        );
+      }
+    } catch (error: any) {
+      dispatch(failure());
+      const errorMessage =
+        error.response?.data?.message || "Menejer o'zgartirishda xatolik";
+      const errorMessages: string[] = error.response?.data?.errors || [];
+
+      dispatch(
+        enqueueSnackbar({
+          message: errorMessage,
+          options: { variant: "error" },
+        }),
+      );
+
+      if (Array.isArray(errorMessages)) {
+        errorMessages.forEach((err) => {
+          dispatch(
+            enqueueSnackbar({
+              message: err,
+              options: { variant: "error" },
+            }),
+          );
+        });
+      }
+    }
+  };

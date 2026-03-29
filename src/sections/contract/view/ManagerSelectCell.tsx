@@ -8,30 +8,40 @@ import { Select, MenuItem } from "@mui/material";
 
 interface ManagerSelectCellProps {
   row: any;
-  value: string;
-  onManagerChange: (customerId: string, newManager: string) => void;
+  onManagerChange: (contractId: string, newManager: string) => void;
 }
 
 export const ManagerSelectCell = React.memo(
-  ({ row, value, onManagerChange }: ManagerSelectCellProps) => {
+  ({ row, onManagerChange }: ManagerSelectCellProps) => {
     const { managers } = useSelector((state: RootState) => state.employee);
 
     const { profile } = useSelector((state: RootState) => state.auth);
     const canEditManager =
       profile?.role === "admin" || profile?.role === "moderator";
 
+    const selectedManagerId = React.useMemo(() => {
+      if (!row.manager || !managers.length) return "";
+      const targetName = row.manager.trim().toLowerCase();
+      return (
+        managers.find((m) => {
+          const fullName = `${m.firstName} ${m.lastName}`.trim().toLowerCase();
+          return (
+            fullName === targetName ||
+            (m.fullName && m.fullName.trim().toLowerCase() === targetName)
+          );
+        })?._id || ""
+      );
+    }, [row.manager, managers]);
+
     const handleChange = (event: SelectChangeEvent<string>) => {
       const newManager = event.target.value as string;
       onManagerChange(row._id, newManager);
     };
 
-    const safeValue = managers.some((m) => m._id === value) ? value : "";
-
     if (!canEditManager) {
-      const currentManager = managers.find((m) => m._id === value);
       return (
         <span style={{ fontSize: "14px" }}>
-          {currentManager ? currentManager.fullName : "Tayinlanmagan"}
+          {row.manager || "Tayinlanmagan"}
         </span>
       );
     }
@@ -47,7 +57,7 @@ export const ManagerSelectCell = React.memo(
 
     return (
       <Select
-        value={safeValue}
+        value={selectedManagerId}
         onChange={handleChange}
         displayEmpty
         size="small"
@@ -78,10 +88,12 @@ export const ManagerSelectCell = React.memo(
             key={manager._id}
             value={manager._id}
             sx={{ fontSize: "13px" }}>
-            {manager.fullName}
+            {manager.fullName || `${manager.firstName} ${manager.lastName}`}
           </MenuItem>
         ))}
       </Select>
     );
   },
 );
+
+ManagerSelectCell.displayName = "ManagerSelectCell";

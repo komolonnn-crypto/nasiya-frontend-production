@@ -1,12 +1,6 @@
-import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
-import {
-  MdCheckCircle,
-  MdPerson,
-  MdPhone,
-  MdLocationOn,
-  MdCreditCard,
-} from "react-icons/md";
+import { MdCheckCircle, MdPerson } from "react-icons/md";
 
 import {
   Box,
@@ -34,7 +28,10 @@ import {
 
 import ContractTable from "./contactTable";
 import ActionContract from "@/sections/contract/action/action-contract";
-import { columnsPageContract, columnsPageNewContract } from "./columns-fixed";
+import {
+  createColumnsPageContract,
+  createColumnsPageNewContract,
+} from "./columns-fixed";
 
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import {
@@ -44,6 +41,7 @@ import {
   getContract,
   getContracts,
   getNewContracts,
+  updateContractManager,
 } from "@/store/actions/contractActions";
 import { getManagers } from "@/store/actions/employeeActions";
 
@@ -70,8 +68,7 @@ function CustomTabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
+      {...other}>
       {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
     </div>
   );
@@ -94,10 +91,13 @@ export function ContractsView() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [bulkDeleteDialog, setBulkDeleteDialog] = useState(false);
   const [tab, setTab] = useState(0);
-  const [manager, setManager] = useState<{ firstName: string; lastName: string } | null>(null);
+  const [manager, setManager] = useState<{
+    firstName: string;
+    lastName: string;
+  } | null>(null);
 
   const isAdmin = profile?.role === "admin";
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  // const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [confirmDialog, setConfirmDialog] = useState<{
     open: boolean;
@@ -115,23 +115,44 @@ export function ContractsView() {
     dispatch(getManagers());
   }, [dispatch]);
 
-  const managerFullName = manager ? `${manager.firstName} ${manager.lastName}` : null;
+  const handleManagerChange = useCallback(
+    (contractId: string, newManager: string) => {
+      dispatch(updateContractManager(contractId, newManager));
+    },
+    [dispatch],
+  );
 
-  const filterListByManager = useCallback((list: any[]) => {
-    if (!managerFullName) return list;
-    return list.filter((item) => {
-      const m = item.managerId || item.manager;
-      if (m && typeof m === "object") {
-        const name = `${m.firstName || ""} ${m.lastName || ""}`.trim();
-        return name === managerFullName;
-      }
-      return false;
-    });
-  }, [managerFullName]);
+  const managerFullName =
+    manager ? `${manager.firstName} ${manager.lastName}` : null;
 
-  const filteredContracts = useMemo(() => filterListByManager(contracts), [contracts, filterListByManager]);
-  const filteredNewContracts = useMemo(() => filterListByManager(newContracts), [newContracts, filterListByManager]);
-  const filteredCompletedContracts = useMemo(() => filterListByManager(completedContracts), [completedContracts, filterListByManager]);
+  const filterListByManager = useCallback(
+    (list: any[]) => {
+      if (!managerFullName) return list;
+      return list.filter((item) => {
+        const m = item.managerId || item.manager;
+        if (m && typeof m === "object") {
+          const name = `${m.firstName || ""} ${m.lastName || ""}`.trim();
+          return name === managerFullName;
+        }
+        // If manager is a string, compare directly (like debtors)
+        return m === managerFullName;
+      });
+    },
+    [managerFullName],
+  );
+
+  const filteredContracts = useMemo(
+    () => filterListByManager(contracts),
+    [contracts, filterListByManager],
+  );
+  const filteredNewContracts = useMemo(
+    () => filterListByManager(newContracts),
+    [newContracts, filterListByManager],
+  );
+  const filteredCompletedContracts = useMemo(
+    () => filterListByManager(completedContracts),
+    [completedContracts, filterListByManager],
+  );
 
   const ManagerFilter = (
     <Autocomplete
@@ -139,25 +160,28 @@ export function ContractsView() {
       options={dataEmployee.managers}
       getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
       isOptionEqualToValue={(option, value) =>
-        `${option.firstName} ${option.lastName}` === `${value.firstName} ${value.lastName}`
+        `${option.firstName} ${option.lastName}` ===
+        `${value.firstName} ${value.lastName}`
       }
       loading={dataEmployee.isLoading}
-  renderInput={(params) => (
-  <TextField
-    {...(params as any)} // Bypasses the strict optional check
-    label="Menejer bo'yicha filter"
-    size="small"
-    InputProps={{
-      ...(params.InputProps as any),
-      endAdornment: (
-        <>
-          {dataEmployee.isLoading && <CircularProgress color="inherit" size={20} />}
-          {params.InputProps.endAdornment}
-        </>
-      ),
-    }}
-  />
-)}
+      renderInput={(params) => (
+        <TextField
+          {...(params as any)} // Bypasses the strict optional check
+          label="Menejer bo'yicha filter"
+          size="small"
+          InputProps={{
+            ...(params.InputProps as any),
+            endAdornment: (
+              <>
+                {dataEmployee.isLoading && (
+                  <CircularProgress color="inherit" size={20} />
+                )}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
       onChange={(_event, value) => setManager(value)}
       value={manager}
       sx={{ minWidth: 200, maxWidth: 350, width: "100%" }}
@@ -170,7 +194,11 @@ export function ContractsView() {
   };
 
   const handleOpenConfirmDialog = (contract: any) => {
-    setConfirmDialog({ open: true, contractId: contract._id, contractData: contract });
+    setConfirmDialog({
+      open: true,
+      contractId: contract._id,
+      contractData: contract,
+    });
   };
 
   const handleCloseConfirmDialog = () => {
@@ -208,10 +236,14 @@ export function ContractsView() {
   return (
     <DashboardContent>
       <Stack spacing={2}>
-        <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2}>
-          <Box sx={{ flexGrow: 1 }}>
-          </Box>
-          
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          flexWrap="wrap"
+          gap={2}>
+          <Box sx={{ flexGrow: 1 }}></Box>
+
           <Stack direction="row" spacing={2}>
             <Tooltip title="CSV formatda yuklab olish">
               <Button
@@ -223,8 +255,7 @@ export function ContractsView() {
                   if (tab === 1) dataToExport = newContracts;
                   if (tab === 2) dataToExport = completedContracts;
                   exportContractsToCSV(dataToExport);
-                }}
-              >
+                }}>
                 Export CSV
               </Button>
             </Tooltip>
@@ -235,9 +266,13 @@ export function ContractsView() {
                 startIcon={<Iconify icon="mingcute:add-line" />}
                 onClick={() => {
                   dispatch(setCustomer(null));
-                  dispatch(setModal({ modal: "contractModal", data: { type: "add", data: undefined } }));
-                }}
-              >
+                  dispatch(
+                    setModal({
+                      modal: "contractModal",
+                      data: { type: "add", data: undefined },
+                    }),
+                  );
+                }}>
                 Qo&apos;shish
               </Button>
             </Tooltip>
@@ -245,34 +280,84 @@ export function ContractsView() {
         </Box>
 
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs value={tab} onChange={handleChangeTab} variant="scrollable" scrollButtons="auto">
-            <Tab label={<Typography variant="subtitle2" fontWeight={700}>Faol</Typography>} {...a11yProps(0)} />
-            <Tab 
+          <Tabs
+            value={tab}
+            onChange={handleChangeTab}
+            variant="scrollable"
+            scrollButtons="auto">
+            <Tab
               label={
-                <Badge color="error" badgeContent={newContracts.length} sx={{ "& .MuiBadge-badge": { top: 4, right: -10 } }}>
-                  <Typography variant="subtitle2" fontWeight={700}>Yangi</Typography>
-                </Badge>
-              } 
-              {...a11yProps(1)} 
+                <Typography variant="subtitle2" fontWeight={700}>
+                  Faol
+                </Typography>
+              }
+              {...a11yProps(0)}
             />
-            <Tab label={<Typography variant="subtitle2" fontWeight={700}>Tugatilgan</Typography>} {...a11yProps(2)} />
+            <Tab
+              label={
+                <Badge
+                  color="error"
+                  badgeContent={newContracts.length}
+                  sx={{ "& .MuiBadge-badge": { top: 4, right: -10 } }}>
+                  <Typography variant="subtitle2" fontWeight={700}>
+                    Yangi
+                  </Typography>
+                </Badge>
+              }
+              {...a11yProps(1)}
+            />
+            <Tab
+              label={
+                <Typography variant="subtitle2" fontWeight={700}>
+                  Tugatilgan
+                </Typography>
+              }
+              {...a11yProps(2)}
+            />
           </Tabs>
         </Box>
 
         {selectedRows.length > 0 && (
-          <Box display="flex" alignItems="center" gap={1} px={2} py={1} sx={{ bgcolor: "error.lighter", border: "1px solid", borderColor: "error.light", borderRadius: 1 }}>
-            <Typography variant="body2" color="error.main" fontWeight={700} sx={{ flex: "1 1 auto" }}>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={1}
+            px={2}
+            py={1}
+            sx={{
+              bgcolor: "error.lighter",
+              border: "1px solid",
+              borderColor: "error.light",
+              borderRadius: 1,
+            }}>
+            <Typography
+              variant="body2"
+              color="error.main"
+              fontWeight={700}
+              sx={{ flex: "1 1 auto" }}>
               {selectedRows.length} ta shartnoma tanlandi
             </Typography>
-            <Button variant="contained" color="error" size="small" onClick={() => setBulkDeleteDialog(true)}>O'chirish</Button>
-            <Button variant="outlined" color="inherit" size="small" onClick={() => setSelectedRows([])}>Bekor qilish</Button>
+            <Button
+              variant="contained"
+              color="error"
+              size="small"
+              onClick={() => setBulkDeleteDialog(true)}>
+              O'chirish
+            </Button>
+            <Button
+              variant="outlined"
+              color="inherit"
+              size="small"
+              onClick={() => setSelectedRows([])}>
+              Bekor qilish
+            </Button>
           </Box>
         )}
 
         <CustomTabPanel value={tab} index={0}>
           <ContractTable
             data={filteredContracts}
-            columns={columnsPageContract}
+            columns={createColumnsPageContract(handleManagerChange)}
             component={ManagerFilter}
             onRowClick={(row) => {
               dispatch(getContract(row._id));
@@ -288,14 +373,26 @@ export function ContractsView() {
         <CustomTabPanel value={tab} index={1}>
           <ContractTable
             data={filteredNewContracts}
-            columns={columnsPageNewContract}
+            columns={createColumnsPageNewContract(handleManagerChange)}
             component={ManagerFilter}
             onRowClick={(row) => {
-              dispatch(setModal({ modal: "contractModal", data: { type: "edit", data: row } }));
+              dispatch(
+                setModal({
+                  modal: "contractModal",
+                  data: { type: "edit", data: row },
+                }),
+              );
             }}
             onCustomerClick={handleCustomerClick}
             renderActions={(row) => (
-              <Button variant="contained" color="success" size="small" onClick={(e) => { e.stopPropagation(); handleOpenConfirmDialog(row); }}>
+              <Button
+                variant="contained"
+                color="success"
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenConfirmDialog(row);
+                }}>
                 Tasdiqlash
               </Button>
             )}
@@ -305,12 +402,13 @@ export function ContractsView() {
         </CustomTabPanel>
 
         <CustomTabPanel value={tab} index={2}>
-          {filteredCompletedContracts.length === 0 && isLoading ? (
-             <Box width="100%" display="flex" justifyContent="center" py={5}><Loader /></Box>
-          ) : (
-            <ContractTable
+          {filteredCompletedContracts.length === 0 && isLoading ?
+            <Box width="100%" display="flex" justifyContent="center" py={5}>
+              <Loader />
+            </Box>
+          : <ContractTable
               data={filteredCompletedContracts}
-              columns={columnsPageContract}
+              columns={createColumnsPageContract(handleManagerChange)}
               component={ManagerFilter}
               onRowClick={(row) => {
                 dispatch(getContract(row._id));
@@ -318,67 +416,149 @@ export function ContractsView() {
               }}
               onCustomerClick={handleCustomerClick}
             />
-          )}
+          }
         </CustomTabPanel>
       </Stack>
 
       {/* --- Dialogs --- */}
-      <Dialog open={bulkDeleteDialog} onClose={() => setBulkDeleteDialog(false)} maxWidth="xs" fullWidth>
-        <DialogTitle sx={{ color: "error.main" }}>O'chirishni tasdiqlang</DialogTitle>
+      <Dialog
+        open={bulkDeleteDialog}
+        onClose={() => setBulkDeleteDialog(false)}
+        maxWidth="xs"
+        fullWidth>
+        <DialogTitle sx={{ color: "error.main" }}>
+          O'chirishni tasdiqlang
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Tanlangan <b>{selectedRows.length}</b> ta shartnoma butunlay o'chiriladi.
+            Tanlangan <b>{selectedRows.length}</b> ta shartnoma butunlay
+            o'chiriladi.
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setBulkDeleteDialog(false)} variant="outlined" color="inherit">Bekor qilish</Button>
-          <Button onClick={handleBulkDelete} variant="contained" color="error">Ha, o'chirilsin</Button>
+          <Button
+            onClick={() => setBulkDeleteDialog(false)}
+            variant="outlined"
+            color="inherit">
+            Bekor qilish
+          </Button>
+          <Button onClick={handleBulkDelete} variant="contained" color="error">
+            Ha, o'chirilsin
+          </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={customerInfoDialog.open} onClose={() => setCustomerInfoDialog({ open: false, customer: null })} maxWidth="sm" fullWidth>
+      <Dialog
+        open={customerInfoDialog.open}
+        onClose={() => setCustomerInfoDialog({ open: false, customer: null })}
+        maxWidth="sm"
+        fullWidth>
         <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <MdPerson size={24} color="var(--palette-primary-main)" /> Mijoz ma'lumotlari
+          <MdPerson size={24} color="var(--palette-primary-main)" /> Mijoz
+          ma'lumotlari
         </DialogTitle>
         <DialogContent>
           {customerInfoDialog.customer && (
             <Stack spacing={2} sx={{ mt: 1 }}>
               <Stack direction="row" spacing={2} alignItems="center">
-                <Avatar sx={{ width: 60, height: 60, bgcolor: "primary.main" }}>{customerInfoDialog.customer.fullName?.charAt(0)}</Avatar>
+                <Avatar sx={{ width: 60, height: 60, bgcolor: "primary.main" }}>
+                  {customerInfoDialog.customer.fullName?.charAt(0)}
+                </Avatar>
                 <Box>
-                  <Typography variant="h6">{customerInfoDialog.customer.fullName}</Typography>
-                  <Typography variant="caption" color="text.secondary">ID: {customerInfoDialog.customer._id?.slice(-8)}</Typography>
+                  <Typography variant="h6">
+                    {customerInfoDialog.customer.fullName}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    ID: {customerInfoDialog.customer._id?.slice(-8)}
+                  </Typography>
                 </Box>
               </Stack>
               <Divider />
               <List dense>
-                <ListItem><ListItemText primary="Telefon" secondary={customerInfoDialog.customer.phoneNumber || "—"} /></ListItem>
-                <ListItem><ListItemText primary="Manzil" secondary={customerInfoDialog.customer.address || "—"} /></ListItem>
-                <ListItem><ListItemText primary="Passport" secondary={customerInfoDialog.customer.passportSeries || "—"} /></ListItem>
-                <ListItem><ListItemText primary="Tug'ilgan sana" secondary={customerInfoDialog.customer.birthDate ? new Date(customerInfoDialog.customer.birthDate).toLocaleDateString() : "—"} /></ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Telefon"
+                    secondary={customerInfoDialog.customer.phoneNumber || "—"}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Manzil"
+                    secondary={customerInfoDialog.customer.address || "—"}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Passport"
+                    secondary={
+                      customerInfoDialog.customer.passportSeries || "—"
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Tug'ilgan sana"
+                    secondary={
+                      customerInfoDialog.customer.birthDate ?
+                        new Date(
+                          customerInfoDialog.customer.birthDate,
+                        ).toLocaleDateString()
+                      : "—"
+                    }
+                  />
+                </ListItem>
               </List>
             </Stack>
           )}
         </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}><Button onClick={() => setCustomerInfoDialog({ open: false, customer: null })} variant="outlined">Yopish</Button></DialogActions>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button
+            onClick={() =>
+              setCustomerInfoDialog({ open: false, customer: null })
+            }
+            variant="outlined">
+            Yopish
+          </Button>
+        </DialogActions>
       </Dialog>
 
-      <Dialog open={confirmDialog.open} onClose={handleCloseConfirmDialog} maxWidth="sm" fullWidth>
+      <Dialog
+        open={confirmDialog.open}
+        onClose={handleCloseConfirmDialog}
+        maxWidth="sm"
+        fullWidth>
         <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <MdCheckCircle color="var(--palette-success-main)" size={24} /> Shartnomani tasdiqlash
+          <MdCheckCircle color="var(--palette-success-main)" size={24} />{" "}
+          Shartnomani tasdiqlash
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>Shartnomani tasdiqlashni xohlaysizmi?</DialogContentText>
+          <DialogContentText>
+            Shartnomani tasdiqlashni xohlaysizmi?
+          </DialogContentText>
           {confirmDialog.contractData && (
             <Box sx={{ mt: 2, p: 2, bgcolor: "action.hover" }}>
-              <Typography variant="body2">Mijoz: {confirmDialog.contractData.customer?.fullName}</Typography>
-              <Typography variant="body2">Mahsulot: {confirmDialog.contractData.productName}</Typography>
+              <Typography variant="body2">
+                Mijoz: {confirmDialog.contractData.customer?.fullName}
+              </Typography>
+              <Typography variant="body2">
+                Mahsulot: {confirmDialog.contractData.productName}
+              </Typography>
             </Box>
           )}
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={handleCloseConfirmDialog} color="inherit" variant="outlined">Bekor qilish</Button>
-          <Button onClick={handleConfirmContract} color="success" variant="contained">Tasdiqlash</Button>
+          <Button
+            onClick={handleCloseConfirmDialog}
+            color="inherit"
+            variant="outlined">
+            Bekor qilish
+          </Button>
+          <Button
+            onClick={handleConfirmContract}
+            color="success"
+            variant="contained">
+            Tasdiqlash
+          </Button>
         </DialogActions>
       </Dialog>
     </DashboardContent>
