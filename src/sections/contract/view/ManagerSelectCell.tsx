@@ -8,10 +8,11 @@ import { Select, MenuItem } from "@mui/material";
 
 interface ManagerSelectCellProps {
   row: any;
-  onManagerChange: (contractId: string, newManager: string) => void;
+  value: string;
+  onManagerChange: (customerId: string, newManager: string) => void;
 }
 
-export const ManagerSelectCell = React.memo(
+export const ManagerSelectCellDebtor = React.memo(
   ({ row, onManagerChange }: ManagerSelectCellProps) => {
     const { managers } = useSelector((state: RootState) => state.employee);
 
@@ -35,7 +36,7 @@ export const ManagerSelectCell = React.memo(
 
     const handleChange = (event: SelectChangeEvent<string>) => {
       const newManager = event.target.value as string;
-      onManagerChange(row.customer, newManager);
+      onManagerChange(row._id, newManager);
     };
 
     if (!canEditManager) {
@@ -62,8 +63,6 @@ export const ManagerSelectCell = React.memo(
         displayEmpty
         size="small"
         sx={{
-          minWidth: "100px",
-          width: "100%",
           height: "30px",
           fontSize: "13px",
           "& .MuiSelect-select": {
@@ -88,12 +87,10 @@ export const ManagerSelectCell = React.memo(
             key={manager._id}
             value={manager._id}
             sx={{ fontSize: "13px" }}>
-            {manager.fullName || `${manager.firstName} ${manager.lastName}`}
+            {`${manager.firstName} ${manager.lastName}`}
           </MenuItem>
         ))}
       </Select>
     );
   },
 );
-
-ManagerSelectCell.displayName = "ManagerSelectCell";

@@ -191,6 +191,7 @@ const CustomerView = () => {
   useEffect(() => {
     dispatch(getCustomers());
     dispatch(getNewCustomers());
+    dispatch(getManagers());
   }, [dispatch]);
 
   if (customers.length === 0 && isLoading) return <Loader />;

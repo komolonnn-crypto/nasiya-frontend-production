@@ -231,6 +231,7 @@ export function ContractsView() {
   useEffect(() => {
     dispatch(getContracts());
     dispatch(getNewContracts());
+    dispatch(getManagers());
   }, [dispatch]);
 
   useEffect(() => {

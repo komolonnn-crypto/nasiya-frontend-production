@@ -3,7 +3,7 @@ import { Chip, Stack, Tooltip, Box, IconButton } from "@mui/material";
 import { MdContentCopy } from "react-icons/md";
 import { enqueueSnackbar } from "notistack";
 import dayjs from "dayjs";
-import { ManagerSelectCell } from "./ManagerSelectCell";
+import { ManagerSelectCellDebtor } from "./ManagerSelectCell";
 
 export const createColumnsPageContract = (
   onManagerChange?: (contractId: string, newManager: string) => void,
@@ -160,7 +160,7 @@ export const createColumnsPageContract = (
     renderCell: (row) => {
       if (onManagerChange) {
         return (
-          <ManagerSelectCell row={row} onManagerChange={onManagerChange} />
+          <ManagerSelectCellDebtor row={row} onManagerChange={onManagerChange} value=""/>
         );
       }
       if (row.manager) return row.manager;
@@ -245,7 +245,7 @@ export const createColumnsPageNewContract = (
     renderCell: (row) => {
       if (onManagerChange) {
         return (
-          <ManagerSelectCell row={row} onManagerChange={onManagerChange} />
+          <ManagerSelectCellDebtor row={row} onManagerChange={onManagerChange} value=""/>
         );
       }
       if (row.manager) return row.manager;

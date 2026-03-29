@@ -69,13 +69,13 @@ export function DebtorView() {
   const { isLoading, debtors, debtContracts } = useSelector(
     (state: RootState) => state.debtor,
   );
-  
+
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
     null,
     null,
   ]);
   const [startDate, endDate] = dateRange;
-  
+
   const [manager, setManager] = useState<{
     firstName: string;
     lastName: string;
@@ -90,6 +90,7 @@ export function DebtorView() {
   useEffect(() => {
     dispatch(getDebtors());
     dispatch(getDebtContract());
+    dispatch(getManagers());
   }, [dispatch]);
 
   useEffect(() => {
