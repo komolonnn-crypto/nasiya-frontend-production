@@ -128,6 +128,12 @@ export function ContractsView() {
   const filterListByManager = useCallback(
     (list: any[]) => {
       if (!managerFullName) return list;
+      console.log("🔍 Filter Debug:", {
+        managerFullName,
+        listLength: list.length,
+        firstItem: list[0],
+        firstItemManager: list[0]?.manager,
+      });
       return list.filter((item) => {
         const m = item.managerId || item.manager;
         if (m && typeof m === "object") {
