@@ -1,6 +1,5 @@
-import { memo, useRef, useState, useEffect } from "react";
+import { memo, useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { RiUploadCloud2Fill } from "react-icons/ri";
-
 import { useSelector } from "react-redux";
 import { enqueueSnackbar } from "notistack";
 
@@ -19,6 +18,8 @@ import {
   DialogContent,
   DialogContentText,
   CircularProgress,
+  TextField,
+  Autocomplete,
 } from "@mui/material";
 
 import CustomerTable from "./customerTable";
@@ -31,6 +32,7 @@ import {
   getNewCustomers,
   bulkDeleteCustomers,
 } from "@/store/actions/customerActions";
+import { getManagers } from "@/store/actions/employeeActions";
 
 import authApi from "@/server/auth";
 import Loader from "@/components/loader/Loader";
@@ -50,40 +52,110 @@ interface TabPanelProps {
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}>
+    <div role="tabpanel" hidden={value !== index} id={`tabpanel-${index}`} {...other}>
       {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
     </div>
   );
 }
 
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-
 const CustomerView = () => {
   const dispatch = useAppDispatch();
-
-  const { customers, newCustomers, isLoading } = useSelector(
-    (state: RootState) => state.customer,
-  );
-
+  const dataEmployee = useSelector((state: RootState) => state.employee);
+  const { customers, newCustomers, isLoading } = useSelector((state: RootState) => state.customer);
   const { profile } = useSelector((state: RootState) => state.auth);
-  const isAdmin = profile?.role === "admin";
+
+  const [manager, setManager] = useState<{ firstName: string; lastName: string } | null>(null);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [bulkDeleteDialog, setBulkDeleteDialog] = useState(false);
+  const [tab, setTab] = useState(0);
+  const [uploading, setUploading] = useState(false);
+  
+  const isAdmin = profile?.role === "admin";
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // --- Manager Filter Logic ---
+  const handleCustomerFocus = useCallback(() => {
+    dispatch(getManagers());
+  }, [dispatch]);
+
+  const managerFullName = manager ? `${manager.firstName} ${manager.lastName}` : null;
+
+  const filterListByManager = useCallback((list: any[]) => {
+    if (!managerFullName) return list;
+    return list.filter((item) => {
+      const m = item.manager; // In customers, manager is usually at root
+      if (m && typeof m === "object") {
+        const name = `${m.firstName || ""} ${m.lastName || ""}`.trim();
+        return name === managerFullName;
+      }
+      return m === managerFullName;
+    });
+  }, [managerFullName]);
+
+  const filteredCustomers = useMemo(() => filterListByManager(customers), [customers, filterListByManager]);
+  const filteredNewCustomers = useMemo(() => filterListByManager(newCustomers), [newCustomers, filterListByManager]);
+
+  const ManagerFilter = (
+    <Autocomplete
+      onFocus={handleCustomerFocus}
+      options={dataEmployee.managers}
+      getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+      isOptionEqualToValue={(option, value) =>
+        `${option.firstName} ${option.lastName}` === `${value.firstName} ${value.lastName}`
+      }
+      loading={dataEmployee.isLoading}
+      renderInput={(params) => {
+        const { InputLabelProps, ...restParams } = params;
+        return (
+          <TextField
+            {...restParams}
+            size="small"
+            label="Menejer bo'yicha filter"
+            InputLabelProps={(InputLabelProps as any)}
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {dataEmployee.isLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
+          />
+        );
+      }}
+      onChange={(_event, value) => setManager(value)}
+      value={manager}
+      sx={{ minWidth: 200, maxWidth: 350, width: "100%" }}
+    />
+  );
+
+  // --- Handlers ---
   const handleBulkDelete = () => {
     dispatch(bulkDeleteCustomers(selectedRows));
     setBulkDeleteDialog(false);
     setSelectedRows([]);
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await authApi.post("/excel/import", formData);
+      if (response.data.success) {
+        enqueueSnackbar("Import muvaffaqiyatli", { variant: "success" });
+        dispatch(getCustomers());
+        dispatch(getNewCustomers());
+      }
+    } catch (error: any) {
+      enqueueSnackbar("Xatolik yuz berdi", { variant: "error" });
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   useEffect(() => {
@@ -91,250 +163,77 @@ const CustomerView = () => {
     dispatch(getNewCustomers());
   }, [dispatch]);
 
-  const [tab, setTab] = useState(0);
-  const [uploading, setUploading] = useState(false);
-
-  const handleChangeTab = (_event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-  };
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleImportClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const validTypes = [
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "application/vnd.ms-excel",
-    ];
-
-    if (!validTypes.includes(file.type)) {
-      enqueueSnackbar("Faqat Excel fayllar (.xlsx, .xls) qabul qilinadi", {
-        variant: "error",
-      });
-      return;
-    }
-
-    if (file.size > 10 * 1024 * 1024) {
-      enqueueSnackbar("Fayl hajmi 10MB dan oshmasligi kerak", {
-        variant: "error",
-      });
-      return;
-    }
-
-    setUploading(true);
-
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await authApi.post("/excel/import", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      if (response.data.success) {
-        enqueueSnackbar(response.data.message, {
-          variant: "success",
-        });
-
-        const { stats } = response.data;
-        enqueueSnackbar(
-          `Yaratildi: ${stats.contractsCreated} ta shartnoma, ${stats.customersCreated} ta yangi mijoz`,
-          {
-            variant: "info",
-          },
-        );
-
-        dispatch(getCustomers());
-        dispatch(getNewCustomers());
-      } else {
-        enqueueSnackbar(response.data.message, {
-          variant: "warning",
-        });
-
-        if (response.data.errors && response.data.errors.length > 0) {
-          response.data.errors.slice(0, 3).forEach((error: any) => {
-            enqueueSnackbar(
-              `Qator ${error.row} (${error.customer}): ${error.error}`,
-              {
-                variant: "error",
-              },
-            );
-          });
-        }
-      }
-    } catch (error: any) {
-      console.error("Excel import error:", error);
-      enqueueSnackbar(
-        error.response?.data?.message ||
-          "Excel import qilishda xatolik yuz berdi",
-        {
-          variant: "error",
-        },
-      );
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    }
-  };
-
-  if (customers.length === 0 && isLoading) {
-    return <Loader />;
-  }
+  if (customers.length === 0 && isLoading) return <Loader />;
 
   return (
     <DashboardContent>
-      <Stack spacing={1}>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="end"
-          gap={3}
-          mb={2}>
-          <Tooltip title="CSV formatda yuklab olish">
-            <Button
-              variant="outlined"
-              color="success"
-              startIcon={<Iconify icon="mingcute:download-2-line" />}
-              onClick={() => {
-                const dataToExport = tab === 0 ? customers : newCustomers;
-                exportCustomersToCSV(dataToExport);
-                enqueueSnackbar("Mijozlar CSV formatda yuklandi", {
-                  variant: "success",
-                });
-              }}>
-              Export CSV
-            </Button>
-          </Tooltip>
+      <Stack spacing={2}>
+        <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2} mb={1}>
+          <Box sx={{ flexGrow: 1 }}>
+          </Box>
+          
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Tooltip title="CSV formatda yuklab olish">
+              <Button
+                variant="outlined"
+                color="success"
+                startIcon={<Iconify icon="mingcute:download-2-line" />}
+                onClick={() => exportCustomersToCSV(tab === 0 ? customers : newCustomers)}
+              >
+                Export CSV
+              </Button>
+            </Tooltip>
 
-          {isAdmin && (
-            <>
-              <Tooltip title="Exceldan import qilish">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={
-                    uploading ?
-                      <CircularProgress size={20} color="inherit" />
-                    : <RiUploadCloud2Fill />
-                  }
-                  onClick={handleImportClick}
-                  disabled={uploading}
-                  sx={{ ml: 2 }}>
-                  {uploading ? "Yuklanmoqda..." : "Import"}
-                </Button>
-              </Tooltip>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileUpload}
-                accept=".xlsx, .xls"
-                style={{ display: "none" }}
-              />
-            </>
-          )}
+            {isAdmin && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={uploading ? <CircularProgress size={20} color="inherit" /> : <RiUploadCloud2Fill />}
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+              >
+                {uploading ? "Yuklanmoqda..." : "Import"}
+              </Button>
+            )}
 
-          <Tooltip title="Mijoz qo'shish">
             <Button
               variant="contained"
               color="inherit"
               startIcon={<Iconify icon="mingcute:add-line" />}
-              onClick={() => {
-                dispatch(
-                  setModal({
-                    modal: "customerModal",
-                    data: { type: "add", data: undefined },
-                  }),
-                );
-              }}>
+onClick={() => dispatch(setModal({ modal: "customerModal", data: { type: "add", data: undefined } }))}
+            >
               Qo&apos;shish
             </Button>
-          </Tooltip>
+          </Stack>
         </Box>
+
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs
-            value={tab}
-            onChange={handleChangeTab}
-            aria-label="basic tabs example">
-            <Tab
-              label={
-                <Typography variant="h6" flexGrow={1}>
-                  Mijozlar
-                </Typography>
-              }
-              {...a11yProps(0)}
-            />
-            <Tab
-              label={
-                <Badge color="error" badgeContent={newCustomers.length}>
-                  <Typography variant="h6" flexGrow={1}>
-                    Yangi mijozlar
-                  </Typography>
-                </Badge>
-              }
-              {...a11yProps(1)}
-            />
+          <Tabs value={tab} onChange={(_e, v) => setTab(v)}>
+            <Tab label={<Typography variant="subtitle2" fontWeight={700}>Mijozlar</Typography>} />
+            <Tab label={
+              <Badge color="error" badgeContent={newCustomers.length}>
+                <Typography variant="subtitle2" fontWeight={700} sx={{ pr: 1 }}>Yangi mijozlar</Typography>
+              </Badge>
+            } />
           </Tabs>
         </Box>
 
         {selectedRows.length > 0 && (
-          <Box
-            display="flex"
-            alignItems="center"
-            flexWrap="wrap"
-            gap={1}
-            px={2}
-            py={1}
-            sx={{
-              bgcolor: "rgba(var(--palette-error-mainChannel) / 0.12)",
-              border: "1px solid rgba(var(--palette-error-mainChannel) / 0.24)",
-              borderRadius: 1,
-            }}>
-            <Typography
-              variant="body2"
-              color="error.main"
-              fontWeight={700}
-              sx={{ flex: "1 1 auto" }}>
+          <Box display="flex" alignItems="center" gap={2} px={2} py={1} sx={{ bgcolor: "error.lighter", borderRadius: 1 }}>
+            <Typography variant="body2" color="error.main" fontWeight={700} sx={{ flexGrow: 1 }}>
               {selectedRows.length} ta mijoz tanlandi
             </Typography>
-            <Box display="flex" gap={1} flexShrink={0}>
-              <Button
-                variant="contained"
-                color="error"
-                size="small"
-                startIcon={<Iconify icon="mingcute:delete-2-line" />}
-                onClick={() => setBulkDeleteDialog(true)}>
-                O'chirish
-              </Button>
-              <Button
-                variant="outlined"
-                color="inherit"
-                size="small"
-                onClick={() => setSelectedRows([])}>
-                Bekor qilish
-              </Button>
-            </Box>
+            <Button variant="contained" color="error" size="small" onClick={() => setBulkDeleteDialog(true)}>O'chirish</Button>
+            <Button variant="outlined" color="inherit" size="small" onClick={() => setSelectedRows([])}>Bekor qilish</Button>
           </Box>
         )}
 
         <CustomTabPanel value={tab} index={0}>
           <CustomerTable
-            data={customers}
+            data={filteredCustomers}
             columns={columnsPageCustomers}
-            onRowClick={(row) => {
-              dispatch(setCustomerId(row._id));
-            }}
+            component={ManagerFilter}
+            onRowClick={(row) => dispatch(setCustomerId(row._id))}
             selectable={isAdmin}
             setSelectedRows={setSelectedRows}
           />
@@ -342,43 +241,28 @@ const CustomerView = () => {
 
         <CustomTabPanel value={tab} index={1}>
           <CustomerTable
-            data={newCustomers}
+            data={filteredNewCustomers}
             columns={columnsNewPageCustomers}
-            onRowClick={(row) => {
-              dispatch(setCustomerId(row._id));
-            }}
+            component={ManagerFilter}
+            onRowClick={(row) => dispatch(setCustomerId(row._id))}
             selectable={isAdmin}
             setSelectedRows={setSelectedRows}
           />
         </CustomTabPanel>
       </Stack>
 
-      {}
-      <Dialog
-        open={bulkDeleteDialog}
-        onClose={() => setBulkDeleteDialog(false)}
-        maxWidth="xs"
-        fullWidth>
-        <DialogTitle sx={{ color: "error.main" }}>
-          {selectedRows.length} ta mijozni o'chirish
-        </DialogTitle>
+      <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept=".xlsx, .xls" style={{ display: "none" }} />
+
+      <Dialog open={bulkDeleteDialog} onClose={() => setBulkDeleteDialog(false)} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ color: "error.main" }}>Mijozlarni o'chirish</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Tanlangan <b>{selectedRows.length}</b> ta mijoz va ularning barcha
-            shartnoma, to'lov ma'lumotlari bazadan <b>butunlay o'chiriladi</b>.
-            Bu amalni qaytarib bo'lmaydi!
+            Tanlangan <b>{selectedRows.length}</b> ta mijoz va ularning ma'lumotlari bazadan butunlay o'chiriladi.
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button
-            onClick={() => setBulkDeleteDialog(false)}
-            variant="outlined"
-            color="inherit">
-            Bekor qilish
-          </Button>
-          <Button onClick={handleBulkDelete} variant="contained" color="error">
-            Ha, o'chirilsin
-          </Button>
+          <Button onClick={() => setBulkDeleteDialog(false)} variant="outlined">Bekor qilish</Button>
+          <Button onClick={handleBulkDelete} variant="contained" color="error">O'chirilsin</Button>
         </DialogActions>
       </Dialog>
     </DashboardContent>

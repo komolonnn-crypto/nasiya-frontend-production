@@ -14,6 +14,7 @@ interface CustomerTableProps {
   onRowClick: (row: ICustomer) => void;
   setSelectedRows?: (selected: string[]) => void;
   selectable?: boolean;
+  component?: React.ReactNode;
 }
 
 const CustomerTable = ({
@@ -22,6 +23,7 @@ const CustomerTable = ({
   onRowClick,
   selectable,
   setSelectedRows,
+  component,
 }: CustomerTableProps) => {
   const dispatch = useAppDispatch();
   const logic = useTableLogic<ICustomer>(data, columns);
@@ -55,6 +57,7 @@ const CustomerTable = ({
       onRowClick={onRowClick}
       {...(setSelectedRows && { setSelectedRows })}
       renderActions={(row) => <ActionCustomer customer={row} />}
+      component={component}
     />
   );
 };
