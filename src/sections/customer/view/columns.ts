@@ -94,6 +94,8 @@ export const columnsPageCustomers: Column[] = [
   {
     id: "manager",
     label: "Menejer",
+    minWidth: 100,
+    width: 130,
     sortable: true,
     filterable: true,
   },

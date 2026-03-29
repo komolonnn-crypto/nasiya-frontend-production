@@ -3,8 +3,11 @@ import { Chip, Stack, Tooltip, Box, IconButton } from "@mui/material";
 import { MdContentCopy } from "react-icons/md";
 import { enqueueSnackbar } from "notistack";
 import dayjs from "dayjs";
+import { ManagerSelectCell } from "./ManagerSelectCell";
 
-export const columnsPageContract: Column[] = [
+export const createColumnsPageContract = (
+  onManagerChange?: (contractId: string, newManager: string) => void,
+): Column[] => [
   {
     id: "day",
     label: "Kun",
@@ -155,11 +158,18 @@ export const columnsPageContract: Column[] = [
     id: "manager",
     label: "Menejer",
     renderCell: (row) => {
-      if (row.manager) row.manager;
+      if (onManagerChange) {
+        return (
+          <ManagerSelectCell row={row} onManagerChange={onManagerChange} />
+        );
+      }
+      if (row.manager) return row.manager;
       return "———";
     },
     sortable: true,
     filterable: true,
+    minWidth: 100,
+    width: 130,
   },
   {
     id: "info",
@@ -204,7 +214,9 @@ export const columnsPageContract: Column[] = [
   },
 ];
 
-export const columnsPageNewContract: Column[] = [
+export const createColumnsPageNewContract = (
+  onManagerChange?: (contractId: string, newManager: string) => void,
+): Column[] => [
   {
     id: "productName",
     label: "Mahsulot Nomi",
@@ -226,6 +238,23 @@ export const columnsPageNewContract: Column[] = [
     align: "center",
     format: (value: number) => `$${value.toLocaleString()}`,
     sortable: true,
+  },
+  {
+    id: "manager",
+    label: "Menejer",
+    renderCell: (row) => {
+      if (onManagerChange) {
+        return (
+          <ManagerSelectCell row={row} onManagerChange={onManagerChange} />
+        );
+      }
+      if (row.manager) return row.manager;
+      return "———";
+    },
+    sortable: true,
+    filterable: true,
+    minWidth: 100,
+    width: 130,
   },
   {
     id: "notes",
