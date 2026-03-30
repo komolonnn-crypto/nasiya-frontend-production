@@ -88,7 +88,7 @@ const CustomerView = () => {
   }, [dispatch]);
 
   const managerFullName =
-    manager ? `${manager.firstName} ${manager.lastName}` : null;
+    manager ? `${manager.firstName} ${manager.lastName}`.trim() : null;
 
   const filterListByManager = useCallback(
     (list: any[]) => {

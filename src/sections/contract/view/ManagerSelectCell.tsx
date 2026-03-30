@@ -36,7 +36,7 @@ export const ManagerSelectCellDebtor = React.memo(
 
     const handleChange = (event: SelectChangeEvent<string>) => {
       const newManager = event.target.value as string;
-      onManagerChange(row._id, newManager);
+      onManagerChange(row.customer, newManager);
     };
 
     if (!canEditManager) {

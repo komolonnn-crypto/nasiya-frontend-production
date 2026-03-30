@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { ManagerSelectCellDebtor } from "./ManagerSelectCell";
 
 export const createColumnsPageContract = (
-  onManagerChange?: (contractId: string, newManager: string) => void,
+  onManagerChange?: (customerId: string, newManager: string) => void,
 ): Column[] => [
   {
     id: "day",
@@ -160,7 +160,11 @@ export const createColumnsPageContract = (
     renderCell: (row) => {
       if (onManagerChange) {
         return (
-          <ManagerSelectCellDebtor row={row} onManagerChange={onManagerChange} value=""/>
+          <ManagerSelectCellDebtor
+            row={row}
+            onManagerChange={onManagerChange}
+            value=""
+          />
         );
       }
       if (row.manager) return row.manager;
@@ -215,7 +219,7 @@ export const createColumnsPageContract = (
 ];
 
 export const createColumnsPageNewContract = (
-  onManagerChange?: (contractId: string, newManager: string) => void,
+  onManagerChange?: (customerId: string, newManager: string) => void,
 ): Column[] => [
   {
     id: "productName",
@@ -245,7 +249,11 @@ export const createColumnsPageNewContract = (
     renderCell: (row) => {
       if (onManagerChange) {
         return (
-          <ManagerSelectCellDebtor row={row} onManagerChange={onManagerChange} value=""/>
+          <ManagerSelectCellDebtor
+            row={row}
+            onManagerChange={onManagerChange}
+            value=""
+          />
         );
       }
       if (row.manager) return row.manager;

@@ -116,8 +116,8 @@ export function ContractsView() {
   }, [dispatch]);
 
   const handleManagerChange = useCallback(
-    (contractId: string, newManager: string) => {
-      dispatch(updateContractManager(contractId, newManager));
+    (customerId: string, newManager: string) => {
+      dispatch(updateContractManager(customerId, newManager));
     },
     [dispatch],
   );

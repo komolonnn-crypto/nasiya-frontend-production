@@ -356,11 +356,10 @@ export const bulkDeleteContracts =
   };
 
 export const updateContractManager =
-  (contractId: string, managerId: string): AppThunk =>
+  (customerId: string, managerId: string): AppThunk =>
   async (dispatch) => {
     dispatch(start());
     try {
-      const customerId = contractId; // Contract update endpoint'da customer ID ishlatiladi
       const res = await authApi.put(`/customer/manager`, {
         customerId,
         managerId,
