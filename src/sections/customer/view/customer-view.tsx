@@ -82,6 +82,14 @@ const CustomerView = () => {
   const isAdmin = profile?.role === "admin";
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    setSelectedRows([]);
+  }, [tab]);
+
+  useEffect(() => {
+    setSelectedRows([]);
+  }, [manager]);
+
   // --- Manager Filter Logic ---
   const handleCustomerFocus = useCallback(() => {
     dispatch(getManagers());
@@ -170,18 +178,58 @@ const CustomerView = () => {
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
     setUploading(true);
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const response = await authApi.post("/excel/import", formData);
-      if (response.data.success) {
-        enqueueSnackbar("Import muvaffaqiyatli", { variant: "success" });
-        dispatch(getCustomers());
-        dispatch(getNewCustomers());
+
+      const response = await authApi.post("/excel/import", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("📤 Import response:", response.data);
+
+      if (response.data?.status === "success") {
+        const successCount = response.data?.data?.success || 0;
+        const failedCount = response.data?.data?.failed || 0;
+
+        if (successCount > 0 && failedCount === 0) {
+          enqueueSnackbar(
+            `${successCount} ta mijoz muvaffaqiyatli import qilindi`,
+            { variant: "success" },
+          );
+        } else if (successCount > 0 && failedCount > 0) {
+          enqueueSnackbar(
+            `${successCount} ta muvaffaqiyatli, ${failedCount} ta xato`,
+            { variant: "warning" },
+          );
+        } else if (failedCount > 0) {
+          enqueueSnackbar(`Import muvaffaqiyatsiz: ${failedCount} ta xato`, {
+            variant: "error",
+          });
+        }
+
+        if (successCount > 0) {
+          dispatch(getCustomers());
+          dispatch(getNewCustomers());
+        }
+      } else {
+        const errorMsg = response.data?.message || "Import muvaffaqiyatsiz";
+        enqueueSnackbar(errorMsg, { variant: "warning" });
       }
     } catch (error: any) {
-      enqueueSnackbar("Xatolik yuz berdi", { variant: "error" });
+      console.error("❌ Import error:", error);
+
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Import qilishda xatolik yuz berdi";
+
+      enqueueSnackbar(errorMessage, { variant: "error" });
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -317,6 +365,7 @@ const CustomerView = () => {
             onRowClick={(row) => dispatch(setCustomerId(row._id))}
             selectable={isAdmin}
             setSelectedRows={setSelectedRows}
+            selectedRows={selectedRows}
           />
         </CustomTabPanel>
 
@@ -328,6 +377,7 @@ const CustomerView = () => {
             onRowClick={(row) => dispatch(setCustomerId(row._id))}
             selectable={isAdmin}
             setSelectedRows={setSelectedRows}
+            selectedRows={selectedRows}
           />
         </CustomTabPanel>
       </Stack>

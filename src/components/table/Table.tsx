@@ -61,8 +61,6 @@ export function TableComponent<T extends Record<string, any>>({
   rowsPerPageOptions = [15, 50, 100, 1000],
   initialRowsPerPage = 100,
   onRowClick,
-  onCustomerClick,
-  onNotesClick,
   filterName = "",
   noDataText = "No data found",
   renderActions,
@@ -72,16 +70,42 @@ export function TableComponent<T extends Record<string, any>>({
 }: TableComponentProps<T>) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [internalSelectedRows, setInternalSelectedRows] = useState<string[]>(
+    [],
+  );
+
+  const selectedRows =
+    selectedRowss !== undefined ? selectedRowss : internalSelectedRows;
+  const setSelectedRows = (rows: string[]) => {
+    setInternalSelectedRows(rows);
+    onSelectedRowsChange?.(rows);
+  };
 
   const handleSelectAllRows = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = filteredData.map((row) => row["_id"] || row["id"]);
+      const currentPageData = filteredData.slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage,
+      );
+      const currentPageIds = currentPageData.map(
+        (row) => row["_id"] || row["id"],
+      );
+
+      const newSelected = [...new Set([...selectedRows, ...currentPageIds])];
       setSelectedRows(newSelected);
-      onSelectedRowsChange?.(newSelected);
     } else {
-      setSelectedRows([]);
-      onSelectedRowsChange?.([]);
+      const currentPageData = filteredData.slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage,
+      );
+      const currentPageIds = currentPageData.map(
+        (row) => row["_id"] || row["id"],
+      );
+      const newSelected = selectedRows.filter(
+        (id) => !currentPageIds.includes(id),
+      );
+
+      setSelectedRows(newSelected);
     }
   };
 
@@ -97,12 +121,11 @@ export function TableComponent<T extends Record<string, any>>({
     }
 
     setSelectedRows(newSelected);
-    onSelectedRowsChange?.(newSelected);
   };
 
   useEffect(() => {
     if (selectedRowss?.length === 0) {
-      setSelectedRows([]);
+      setInternalSelectedRows([]);
     }
   }, [selectedRowss]);
 
@@ -115,6 +138,7 @@ export function TableComponent<T extends Record<string, any>>({
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+    setSelectedRows([]);
   };
 
   const filteredData = data.filter((item) =>
@@ -133,7 +157,7 @@ export function TableComponent<T extends Record<string, any>>({
 
   const renderCellValue = (row: T, column: Column) => {
     if (column.renderCell) {
-      return column.renderCell(row, onCustomerClick, onNotesClick);
+      return column.renderCell(row);
     }
 
     const value = row[column.id];
@@ -178,48 +202,62 @@ export function TableComponent<T extends Record<string, any>>({
                     <TableCell
                       key={column.id}
                       align={column.align || "center"}
-                      sx={{
-                        ...(excelHeaderCellStyle as object),
-                        minWidth: column.minWidth || column.width || 100,
-                        width: column.width ? `${column.width}px` : "auto",
-                        ...(column.sticky ? {
-                          ...(column.sticky === "left" ?
-                            excelStickyLeftStyle(column.stickyOffset || 0) as object
-                          : excelStickyRightStyle(column.stickyOffset || 0) as object),
-                          zIndex: 4,
-                          backgroundColor: `${EXCEL_COLORS.headerBg} !important`,
-                        } : {}),
-                      } as any}>
+                      sx={
+                        {
+                          ...(excelHeaderCellStyle as object),
+                          minWidth: column.minWidth || column.width || 100,
+                          width: column.width ? `${column.width}px` : "auto",
+                          ...(column.sticky ?
+                            {
+                              ...(column.sticky === "left" ?
+                                (excelStickyLeftStyle(
+                                  column.stickyOffset || 0,
+                                ) as object)
+                              : (excelStickyRightStyle(
+                                  column.stickyOffset || 0,
+                                ) as object)),
+                              zIndex: 4,
+                              backgroundColor: `${EXCEL_COLORS.headerBg} !important`,
+                            }
+                          : {}),
+                        } as any
+                      }>
                       {column.label}
                     </TableCell>
                   ))}
                 {renderActions && (
                   <TableCell
                     align="center"
-                    sx={{
-                      ...(excelHeaderCellStyle as object),
-                      width: selectable ? "40px" : "60px",
-                      minWidth: selectable ? "40px" : "60px",
-                      px: "4px",
-                      ...(selectable ? {
-                        ...(excelStickyRightStyle(32) as object),
-                        zIndex: 4,
-                        backgroundColor: `${EXCEL_COLORS.headerBg} !important`,
-                      } : {}),
-                    } as any}>
+                    sx={
+                      {
+                        ...(excelHeaderCellStyle as object),
+                        width: selectable ? "40px" : "60px",
+                        minWidth: selectable ? "40px" : "60px",
+                        px: "4px",
+                        ...(selectable ?
+                          {
+                            ...(excelStickyRightStyle(32) as object),
+                            zIndex: 4,
+                            backgroundColor: `${EXCEL_COLORS.headerBg} !important`,
+                          }
+                        : {}),
+                      } as any
+                    }>
                     Actions
                   </TableCell>
                 )}
                 {selectable && (
                   <TableCell
                     padding="checkbox"
-                    sx={{
-                      ...(excelHeaderCellStyle as object),
-                      ...(excelStickyRightStyle(0) as object),
-                      zIndex: 4,
-                      width: "32px",
-                      minWidth: "32px",
-                    } as any}>
+                    sx={
+                      {
+                        ...(excelHeaderCellStyle as object),
+                        ...(excelStickyRightStyle(0) as object),
+                        zIndex: 4,
+                        width: "32px",
+                        minWidth: "32px",
+                      } as any
+                    }>
                     <Checkbox
                       sx={{
                         ...excelCheckboxStyle,
@@ -231,14 +269,40 @@ export function TableComponent<T extends Record<string, any>>({
                           color: "var(--palette-common-white)",
                         },
                       }}
-                      indeterminate={
-                        selectedRows.length > 0 &&
-                        selectedRows.length < filteredData.length
-                      }
-                      checked={
-                        filteredData.length > 0 &&
-                        selectedRows.length === filteredData.length
-                      }
+                      indeterminate={(() => {
+                        const currentPageData = filteredData.slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage,
+                        );
+                        const currentPageIds = currentPageData.map(
+                          (row) => row["_id"] || row["id"],
+                        );
+                        const selectedOnCurrentPage = currentPageIds.filter(
+                          (id) => selectedRows.includes(id),
+                        ).length;
+
+                        return (
+                          selectedOnCurrentPage > 0 &&
+                          selectedOnCurrentPage < currentPageIds.length
+                        );
+                      })()}
+                      checked={(() => {
+                        const currentPageData = filteredData.slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage,
+                        );
+                        const currentPageIds = currentPageData.map(
+                          (row) => row["_id"] || row["id"],
+                        );
+                        const selectedOnCurrentPage = currentPageIds.filter(
+                          (id) => selectedRows.includes(id),
+                        ).length;
+
+                        return (
+                          currentPageData.length > 0 &&
+                          selectedOnCurrentPage === currentPageIds.length
+                        );
+                      })()}
                       onChange={handleSelectAllRows}
                     />
                   </TableCell>
@@ -298,55 +362,83 @@ export function TableComponent<T extends Record<string, any>>({
                             key={`${rowId}-${column.id}`}
                             align={column.align || "center"}
                             onClick={() => onRowClick?.(row)}
-                            sx={{
-                              ...(excelBodyCellStyle as object),
-                              minWidth: column.minWidth || column.width || 100,
-                              width: column.width ? `${column.width}px` : "auto",
-                              ...(column.sticky ? {
-                                ...(column.sticky === "left" ?
-                                  excelStickyLeftStyle(column.stickyOffset || 0) as object
-                                : excelStickyRightStyle(column.stickyOffset || 0) as object),
-                                zIndex: 1,
-                                ...(isExpiredReminder ? {
-                                  backgroundColor: "rgba(var(--palette-error-mainChannel) / 0.08)",
-                                } : {}),
-                                ...(row["isReminderNotification"] && !isExpiredReminder ? {
-                                  backgroundColor: "rgba(var(--palette-warning-mainChannel) / 0.08)",
-                                } : {}),
-                              } : {}),
-                            } as any}>
+                            sx={
+                              {
+                                ...(excelBodyCellStyle as object),
+                                minWidth:
+                                  column.minWidth || column.width || 100,
+                                width:
+                                  column.width ? `${column.width}px` : "auto",
+                                ...(column.sticky ?
+                                  {
+                                    ...(column.sticky === "left" ?
+                                      (excelStickyLeftStyle(
+                                        column.stickyOffset || 0,
+                                      ) as object)
+                                    : (excelStickyRightStyle(
+                                        column.stickyOffset || 0,
+                                      ) as object)),
+                                    zIndex: 1,
+                                    ...(isExpiredReminder ?
+                                      {
+                                        backgroundColor:
+                                          "rgba(var(--palette-error-mainChannel) / 0.08)",
+                                      }
+                                    : {}),
+                                    ...((
+                                      row["isReminderNotification"] &&
+                                      !isExpiredReminder
+                                    ) ?
+                                      {
+                                        backgroundColor:
+                                          "rgba(var(--palette-warning-mainChannel) / 0.08)",
+                                      }
+                                    : {}),
+                                  }
+                                : {}),
+                              } as any
+                            }>
                             {renderCellValue(row, column)}
                           </TableCell>
                         ))}
                       {renderActions && (
                         <TableCell
                           align="center"
-                          sx={{
-                            ...(excelBodyCellStyle as object),
-                            width: selectable ? "40px" : "60px",
-                            minWidth: selectable ? "40px" : "60px",
-                            px: "4px",
-                            ...(selectable ? {
-                              ...(excelStickyRightStyle(32) as object),
-                              zIndex: 1,
-                            } : {}),
-                          } as any}>
+                          sx={
+                            {
+                              ...(excelBodyCellStyle as object),
+                              width: selectable ? "40px" : "60px",
+                              minWidth: selectable ? "40px" : "60px",
+                              px: "4px",
+                              ...(selectable ?
+                                {
+                                  ...(excelStickyRightStyle(32) as object),
+                                  zIndex: 1,
+                                }
+                              : {}),
+                            } as any
+                          }>
                           {renderActions(row)}
                         </TableCell>
                       )}
                       {selectable && (
                         <TableCell
                           padding="checkbox"
-                          sx={{
-                            ...(excelBodyCellStyle as object),
-                            ...(excelStickyRightStyle(0) as object),
-                            zIndex: 1,
-                            width: "32px",
-                            minWidth: "32px",
-                            ...(isSelected ? {
-                              backgroundColor: "rgba(var(--palette-primary-mainChannel) / 0.16)",
-                            } : {}),
-                          } as any}>
+                          sx={
+                            {
+                              ...(excelBodyCellStyle as object),
+                              ...(excelStickyRightStyle(0) as object),
+                              zIndex: 1,
+                              width: "32px",
+                              minWidth: "32px",
+                              ...(isSelected ?
+                                {
+                                  backgroundColor:
+                                    "rgba(var(--palette-primary-mainChannel) / 0.16)",
+                                }
+                              : {}),
+                            } as any
+                          }>
                           <Checkbox
                             sx={excelCheckboxStyle}
                             checked={isSelected}
