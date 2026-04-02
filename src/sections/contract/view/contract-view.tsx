@@ -238,6 +238,16 @@ export function ContractsView() {
     if (tab === 2) dispatch(getCompletedContracts());
   }, [tab, dispatch]);
 
+  // ✅ Tab o'zgarganda selectedRows ni tozalash
+  useEffect(() => {
+    setSelectedRows([]);
+  }, [tab]);
+
+  // ✅ Manager filtri o'zgarganda selectedRows ni tozalash
+  useEffect(() => {
+    setSelectedRows([]);
+  }, [manager]);
+
   if (contracts.length === 0 && isLoading) return <Loader />;
 
   return (
@@ -374,6 +384,7 @@ export function ContractsView() {
             renderActions={(contract) => <ActionContract contract={contract} />}
             selectable={isAdmin}
             setSelectedRows={setSelectedRows}
+            selectedRows={selectedRows}
           />
         </CustomTabPanel>
 
@@ -405,6 +416,7 @@ export function ContractsView() {
             )}
             selectable={isAdmin}
             setSelectedRows={setSelectedRows}
+            selectedRows={selectedRows}
           />
         </CustomTabPanel>
 
