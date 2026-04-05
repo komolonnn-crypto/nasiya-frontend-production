@@ -82,7 +82,7 @@ export interface IAuditLog {
   timestamp: string;
   createdAt: string;
   updatedAt: string;
-  contractId: string;
+  customerId?: string; // ✅ YANGI: Mijoz ID
 }
 
 export interface AuditLogDailyResponse {
@@ -235,7 +235,7 @@ export const headers: Header[] = [
   { label: "Xodim" },
   { label: "Harakat" },
   { label: "Bo'lim" },
-  { label: "Shartnoma ID" },
+  { label: "Mijoz ID" }, // ✅ O'ZGARTIRILDI: Shartnoma ID → Mijoz ID
   { label: "Mijoz" },
   { label: "Xodim" },
   { label: "Summa" },

@@ -43,7 +43,7 @@ import type {
 dayjs.extend(relativeTime);
 dayjs.locale("uz-latn");
 
-const userCache: Record<string, string> = {};
+const userCache: Record<string, string | undefined> = {};
 
 function formatAmount(value: number | undefined | null): string {
   if (value == null) return "—";
@@ -52,8 +52,10 @@ function formatAmount(value: number | undefined | null): string {
 }
 
 function getUserDisplayName(userId: string, allLogs: IAuditLog[]): string {
+  if (!userId) return "Noma'lum foydalanuvchi";
+
   if (userCache[userId]) {
-    return userCache[userId];
+    return userCache[userId] || "Noma'lum foydalanuvchi";
   }
 
   const userLog = allLogs.find(
@@ -656,20 +658,20 @@ export default function AuditLogTable({
                       ),
                     },
                     {
-                      key: "contractId",
+                      key: "customerId",
                       render: (log: IAuditLog) =>
-                        log.contractId ?
+                        log.customerId ?
                           <Chip
-                            label={log.contractId}
+                            label={log.customerId}
                             size="small"
                             variant="filled"
-                            color="info"
+                            color="primary"
                             sx={{ fontSize: "0.6rem", height: 20 }}
                           />
                         : <Typography
                             variant="caption"
                             sx={{ fontSize: "0.6rem", textAlign: "center" }}>
-                            ID mavjud emas
+                            ———
                           </Typography>,
                     },
                     {
@@ -697,6 +699,7 @@ export default function AuditLogTable({
                             maxWidth: 70,
                             fontSize: "0.6rem",
                             textAlign: "center",
+                            color: "",
                           }}>
                           {log.metadata?.paymentCreatorName || "———"}
                         </Typography>
