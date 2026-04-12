@@ -1,4 +1,5 @@
 import type { Column } from "@/components/table/types";
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 import dayjs from "dayjs";
 
 export const columnsDebtor: Column[] = [
@@ -48,7 +49,7 @@ export const columnsDebtor: Column[] = [
         const day = dayjs(row.createdAt).date();
         return day.toString().padStart(2, "0");
       }
-      return "———";
+      return tableEmptyUz.calendarDay;
     },
   },
   {
@@ -107,7 +108,7 @@ export const columnsDebtor: Column[] = [
           return `${totalPaid}/${totalMonths}`;
         }
       }
-      return "———";
+      return tableEmptyUz.paymentProgress;
     },
   },
   {
@@ -164,7 +165,7 @@ export const columnsContract: Column[] = [
         const day = dayjs(row.startDate).date();
         return day.toString();
       }
-      return "—";
+      return tableEmptyUz.calendarDay;
     },
   },
   {
@@ -226,7 +227,8 @@ export const columnsContract: Column[] = [
   {
     id: "startDate",
     label: "Sana",
-    format: (value: any) => (value ? value.toString().split("T")[0] : ""),
+    format: (value: any) =>
+      value ? value.toString().split("T")[0] : tableEmptyUz.contractDate,
     sortable: true,
     filterable: false,
     minWidth: 90,
@@ -246,7 +248,7 @@ export const columnsContract: Column[] = [
       if (totalMonths > 0) {
         return `${paidMonths}/${totalMonths}`;
       }
-      return "—";
+      return tableEmptyUz.paymentProgress;
     },
   },
   {
@@ -260,7 +262,7 @@ export const columnsContract: Column[] = [
       const delayDays = row.delayDays || 0;
 
       if (delayDays <= 0) {
-        return "—";
+        return tableEmptyUz.delayNone;
       }
 
       if (delayDays > 30) {

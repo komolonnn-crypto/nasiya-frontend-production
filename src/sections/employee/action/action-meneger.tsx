@@ -1,4 +1,5 @@
 import type { IEmployee } from "@/types/employee";
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 
 import { useState, useCallback } from "react";
 import { MdDelete, MdWarning } from "react-icons/md";
@@ -139,7 +140,7 @@ export default function ActionEmployee({ employee }: { employee: IEmployee }) {
                   Rol:
                 </Typography>
                 <Typography variant="body1" fontWeight="medium">
-                  {employee.role || "———"}
+                  {employee.role || tableEmptyUz.role}
                 </Typography>
               </Box>
             </Stack>

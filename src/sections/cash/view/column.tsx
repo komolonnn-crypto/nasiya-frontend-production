@@ -19,6 +19,7 @@ import {
 
 import { enqueueSnackbar } from "notistack";
 import type { Column } from "@/components/table/types";
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 
 export const columnsCash: Column[] = [
   {
@@ -75,7 +76,7 @@ export const columnsCash: Column[] = [
 
         return day.toString().padStart(2, "0");
       }
-      return "—";
+      return tableEmptyUz.calendarDay;
     },
   },
   {
@@ -132,7 +133,7 @@ export const columnsCash: Column[] = [
       }
       return (
         <Typography variant="body2" color="text.secondary">
-          ———
+          {tableEmptyUz.contractId}
         </Typography>
       );
     },
@@ -165,11 +166,11 @@ export const columnsCash: Column[] = [
                 color: "primary.dark",
               },
             }}>
-            {displayName || "Noma'lum"}
+            {displayName || tableEmptyUz.nameUnknown}
           </Typography>
         );
       }
-      return "———";
+      return tableEmptyUz.customer;
     },
   },
   {
@@ -179,12 +180,12 @@ export const columnsCash: Column[] = [
     minWidth: 110,
     width: 130,
     renderCell: (row) => {
-      if (!row.managerId) return "—";
+      if (!row.managerId) return tableEmptyUz.manager;
 
       const managerName =
         `${row.managerId.firstName || ""} ${row.managerId.lastName || ""}`.trim();
 
-      if (!managerName) return "———";
+      if (!managerName) return tableEmptyUz.manager;
 
       return (
         <Typography
@@ -233,7 +234,7 @@ export const columnsCash: Column[] = [
       }
       return (
         <Typography variant="body2" color="text.secondary">
-          ———
+          {tableEmptyUz.reminderNoPayment}
         </Typography>
       );
     },
@@ -248,7 +249,7 @@ export const columnsCash: Column[] = [
       if (row.isReminderNotification) {
         return (
           <Typography variant="body2" color="text.secondary">
-            ———
+            {tableEmptyUz.reminderNoPayment}
           </Typography>
         );
       }
@@ -334,7 +335,7 @@ export const columnsCash: Column[] = [
       if (row.isReminderNotification) {
         return (
           <Typography variant="body2" color="text.secondary">
-            ———
+            {tableEmptyUz.reminderNoPayment}
           </Typography>
         );
       }
@@ -366,7 +367,7 @@ export const columnsCash: Column[] = [
       if (!method) {
         return (
           <Typography variant="body2" color="text.secondary">
-            —
+            {tableEmptyUz.paymentMethod}
           </Typography>
         );
       }
@@ -443,7 +444,7 @@ export const columnsCash: Column[] = [
           </Stack>
         );
       }
-      return "———";
+      return tableEmptyUz.contractDate;
     },
   },
   {
@@ -516,7 +517,7 @@ export const columnsCash: Column[] = [
       };
 
       const config = statusConfig[row.status] || {
-        label: row.status || "———",
+        label: row.status || tableEmptyUz.status,
         color: "default",
         icon: null,
       };
@@ -579,8 +580,8 @@ export const columnsCash: Column[] = [
       }
 
       if (row.notes && typeof row.notes === "object" && "text" in row.notes) {
-        const text = row.notes.text || "———";
-        const hasNotes = text && text !== "———";
+        const text = row.notes.text || tableEmptyUz.notes;
+        const hasNotes = text && text !== tableEmptyUz.notes;
 
         return (
           <Tooltip title={hasNotes ? "Izohni ko'rish" : "Izoh yo'q"} arrow>
@@ -674,7 +675,11 @@ export const columnsCash: Column[] = [
         );
       }
 
-      return <Box sx={{ color: "text.disabled", fontSize: "0.7rem" }}>———</Box>;
+      return (
+        <Box sx={{ color: "text.disabled", fontSize: "0.7rem" }}>
+          {tableEmptyUz.nextPaymentClear}
+        </Box>
+      );
     },
   },
 ];

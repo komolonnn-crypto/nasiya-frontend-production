@@ -52,7 +52,7 @@ const EditHistoryTimeline: FC<EditHistoryTimelineProps> = ({
   }
 
   const formatValue = (value: any): string => {
-    if (value === null || value === undefined) return "—";
+    if (value === null || value === undefined) return "Ma'lumot yo'q";
     if (typeof value === "boolean") return value ? "Ha" : "Yo'q";
     if (value instanceof Date)
       return new Date(value).toLocaleDateString("uz-UZ");

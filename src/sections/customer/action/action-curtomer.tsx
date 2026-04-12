@@ -1,4 +1,5 @@
 import type { ICustomer } from "@/types/customer";
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 
 import { useState, useCallback } from "react";
 import { MdDelete, MdWarning, MdRefresh } from "react-icons/md";
@@ -162,7 +163,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
                   Telefon:
                 </Typography>
                 <Typography variant="body1" fontWeight="medium">
-                  {customer.phoneNumber || "———"}
+                  {customer.phoneNumber || tableEmptyUz.phone}
                 </Typography>
               </Box>
             </Stack>
@@ -238,7 +239,7 @@ export default function ActionCustomer({ customer }: { customer: ICustomer }) {
                   Telefon:
                 </Typography>
                 <Typography variant="body1" fontWeight="medium">
-                  {customer.phoneNumber || "—"}
+                  {customer.phoneNumber || tableEmptyUz.phone}
                 </Typography>
               </Box>
             </Stack>

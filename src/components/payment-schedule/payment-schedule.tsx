@@ -27,6 +27,12 @@ import {
 
 import { format, addMonths } from "date-fns";
 import { MdContentCopy } from "react-icons/md";
+
+import {
+  formatDdMmYyyyTashkent,
+  delayPaidVsDueCalendarDays,
+  delayUnpaidOverdueCalendarDays,
+} from "@/utils/format-payment-date-tashkent";
 import { Iconify } from "@/components/iconify";
 import { PaymentModal } from "@/components/payment-modal";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
@@ -228,21 +234,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
       isPaid: isInitialPaid,
       isInitial: true,
     });
-    const monthlyPayments = payments
-      .filter((p) => p.paymentType !== "initial" && p.isPaid)
-      .sort((a, b) => {
-        const dateA =
-          a.confirmedAt ? new Date(a.confirmedAt) : new Date(a.date);
-        const dateB =
-          b.confirmedAt ? new Date(b.confirmedAt) : new Date(b.date);
-
-        if (dateA.getTime() === dateB.getTime()) {
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
-        }
-
-        return dateA.getTime() - dateB.getTime();
-      });
-
     const monthlyPaymentStartDate =
       initialPaymentDueDate ?
         new Date(initialPaymentDueDate)
@@ -251,7 +242,12 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     for (let i = 1; i <= period; i++) {
       const paymentDate = addMonths(monthlyPaymentStartDate, i - 1);
 
-      const isPaid = i <= monthlyPayments.length;
+      const isPaid = payments.some(
+        (p) =>
+          p.paymentType !== "initial" &&
+          p.isPaid &&
+          Number(p.targetMonth) === i,
+      );
 
       schedule.push({
         month: i,
@@ -384,11 +380,12 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
             maxHeight: "60vh",
             overflowX: "auto",
             borderRadius: "12px",
+            width: "100%",
           }}>
           <Table
             size="small"
             stickyHeader
-            sx={{ minWidth: "100%", width: "100%" }}>
+            sx={{ minWidth: { xs: "100%", md: 960 }, width: "100%" }}>
             <TableHead>
               <TableRow>
                 <TableCell
@@ -524,25 +521,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
             </TableHead>
             <TableBody>
               {(() => {
-                const sortedPayments = [...payments].sort((a, b) => {
-                  const dateA =
-                    a.confirmedAt ? new Date(a.confirmedAt) : new Date(a.date);
-                  const dateB =
-                    b.confirmedAt ? new Date(b.confirmedAt) : new Date(b.date);
-
-                  if (dateA.getTime() === dateB.getTime()) {
-                    return (
-                      new Date(a.date).getTime() - new Date(b.date).getTime()
-                    );
-                  }
-
-                  return dateA.getTime() - dateB.getTime();
-                });
-
-                const paidMonthlyPayments = sortedPayments.filter(
-                  (p) => p.paymentType !== "initial" && p.isPaid,
-                );
-
                 let previousExcess = 0;
 
                 return schedule.map((item, _index) => {
@@ -555,7 +533,12 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                       (p) => p.paymentType === "initial" && p.isPaid,
                     );
                   } else {
-                    actualPayment = paidMonthlyPayments[item.month - 1];
+                    actualPayment = payments.find(
+                      (p) =>
+                        p.paymentType !== "initial" &&
+                        p.isPaid &&
+                        Number(p.targetMonth) === item.month,
+                    );
                   }
 
                   let remainingAmountToShow = 0;
@@ -619,22 +602,14 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                   }
 
                   let delayDays = 0;
-                  const scheduledDate = new Date(item.date);
-                  const todayNormalized = new Date();
-                  todayNormalized.setHours(0, 0, 0, 0);
-
                   if (actualPayment && item.isPaid) {
-                    const paidDate = new Date(actualPayment.date);
-                    paidDate.setHours(0, 0, 0, 0);
-                    delayDays = Math.floor(
-                      (paidDate.getTime() - scheduledDate.getTime()) /
-                        (1000 * 60 * 60 * 24),
-                    );
-                  } else if (!item.isPaid && scheduledDate < todayNormalized) {
-                    delayDays = Math.floor(
-                      (todayNormalized.getTime() - scheduledDate.getTime()) /
-                        (1000 * 60 * 60 * 24),
-                    );
+                    const paidRef =
+                      actualPayment.confirmedAt ?
+                        new Date(actualPayment.confirmedAt)
+                      : new Date(actualPayment.date);
+                    delayDays = delayPaidVsDueCalendarDays(item.date, paidRef);
+                  } else if (!item.isPaid) {
+                    delayDays = delayUnpaidOverdueCalendarDays(item.date);
                   }
 
                   const fromPreviousMonth = previousExcess;
@@ -746,7 +721,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           <Typography
                             variant="body2"
                             fontSize={{ xs: "0.688rem", sm: "0.75rem" }}>
-                            {format(new Date(item.date), "dd.MM.yyyy")}
+                            {formatDdMmYyyyTashkent(new Date(item.date))}
                           </Typography>
                         </TableCell>
 
@@ -769,11 +744,10 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               fontSize="0.75rem"
                               color="warning.main">
                               {pendingInitialRecord.date ?
-                                format(
+                                formatDdMmYyyyTashkent(
                                   new Date(pendingInitialRecord.date),
-                                  "dd.MM.yyyy",
                                 )
-                              : "——"}
+                              : "Yuborilgan sana yo'q"}
                             </Typography>
                           : item.isPaid ?
                             <Typography
@@ -784,36 +758,30 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               }>
                               {item.isInitial ?
                                 paidInitialRecord?.confirmedAt ?
-                                  format(
+                                  formatDdMmYyyyTashkent(
                                     new Date(paidInitialRecord.confirmedAt),
-                                    "dd.MM.yyyy HH:mm",
                                   )
                                 : paidInitialRecord?.date ?
-                                  format(
+                                  formatDdMmYyyyTashkent(
                                     new Date(paidInitialRecord.date),
-                                    "dd.MM.yyyy",
                                   )
-                                : "——"
+                                : "Sana aniqlanmadi"
                               : actualPayment && actualPayment.confirmedAt ?
-                                format(
+                                formatDdMmYyyyTashkent(
                                   new Date(actualPayment.confirmedAt),
-                                  "dd.MM.yyyy",
                                 )
                               : actualPayment ?
-                                format(
+                                formatDdMmYyyyTashkent(
                                   new Date(actualPayment.date),
-                                  "dd.MM.yyyy",
                                 )
-                              : format(new Date(item.date), "dd.MM.yyyy")}
-                              {!item.isInitial &&
-                                delayDays > 0 &&
-                                ` (+${delayDays})`}
+                              : formatDdMmYyyyTashkent(new Date(item.date))}
                             </Typography>
                           : <Typography
                               variant="body2"
-                              color="text.disabled"
-                              align="center">
-                              ——
+                              color="text.secondary"
+                              align="center"
+                              sx={{ fontSize: { xs: "0.65rem", sm: "0.75rem" } }}>
+                              Hali to'lanmagan
                             </Typography>
                           }
                         </TableCell>
@@ -845,7 +813,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               !hasAnyInitialPayment &&
                               !initialPayment
                             ) ?
-                              "——"
+                              "Boshlang'ich yo'q"
                             : `${item.amount.toLocaleString()} $`}
                           </Typography>
                         </TableCell>
@@ -918,9 +886,10 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                             </Box>
                           : <Typography
                               variant="body2"
-                              color="text.disabled"
-                              align="center">
-                              ——
+                              color="text.secondary"
+                              align="center"
+                              sx={{ fontSize: { xs: "0.65rem", sm: "0.75rem" } }}>
+                              Hali to'lanmagan
                             </Typography>
                           }
                         </TableCell>
@@ -1016,9 +985,9 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                 </Typography>
                               : <Typography
                                   variant="caption"
-                                  color="text.disabled"
+                                  color="text.secondary"
                                   sx={{ fontSize: "0.65rem" }}>
-                                  ——
+                                  To'lov yuborilmagan
                                 </Typography>
 
                             : !item.isInitial && !item.isPaid ?
@@ -1153,11 +1122,11 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                 </Tooltip>
                               : <Typography
                                   variant="caption"
-                                  color="text.disabled"
+                                  color="text.secondary"
                                   sx={{
                                     fontSize: { xs: "0.6rem", sm: "0.75rem" },
                                   }}>
-                                  ——
+                                  Izoh yo'q
                                 </Typography>;
                           })()}
                         </TableCell>
@@ -1202,11 +1171,11 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               </Tooltip>
                             : <Typography
                                 variant="caption"
-                                color="text.disabled"
+                                color="text.secondary"
                                 sx={{
                                   fontSize: { xs: "0.6rem", sm: "0.75rem" },
                                 }}>
-                                ——
+                                To'lovdan keyin
                               </Typography>
                             }
                           </TableCell>

@@ -18,6 +18,11 @@ import { Iconify } from "@/components/iconify";
 import dayjs, { Dayjs } from "dayjs";
 
 import {
+  formatDdMmYyyyTashkent,
+  formatHhMmSsTashkent,
+} from "@/utils/format-payment-date-tashkent";
+
+import {
   fetchDailyActivity,
   fetchActivityStats,
 } from "@/store/actions/auditLogActions";
@@ -110,8 +115,8 @@ export default function AuditLogView() {
       "Summa",
     ];
     const rows = csvData.map((log) => [
-      dayjs(log.timestamp).format("DD.MM.YYYY"),
-      dayjs(log.timestamp).format("HH:mm"),
+        formatDdMmYyyyTashkent(log.timestamp),
+        formatHhMmSsTashkent(log.timestamp),
       `${log.userId.firstName} ${log.userId.lastName}`,
       log.action,
       log.entity,

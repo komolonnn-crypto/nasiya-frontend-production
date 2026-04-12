@@ -34,6 +34,7 @@ import { DashboardContent } from "@/layouts/dashboard";
 import { setCustomerId } from "@/store/slices/customerSlice";
 import { getCustomer } from "@/store/actions/customerActions";
 
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 import { Iconify } from "@/components/iconify";
 import Loader from "@/components/loader/Loader";
 import CustomerInfo from "@/components/customer-infos/customerInfo";
@@ -265,7 +266,7 @@ export function CustomerDetails() {
                   }}>
                   <FaPassport size={20} style={{ opacity: 0.3 }} />
                   <Typography color="text.secondary" sx={{ flex: 1 }}>
-                    ---
+                    {tableEmptyUz.fileMissing}
                   </Typography>
                 </Box>
               }
@@ -324,7 +325,7 @@ export function CustomerDetails() {
                   }}>
                   <FaRegFileLines size={20} style={{ opacity: 0.3 }} />
                   <Typography color="text.secondary" sx={{ flex: 1 }}>
-                    ---
+                    {tableEmptyUz.fileMissing}
                   </Typography>
                 </Box>
               }
@@ -380,7 +381,7 @@ export function CustomerDetails() {
                   }}>
                   <TbPhoto size={20} style={{ opacity: 0.3 }} />
                   <Typography color="text.secondary" sx={{ flex: 1 }}>
-                    ---
+                    {tableEmptyUz.fileMissing}
                   </Typography>
                 </Box>
               }

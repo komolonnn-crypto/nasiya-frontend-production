@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import { setModal } from "@/store/slices/modalSlice";
 
 import type { IContract } from "@/types/contract";
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 import type { RootState } from "@/store";
 
 import { Iconify } from "@/components/iconify";
@@ -143,7 +144,7 @@ export default function ActionContract({ contract }: { contract: IContract }) {
                   Mijoz:
                 </Typography>
                 <Typography variant="body1" fontWeight="medium">
-                  {contract.customer?.fullName || "———"}
+                  {contract.customer?.fullName || tableEmptyUz.customerName}
                 </Typography>
               </Box>
               <Box>

@@ -1,4 +1,5 @@
 import type { Column } from "@/components/table/types";
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 import { Chip, Stack, Tooltip, Box, IconButton } from "@mui/material";
 import { MdContentCopy } from "react-icons/md";
 import { enqueueSnackbar } from "notistack";
@@ -30,7 +31,7 @@ export const createColumnsPageContract = (
         const day = dayjs(row.startDate).date();
         return String(day).padStart(2, "0");
       }
-      return "———";
+      return tableEmptyUz.calendarDay;
     },
   },
   {
@@ -52,7 +53,7 @@ export const createColumnsPageContract = (
       };
 
       if (!row.customId) {
-        return "———";
+        return tableEmptyUz.contractId;
       }
 
       return (
@@ -97,7 +98,7 @@ export const createColumnsPageContract = (
         }
         return row.customerName;
       }
-      return row.customerName || "———";
+      return row.customerName || tableEmptyUz.customerName;
     },
   },
   {
@@ -114,7 +115,7 @@ export const createColumnsPageContract = (
       if (row.startDate) {
         return dayjs(row.startDate).format("YYYY-MM-DD");
       }
-      return "———";
+      return tableEmptyUz.contractDate;
     },
     sortable: true,
     filterable: false,
@@ -168,7 +169,7 @@ export const createColumnsPageContract = (
         );
       }
       if (row.manager) return row.manager;
-      return "———";
+      return tableEmptyUz.manager;
     },
     sortable: true,
     filterable: true,
@@ -192,7 +193,7 @@ export const createColumnsPageContract = (
       const activeItems = items.filter((item) => item.value);
 
       if (activeItems.length === 0) {
-        return "———";
+        return tableEmptyUz.extras;
       }
 
       return (
@@ -257,7 +258,7 @@ export const createColumnsPageNewContract = (
         );
       }
       if (row.manager) return row.manager;
-      return "———";
+      return tableEmptyUz.manager;
     },
     sortable: true,
     filterable: true,
