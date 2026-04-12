@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 
 import { Scrollbar } from "@/components/scrollbar";
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 import { TableNoData } from "./TableNoData";
 import {
   excelHeaderCellStyle,
@@ -163,14 +164,33 @@ export function TableComponent<T extends Record<string, any>>({
     const value = row[column.id];
 
     if (column.id === "manager") {
-      return value || "—";
+      if (value == null || value === "") return tableEmptyUz.manager;
+      return value;
     }
 
-    return (
-      column.format ? column.format(value)
-      : column.id === "birthDate" ? value.split("T")[0]
-      : value
-    );
+    if (column.format) {
+      const formatted = column.format(value);
+      if (
+        formatted === null ||
+        formatted === undefined ||
+        formatted === "" ||
+        (typeof formatted === "string" && formatted.trim() === "")
+      ) {
+        return tableEmptyUz.generic;
+      }
+      return formatted;
+    }
+
+    if (column.id === "birthDate") {
+      if (value == null || value === "") return tableEmptyUz.contractDate;
+      return String(value).split("T")[0];
+    }
+
+    if (value === null || value === undefined || value === "") {
+      return tableEmptyUz.generic;
+    }
+
+    return value;
   };
 
   useEffect(() => {

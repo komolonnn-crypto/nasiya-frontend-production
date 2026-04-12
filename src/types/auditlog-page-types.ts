@@ -82,7 +82,10 @@ export interface IAuditLog {
   timestamp: string;
   createdAt: string;
   updatedAt: string;
-  customerId?: string; // ✅ YANGI: Mijoz ID
+  /** Jadval uchun: shartnoma `customId` (bo‘lmasa ichki ObjectId) */
+  contractId?: string;
+  /** Bog‘langan mijozning Mongo ObjectId (ichki) */
+  customerId?: string;
 }
 
 export interface AuditLogDailyResponse {
@@ -235,9 +238,9 @@ export const headers: Header[] = [
   { label: "Xodim" },
   { label: "Harakat" },
   { label: "Bo'lim" },
-  { label: "Mijoz ID" }, // ✅ O'ZGARTIRILDI: Shartnoma ID → Mijoz ID
+  { label: "Shartnoma ID" },
   { label: "Mijoz" },
-  { label: "Xodim" },
+  { label: "Menejer" },
   { label: "Summa" },
   { label: "Kun" },
   { label: "Soat" },

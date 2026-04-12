@@ -17,6 +17,7 @@ import {
 import { alpha } from "@mui/material/styles";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { formatNumber } from "@/utils/format-number";
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 import { setModal } from "@/store/slices/modalSlice";
 import { Iconify } from "@/components/iconify";
 import { useSelector } from "react-redux";
@@ -146,18 +147,18 @@ const RenderContractFields: React.FC<IProps> = ({
           </Grid>
         )}
         {}
-        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.originalPrice ? formatNumber(contract.originalPrice) : "—"} label="Asl narxi" /></Grid>
-        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.price ? formatNumber(contract.price) : "—"} label="Sotuv narxi" /></Grid>
-        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.initialPayment ? formatNumber(contract.initialPayment) : "—"} label="Oldindan to'lov" /></Grid>
-        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.initialPaymentDueDate ? dateFormat(contract.initialPaymentDueDate) : "—"} label="Oldindan to'lov sanasi" /></Grid>
-        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.percentage ? formatNumber(contract.percentage) : "—"} label="Foiz" /></Grid>
-        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.period ? formatNumber(contract.period) : "—"} label="Muddat (oy)" /></Grid>
-        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.monthlyPayment ? formatNumber(contract.monthlyPayment) : "—"} label="Oylik to'lov" /></Grid>
-        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.totalPrice ? formatNumber(contract.totalPrice) : "—"} label="Umumiy narx" /></Grid>
-        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.totalPaid !== undefined ? formatNumber(contract.totalPaid) : "—"} label="To'langan summa" /></Grid>
-        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.remainingDebt !== undefined ? formatNumber(contract.remainingDebt) : "—"} label="Qolgan summa" /></Grid>
-        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.startDate ? dateFormat(contract.startDate) : "—"} label="Shartnoma sanasi" /></Grid>
-        <Grid xs={6} md={4}><ReadOnlyTextField value={paymentDeadline || "—"} label="To'lov muddati" /></Grid>
+        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.originalPrice ? formatNumber(contract.originalPrice) : tableEmptyUz.generic} label="Asl narxi" /></Grid>
+        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.price ? formatNumber(contract.price) : tableEmptyUz.generic} label="Sotuv narxi" /></Grid>
+        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.initialPayment ? formatNumber(contract.initialPayment) : tableEmptyUz.generic} label="Oldindan to'lov" /></Grid>
+        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.initialPaymentDueDate ? dateFormat(contract.initialPaymentDueDate) : tableEmptyUz.contractDate} label="Oldindan to'lov sanasi" /></Grid>
+        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.percentage ? formatNumber(contract.percentage) : tableEmptyUz.generic} label="Foiz" /></Grid>
+        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.period ? formatNumber(contract.period) : tableEmptyUz.generic} label="Muddat (oy)" /></Grid>
+        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.monthlyPayment ? formatNumber(contract.monthlyPayment) : tableEmptyUz.generic} label="Oylik to'lov" /></Grid>
+        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.totalPrice ? formatNumber(contract.totalPrice) : tableEmptyUz.generic} label="Umumiy narx" /></Grid>
+        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.totalPaid !== undefined ? formatNumber(contract.totalPaid) : tableEmptyUz.generic} label="To'langan summa" /></Grid>
+        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.remainingDebt !== undefined ? formatNumber(contract.remainingDebt) : tableEmptyUz.generic} label="Qolgan summa" /></Grid>
+        <Grid xs={6} md={4}><ReadOnlyTextField value={contract.startDate ? dateFormat(contract.startDate) : tableEmptyUz.contractDate} label="Shartnoma sanasi" /></Grid>
+        <Grid xs={6} md={4}><ReadOnlyTextField value={paymentDeadline || tableEmptyUz.generic} label="To'lov muddati" /></Grid>
 
         <Grid xs={12}>
   <TextField

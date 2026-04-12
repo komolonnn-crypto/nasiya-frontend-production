@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 
 import { Iconify } from "@/components/iconify";
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 import PayCommentModal from "./pay-comment-modal";
 
 interface IProps {
@@ -64,7 +65,7 @@ const RenderPaymentHistory: FC<IProps> = ({ payments }) => {
                         ? "0" 
                         : (payment as any).targetMonth 
                           ? `${(payment as any).targetMonth}` 
-                          : "—"
+                          : tableEmptyUz.targetMonth
                     }
                     size="small"
                     variant="filled"

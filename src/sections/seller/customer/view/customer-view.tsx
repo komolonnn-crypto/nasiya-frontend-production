@@ -31,6 +31,7 @@ import { enqueueSnackbar } from "notistack";
 import { Iconify } from "@/components/iconify";
 import Loader from "@/components/loader/Loader";
 import { exportCustomersToCSV } from "@/utils/export-csv";
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 
 import CustomerTable from "./customerTable";
 
@@ -67,32 +68,33 @@ const columns: Column[] = [
     id: "fullName",
     label: "Mijoz",
     sortable: true,
-    format: (value: any) => (value ? `${value}` : "—"),
+    format: (value: any) => (value ? `${value}` : tableEmptyUz.customerName),
   },
   {
     id: "phoneNumber",
     label: "Telefon raqami",
     sortable: true,
-    format: (value: any) => (value ? `${value}` : "—"),
+    format: (value: any) => (value ? `${value}` : tableEmptyUz.phone),
   },
   {
     id: "address",
     label: "Manzil",
     sortable: true,
-    format: (value: any) => (value ? `${value}` : "—"),
+    format: (value: any) => (value ? `${value}` : tableEmptyUz.address),
   },
   {
     id: "passportSeries",
     label: "Passport seriya",
     sortable: true,
-    format: (value: any) => (value ? `${value}` : "—"),
+    format: (value: any) =>
+      value ? `${value}` : tableEmptyUz.passportSeries,
   },
   {
     id: "birthDate",
     label: "Tug'ilgan sana",
     sortable: true,
     format: (value: any) =>
-      value ? new Date(value).toLocaleDateString() : "—",
+      value ? new Date(value).toLocaleDateString() : tableEmptyUz.birthDate,
   },
   {
     id: "manager",
@@ -100,8 +102,8 @@ const columns: Column[] = [
     sortable: false,
     renderCell: (row) =>
       row.manager ?
-        `${row.manager.firstName} ${row.manager.lastName || "_"}`
-      : "—",
+        `${row.manager.firstName} ${row.manager.lastName || tableEmptyUz.nameUnknown}`
+      : tableEmptyUz.manager,
   },
 ];
 

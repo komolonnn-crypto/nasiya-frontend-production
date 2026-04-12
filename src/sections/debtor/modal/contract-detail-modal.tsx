@@ -1,4 +1,5 @@
 import type { IContract } from "@/types/contract";
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 
 import {
   Box,
@@ -207,7 +208,7 @@ export function ContractDetailModal({
                   <TableCell align="right">
                     {contract.startDate ?
                       new Date(contract.startDate).toLocaleDateString("uz-UZ")
-                    : "—"}
+                    : tableEmptyUz.contractDate}
                   </TableCell>
                 </TableRow>
                 <TableRow
@@ -228,7 +229,7 @@ export function ContractDetailModal({
                       new Date(contract.nextPaymentDate).toLocaleDateString(
                         "uz-UZ",
                       )
-                    : "—"}
+                    : tableEmptyUz.nextPaymentDate}
                   </TableCell>
                 </TableRow>
                 {(contract as any).manager && (

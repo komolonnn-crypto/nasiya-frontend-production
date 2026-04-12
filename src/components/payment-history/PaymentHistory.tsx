@@ -23,6 +23,7 @@ import { format } from "date-fns";
 import { getPaymentHistory } from "@/store/actions/paymentActions"
 import { useAppDispatch } from "@/hooks/useAppDispatch"
 import { Iconify } from "@/components/iconify"
+import { tableEmptyUz } from "@/utils/table-empty-labels"
 
 interface PaymentHistoryProps {
   customerId?: string;
@@ -205,7 +206,7 @@ const PaymentHistory: React.FC<PaymentHistoryProps> = ({
                         />
                       ) : (
                         <Typography variant="caption" color="text.secondary">
-                          —
+                          {tableEmptyUz.contractId}
                         </Typography>
                       )}
                     </TableCell>
@@ -216,7 +217,7 @@ const PaymentHistory: React.FC<PaymentHistoryProps> = ({
                             ? "0" 
                             : payment.targetMonth 
                               ? `${payment.targetMonth}-oy` 
-                              : "—"
+                              : tableEmptyUz.targetMonth
                         }
                         size="small"
                         variant="filled"

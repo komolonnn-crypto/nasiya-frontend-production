@@ -20,35 +20,64 @@ import {
   IconButton,
   Paper,
 } from "@mui/material";
-import { alpha } from "@mui/material/styles";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import relativeTime from "dayjs/plugin/relativeTime";
 import { Iconify } from "@/components/iconify";
-import "dayjs/locale/uz-latn";
-import dayjs from "dayjs";
+
+import {
+  formatDdMmYyyyHhMmSsTashkent,
+  formatDdMmYyyyTashkent,
+  formatHhMmSsTashkent,
+} from "@/utils/format-payment-date-tashkent";
 
 import {
   AUDIT_ACTION_LABELS,
   AUDIT_ENTITY_LABELS,
   AUDIT_ACTION_COLORS,
+  AuditAction,
   rows,
   headers,
 } from "@/types/auditlog-page-types";
+import { tableEmptyUz } from "@/utils/table-empty-labels";
 import type {
   AuditLogTableProps,
   ExpandedRowProps,
   IAuditLog,
 } from "@/types/auditlog-page-types";
 
-dayjs.extend(relativeTime);
-dayjs.locale("uz-latn");
-
 const userCache: Record<string, string | undefined> = {};
 
 function formatAmount(value: number | undefined | null): string {
-  if (value == null) return "—";
+  if (value == null) return "0";
   const rounded = Math.round(value * 100) / 100;
   return rounded % 1 === 0 ? rounded.toFixed(0) : rounded.toFixed(2);
+}
+
+function auditLogNumericAmount(log: IAuditLog): number | null {
+  const m = log.metadata;
+  if (!m) return null;
+  const raw = m.amount ?? m.totalPrice ?? m.dollar ?? m.sum;
+  if (raw === undefined || raw === null) return null;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+}
+
+function AuditMissing({ text }: { text: string }) {
+  return (
+    <Typography
+      variant="caption"
+      color="text.secondary"
+      sx={{
+        fontSize: "0.65rem",
+        fontStyle: "italic",
+        textAlign: "center",
+        display: "block",
+        px: 0.5,
+        lineHeight: 1.3,
+      }}>
+      {text}
+    </Typography>
+  );
 }
 
 function getUserDisplayName(userId: string, allLogs: IAuditLog[]): string {
@@ -140,7 +169,7 @@ function formatFieldValue(
   fieldName?: string,
   allLogs?: IAuditLog[],
 ): string {
-  if (value === null || value === undefined) return "-";
+  if (value === null || value === undefined) return tableEmptyUz.generic;
   if (value === true) return "Ha";
   if (value === false) return "Yo'q";
 
@@ -186,7 +215,7 @@ function formatFieldValue(
     typeof value === "string" &&
     value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
   ) {
-    return dayjs(value).format("DD.MM.YYYY HH:mm");
+    return formatDdMmYyyyHhMmSsTashkent(value);
   }
 
   return String(value);
@@ -204,6 +233,20 @@ function ExpandedRow({ log, allLogs }: ExpandedRowProps) {
     }) || [];
 
   const isPaymentAction = log.action === "CONFIRM" || log.action === "REJECT";
+
+  const actorName = (() => {
+    const u = log.userId as unknown;
+    if (
+      u &&
+      typeof u === "object" &&
+      u !== null &&
+      "firstName" in u &&
+      (u as { firstName?: string }).firstName
+    ) {
+      return `${(u as { firstName: string }).firstName} ${(u as { lastName?: string }).lastName || ""}`.trim();
+    }
+    return "Noma'lum xodim";
+  })();
 
   return (
     <Box sx={{ p: 0.5, bgcolor: "background.neutral", borderRadius: 0 }}>
@@ -223,25 +266,25 @@ function ExpandedRow({ log, allLogs }: ExpandedRowProps) {
                   variant="body2"
                   color="success.main"
                   fontWeight={600}>
-                  Tasdiqlangan: {log.userId.firstName} {log.userId.lastName}
+                  Tasdiqlangan: {actorName}
                   <Typography
                     component="span"
                     variant="caption"
                     color="text.secondary"
                     sx={{ ml: 1 }}>
-                    ({dayjs(log.timestamp).format("DD.MM.YYYY HH:mm")})
+                    ({formatDdMmYyyyHhMmSsTashkent(log.timestamp)})
                   </Typography>
                 </Typography>
               )}
               {log.action === "REJECT" && (
                 <Typography variant="body2" color="error.main" fontWeight={600}>
-                  Rad etilgan: {log.userId.firstName} {log.userId.lastName}
+                  Rad etilgan: {actorName}
                   <Typography
                     component="span"
                     variant="caption"
                     color="text.secondary"
                     sx={{ ml: 1 }}>
-                    ({dayjs(log.timestamp).format("DD.MM.YYYY HH:mm")})
+                    ({formatDdMmYyyyHhMmSsTashkent(log.timestamp)})
                   </Typography>
                 </Typography>
               )}
@@ -459,6 +502,7 @@ export default function AuditLogTable({
   onLimitChange,
   maxHeight = "600px",
 }: AuditLogTableProps) {
+  const theme = useTheme();
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   const handleExpandRow = (logId: string) => {
@@ -610,30 +654,52 @@ export default function AuditLogTable({
                   const cells = [
                     {
                       key: "icon",
-                      render: (log: IAuditLog) => (
-                        <Iconify
-                          icon={getActionIcon(log.action, log.entity)}
-                          width={20}
-                          sx={{
-                            color: `${AUDIT_ACTION_COLORS[log.action] || "default"}.main`,
-                          }}
-                        />
-                      ),
+                      render: (log: IAuditLog) => {
+                        const key =
+                          AUDIT_ACTION_COLORS[log.action as AuditAction] ??
+                          "primary";
+                        const palette = theme.palette as Record<
+                          string,
+                          { main?: string } | undefined
+                        >;
+                        const iconColor =
+                          key === "default" ?
+                            theme.palette.text.secondary
+                          : palette[key]?.main ?? theme.palette.primary.main;
+                        return (
+                          <Iconify
+                            icon={getActionIcon(log.action, log.entity)}
+                            width={20}
+                            sx={{ color: iconColor }}
+                          />
+                        );
+                      },
                     },
                     {
                       key: "user",
-                      render: (log: IAuditLog) => (
-                        <Typography
-                          variant="caption"
-                          noWrap
-                          sx={{
-                            maxWidth: 80,
-                            fontSize: "0.6rem",
-                            textAlign: "center",
-                          }}>
-                          {log.userId.firstName} {log.userId.lastName}
-                        </Typography>
-                      ),
+                      render: (log: IAuditLog) => {
+                        const u = log.userId as unknown;
+                        const name =
+                          u &&
+                          typeof u === "object" &&
+                          u !== null &&
+                          "firstName" in u &&
+                          (u as { firstName?: string }).firstName ?
+                            `${(u as { firstName: string }).firstName} ${(u as { lastName?: string }).lastName || ""}`.trim()
+                          : null;
+                        return name ?
+                            <Typography
+                              variant="caption"
+                              noWrap
+                              sx={{
+                                maxWidth: 100,
+                                fontSize: "0.6rem",
+                                textAlign: "center",
+                              }}>
+                              {name}
+                            </Typography>
+                          : <AuditMissing text="Xodim: ma'lumot yo'q" />;
+                      },
                     },
                     {
                       key: "action",
@@ -658,21 +724,42 @@ export default function AuditLogTable({
                       ),
                     },
                     {
-                      key: "customerId",
-                      render: (log: IAuditLog) =>
-                        log.customerId ?
-                          <Chip
-                            label={log.customerId}
-                            size="small"
-                            variant="filled"
-                            color="primary"
-                            sx={{ fontSize: "0.6rem", height: 20 }}
-                          />
-                        : <Typography
-                            variant="caption"
-                            sx={{ fontSize: "0.6rem", textAlign: "center" }}>
-                            ———
-                          </Typography>,
+                      key: "contractDisplayId",
+                      render: (log: IAuditLog) => {
+                        const id =
+                          typeof log.contractId === "string" ?
+                            log.contractId.trim()
+                          : "";
+                        if (id) {
+                          return (
+                            <Chip
+                              label={id}
+                              size="small"
+                              variant="outlined"
+                              color="primary"
+                              title={id}
+                              sx={{
+                                fontSize: "0.65rem",
+                                height: 22,
+                                maxWidth: 110,
+                                "& .MuiChip-label": {
+                                  px: 0.5,
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                },
+                              }}
+                            />
+                          );
+                        }
+                        if (log.entity === "contract") {
+                          return (
+                            <AuditMissing text="Shartnoma ID kiritilmagan" />
+                          );
+                        }
+                        return (
+                          <AuditMissing text="Ushbu yozuv uchun shartnoma ID yo'q" />
+                        );
+                      },
                     },
                     {
                       key: "customer",
@@ -685,38 +772,47 @@ export default function AuditLogTable({
                             fontSize: "0.6rem",
                             textAlign: "center",
                           }}>
-                          {`${log.metadata?.customerName || "———"}`}
+                          {log.metadata?.customerName ?
+                            `${log.metadata.customerName}`
+                          : <AuditMissing text="Mijoz nomi yo'q" />}
                         </Typography>
                       ),
                     },
                     {
-                      key: "paymentCreator",
-                      render: (log: IAuditLog) => (
-                        <Typography
-                          variant="caption"
-                          noWrap
-                          sx={{
-                            maxWidth: 70,
-                            fontSize: "0.6rem",
-                            textAlign: "center",
-                            color: "",
-                          }}>
-                          {log.metadata?.paymentCreatorName || "———"}
-                        </Typography>
-                      ),
+                      key: "managerOrCreator",
+                      render: (log: IAuditLog) => {
+                        const name =
+                          log.metadata?.managerName ||
+                          log.metadata?.paymentCreatorName;
+                        return name ?
+                            <Typography
+                              variant="caption"
+                              noWrap
+                              sx={{
+                                maxWidth: 96,
+                                fontSize: "0.6rem",
+                                textAlign: "center",
+                              }}>
+                              {name}
+                            </Typography>
+                          : <AuditMissing text="Menejer: ma'lumot yo'q" />;
+                      },
                     },
                     {
                       key: "amount",
-                      render: (log: IAuditLog) => (
-                        <Typography
-                          variant="caption"
-                          noWrap
-                          sx={{ fontSize: "0.6rem", textAlign: "center" }}>
-                          {log.metadata?.amount ?
-                            `$${formatAmount(log.metadata.amount)}`
-                          : "———"}
-                        </Typography>
-                      ),
+                      render: (log: IAuditLog) => {
+                        const n = auditLogNumericAmount(log);
+                        return (
+                          <Typography
+                            variant="caption"
+                            noWrap
+                            sx={{ fontSize: "0.6rem", textAlign: "center" }}>
+                            {n != null ?
+                              `$${formatAmount(n)}`
+                            : <AuditMissing text="Summasi yo'q" />}
+                          </Typography>
+                        );
+                      },
                     },
                     {
                       key: "date",
@@ -724,7 +820,7 @@ export default function AuditLogTable({
                         <Typography
                           variant="caption"
                           sx={{ fontSize: "0.6rem", textAlign: "center" }}>
-                          {dayjs(log?.timestamp).format("DD.MM.YY")}
+                          {formatDdMmYyyyTashkent(log?.timestamp)}
                         </Typography>
                       ),
                     },
@@ -735,7 +831,7 @@ export default function AuditLogTable({
                           variant="caption"
                           color="text.secondary"
                           sx={{ fontSize: "0.7rem", textAlign: "center" }}>
-                          {dayjs(log.timestamp).format("HH:mm")}
+                          {formatHhMmSsTashkent(log.timestamp)}
                         </Typography>
                       ),
                     },
